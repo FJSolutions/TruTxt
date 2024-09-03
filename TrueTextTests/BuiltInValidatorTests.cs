@@ -1,0 +1,228 @@
+﻿using TrueText;
+
+namespace TrueTextTests;
+
+using V = TrueText.Validator;
+
+public class BuiltInValidatorTests
+{
+    [Fact]
+    public void MinValidatorValidTest()
+    {
+        var result = V.Min(3)
+            .Apply("Francis");
+        
+        Assert.True(result.IsValid);
+    }
+    
+    [Fact]
+    public void MinValidatorInvalidTest()
+    {
+        var result = V.Min(3)
+            .Apply("Ox");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void MaxValidatorValidTest()
+    {
+        var result = V.Max(3)
+            .Apply("Ox");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void MaxValidatorInvalidTest()
+    {
+        var result = V.Max(3)
+            .Apply("Francis");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void BetweenValidatorValidTest()
+    {
+        var result = V.Between(3, 7)
+            .Apply("Sarah");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void BetweenValidatorInvalidAboveTest()
+    {
+        var result = V.Between(3, 7)
+            .Apply("Francis");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void BetweenValidatorInvalidBelowTest()
+    {
+        var result = V.Between(3, 7)
+            .Apply("Ox");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void OptionalValidatorEmptyValidTest()
+    {
+        var result = V.Optional(V.Min(3))
+            .Apply("\t");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void OptionalValidatorWithContentValidTest()
+    {
+        var result = V.Optional(V.Min(3))
+            .Apply("Francis");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void OptionalValidatorWithContentInvalidTest()
+    {
+        var result = V.Optional(V.Min(3))
+            .Apply("Ox");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void RequiredValidatorEmptyValidTest()
+    {
+        var result = V.Required()
+            .Apply("F");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void RequiredValidatorWithAdditionalValidatorsValidTest()
+    {
+        var result = V.Required(V.Min(3))
+            .Apply("Francis");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void RequiredValidatorEmptyInvalidTest()
+    {
+        var result = V.Required()
+            .Apply("\t");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void IntegerValidatorValidTest()
+    {
+        var result = V.IsInteger()
+            .Apply("10_000");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("10000", result.Text);
+    }
+
+    [Fact]
+    public void IntegerValidatorInvalidTest()
+    {
+        var result = V.IsInteger()
+            .Apply("R 10,000");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void DecimalValidatorValidTest()
+    {
+        var result = V.IsDecimal()
+            .Apply("123.456");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("123.456", result.Text);
+    }
+
+    [Fact]
+    public void DecimalValidatorInvalidExtraDotTest()
+    {
+        var result = V.IsDecimal()
+            .Apply("123.45.6");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void DecimalValidatorInvalidTest()
+    {
+        var result = V.IsDecimal()
+            .Apply("R 123.45");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void RegexValidatorValidTest()
+    {
+        var result = V.Regex(@"^\d\d\d$")
+            .Apply("123");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("123", result.Text);
+    }
+
+    [Fact]
+    public void RegexValidatorInvalidTest()
+    {
+        var result = V.Regex(@"^\d\d\d$")
+            .Apply("R 123");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void EmailValidatorValidTest()
+    {
+        var result = V.IsEmail()
+            .Apply("FBJ@Example.com");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("fbj@example.com", result.Text);
+    }
+
+    [Fact]
+    public void EmailValidatorInvalidTest()
+    {
+        var result = V.IsEmail()
+            .Apply("FBJ@Example");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void PasswordValidatorValidTest()
+    {
+        var result = V.Password(PasswordPolicy.Weak())
+            .Apply("abC4@");
+        
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void PasswordValidatorInvalidTest()
+    {
+        var result = V.Password(PasswordPolicy.Weak())
+            .Apply("abc");
+        
+        Assert.False(result.IsValid);
+    }
+}

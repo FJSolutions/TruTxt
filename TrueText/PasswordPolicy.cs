@@ -17,7 +17,7 @@ public sealed class PasswordPolicy
     /// </summary>
     private PasswordPolicy()
     {
-        MinimumLength = 5;
+        MinimumLength = 1;
         MaximumLength = UInt16.MaxValue;
         IsSpaceAllowed = false;
         RequiredNumberOfLowerCaseLetters = 0;
@@ -141,12 +141,15 @@ public sealed class PasswordPolicy
     }
 
     /// <summary>
-    /// The lenient <see cref="PasswordPolicy"/> only requires a password to be 5 characters long.
+    /// The weak <see cref="PasswordPolicy"/> only requires a password to be 5 characters long.
     /// </summary>
     /// <returns>A <see cref="PasswordPolicy"/> instance.</returns>
-    public static PasswordPolicy Lenient()
+    public static PasswordPolicy Weak()
     {
-        return new PasswordPolicy();
+        return new PasswordPolicy
+        {
+            MinimumLength = 5,
+        };
     }
 
     /// <summary>

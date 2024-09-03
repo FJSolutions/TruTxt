@@ -4,6 +4,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Result = ValidationResult<string>;
 
+/// <summary>
+/// A data-structure that contains the validation or transformation logic core to the library.
+/// </summary>
 public sealed class Validator
 {
     // Fields
@@ -50,7 +53,7 @@ public sealed class Validator
     /// </summary>
     /// <param name="other">The other <see cref="Validator"/> to combine this one with</param>
     /// <returns>A new <see cref="Validator"/> instance</returns>
-    public Validator OrThen(Validator other)
+    public Validator OrElse(Validator other)
     {
         return new Validator(input =>
         {
@@ -73,22 +76,32 @@ public sealed class Validator
     /// <returns>A new <see cref="Validator"/> combining the two Validators</returns>
     /// <summary>
     /// Operator for alternatively combining validators
-    /// (Operator for the <see cref="OrThen"/> method)
+    /// (Operator for the <see cref="OrElse"/> method)
     /// </summary>
     /// <param name="lhs">The left hand side <see cref="Validator"/></param>
     /// <param name="rhs">The right hand side <see cref="Validator"/></param>
     /// <returns>A new <see cref="Validator"/> combining the two Validators</returns>
-    public static Validator operator |(Validator lhs, Validator rhs) => lhs.OrThen(rhs);
+    public static Validator operator |(Validator lhs, Validator rhs) => lhs.OrElse(rhs);
 
+    /// <summary>
+    /// The <c>true</c> operator is required to be overloaded for the logical && and || operators to be derived 
+    /// </summary>
+    /// <param name="validator"></param>
+    /// <returns><c>true</c></returns>
     public static bool operator true(Validator validator) => true;
 
+    /// <summary>
+    /// The <c>false</c> operator is required to be overloaded for the logical && and || operators to be derived 
+    /// </summary>
+    /// <param name="validator"></param>
+    /// <returns><c>false</c></returns>
     public static bool operator false(Validator validator) => false;
 
-    /*
+    /*********************************************
      * 
      * Factory Validator transformation methods
      * 
-     */
+     *********************************************/
 
     /// <summary>
     /// Creates a transforming validator that trims whitespace from the beginning and end of input. 
@@ -117,28 +130,22 @@ public sealed class Validator
             {
                 if (char.IsDigit(c))
                     sb.Append(c);
-                else if (c == '.')
-                    sb.Append('.');
             }
-
-            var numberString = sb.ToString();
-            if (numberString.StartsWith('.') || numberString.EndsWith('.') || numberString.Count(c => c == '.') > 1)
-                return Result.Invalid($"'{sb.ToString()}' is not a valid number", input);
 
             return Result.Pure(sb.ToString());
         });
     }
 
-    /*
+    /*************************************
      * 
      * Factory Validator creation methods
      * 
-     */
+     *************************************/
 
     /// <summary>
     /// Creates an validator that does not fail if no value was supplied but uses the supplied Validators on any value present
     /// </summary>
-    /// <param name="validators"></param>
+    /// <param name="validators">An array of validators to process if there is a value to validate</param>
     /// <returns>An <see cref="Validator"/> instance.</returns>
     public static Validator Optional(params Validator[] validators)
     {
@@ -146,14 +153,14 @@ public sealed class Validator
             input =>
             {
                 input = input?.Trim() ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(input))
+                if (input.Length == 0)
                     return Result.Valid(input);
 
                 return Result.Invalid(string.Empty, input);
             }
         );
 
-        return optional.OrThen(validators.Aggregate((acc, next) => acc.AndThen(next)));
+        return optional.OrElse(validators.Aggregate((acc, next) => acc.AndThen(next)));
     }
 
 
@@ -240,7 +247,7 @@ public sealed class Validator
             {
                 if (char.IsDigit(c))
                     sb.Append(c);
-                else if (char.IsWhiteSpace(c))
+                else if (c == '_')
                     continue;
                 else
                     return Result.Invalid("The input should only contain numbers", input);
@@ -324,7 +331,7 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = input ?? string.Empty;
+            input ??= string.Empty;
 
             if (policy.MaximumLength < input.Length)
                 return Result.Invalid("The password is too long", input);
@@ -345,13 +352,14 @@ public sealed class Validator
                     upperCaseCount += 1;
                 if (policy.ListOfAcceptedSymbols.Contains(c))
                     symbolCount += 1;
-                if (c == ' ')
+                if (char.IsWhiteSpace(c))
                     hasSpace = true;
                 if (char.IsDigit(c))
                     digitCount += 1;
             }
 
             var result = Result.Valid(input);
+            
             if (!policy.IsSpaceAllowed && hasSpace)
                 result += Result.Invalid("The password may not contain spaces", input);
             if (policy.RequiredNumberOfLowerCaseLetters > lowerCaseCount)

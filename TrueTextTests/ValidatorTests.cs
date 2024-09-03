@@ -1,4 +1,4 @@
-namespace trueTextTests;
+namespace TrueTextTests;
 
 using TrueText;
 using static TrueText.ValidationResult<string>;
@@ -52,5 +52,5 @@ public class ValidatorTests
         Assert.False(result.IsValid);
     }
 
-    // OrThen
+    // OrElse
 }
