@@ -91,7 +91,7 @@ public abstract record ValidationResult<T>(string Text, bool IsValid)
     /// </summary>
     /// <param name="orElse">The value to supply if this is an <see cref="Invalid"/> result.</param>
     /// <returns>A <typeparam name="T"></typeparam> value</returns>
-    public T Reduce(T orElse) => this.IsValid ? this.AsValid().Value : orElse;
+    public T Reduce(T orElse = default) => this.IsValid ? this.AsValid().Value : orElse;
 
     /// <summary>
     /// Reduces the <see cref="ValidationResult{T}"/> to its value
