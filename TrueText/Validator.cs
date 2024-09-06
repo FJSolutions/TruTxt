@@ -121,21 +121,47 @@ public sealed class Validator
     /// Creates an extraction validator that extracts numbers from an input string
     /// </summary>
     /// <returns>An <see cref="Validator"/> instance</returns>
-    public static Validator ExtractDigits()
+    public static Validator ExtractNumber(bool allowDecimals = true)
     {
         return new Validator(input =>
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
             var sb = new StringBuilder(input.Length);
+            var noDecimalPoints = 0;
+            var hasDigits = false;
 
             foreach (var c in input)
             {
                 if (char.IsDigit(c))
+                {
                     sb.Append(c);
-                //! Extract decimal points too!
+                    hasDigits = true;
+                }
+
+                if (c == '.')
+                {
+                    sb.Append('.');
+                    noDecimalPoints += 1;
+                }
             }
 
-            return ValidationResult.Pure(sb.ToString());
+            if (hasDigits)
+            {
+                if (!allowDecimals && noDecimalPoints > 0)
+                    return ValidationResult.Invalid(input,
+                        $"A whole number cannot be reliably extracted from '{input}'");
+
+                if (noDecimalPoints > 1)
+                    return ValidationResult.Invalid(input,
+                        "There are too many decimal points in the extracted number!");
+
+                if (sb.ToString()[0] == '.')
+                    ValidationResult.Invalid(input, "An extracted number cannot end with a decimal point");
+
+                return ValidationResult.Pure(sb.ToString());
+            }
+
+            return ValidationResult.Invalid(input, $"No number could be extracted from '{input}' ");
         });
     }
 

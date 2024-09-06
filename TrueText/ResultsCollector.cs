@@ -16,13 +16,9 @@ public class ResultsCollector<T> : IEnumerable<KeyValuePair<T, ValidationResult>
     }
 
     /// <summary>
-    /// Indicates whether all the <see cref="ValidationResult"/>s collected are in the valid state.
+    /// Gets a value indicating whether all the <see cref="ValidationResult"/>s collected are in the valid state.
     /// </summary>
-    /// <returns><c>true</c> if all the collected <see cref="ValidationResult"/>s are valid; otherwise <c>false</c></returns>
-    public bool IsValid()
-    {
-        return this._results.Values.All(result => result.IsValid);
-    }
+    public bool IsValid { get; private set; }
 
     /// <summary>
     /// Collects the result into this collection under the specific key; or adds it to an existing entry.
@@ -36,6 +32,9 @@ public class ResultsCollector<T> : IEnumerable<KeyValuePair<T, ValidationResult>
             this._results[key] = result + r2;
         else
             this._results.Add(key, result);
+
+        // Update the valid status of this ResultCollector
+        this.IsValid = this._results.Values.All(r => r.IsValid);
 
         return result;
     }
@@ -51,6 +50,56 @@ public class ResultsCollector<T> : IEnumerable<KeyValuePair<T, ValidationResult>
             return result;
 
         return ValidationResult.Pure(string.Empty);
+    }
+
+    /// <summary>
+    /// Matches on the state of this <see cref="ResultsCollector{T}"/> and automatically runs one or the other of the two
+    /// provided functions, depending on the state. 
+    /// </summary>
+    /// <param name="valid">The function to run when the <see cref="ResultsCollector{T}"/> is on a valid state</param>
+    /// <param name="invalid">The function that runs when the <see cref="ResultsCollector{T}"/> is in an invalid state</param>
+    /// <typeparam name="TResult">The type of the return value</typeparam>
+    /// <returns>A <typeparamref name="TResult"/> instance</returns>
+    public TResult Match<TResult>(
+        Func<TrueReader<T>, TResult> valid,
+        Func<ResultsCollector<T>, TResult> invalid
+    )
+    {
+        if (!this.IsValid)
+        {
+            var dict =
+                this._results.Select(
+                        pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
+                    )
+                    .ToDictionary();
+            return valid(new TrueReader<T>(dict));
+        }
+
+        return invalid(this);
+    }
+
+    /// <summary>
+    /// Matches on the state of this <see cref="ResultsCollector{T}"/> and automatically runs one or the other of the two
+    /// provided functions, depending on the state. 
+    /// </summary>
+    /// <param name="valid">The function to run when the <see cref="ResultsCollector{T}"/> is on a valid state</param>
+    /// <param name="invalid">The function that runs when the <see cref="ResultsCollector{T}"/> is in an invalid state</param>
+    public void Match(
+        Action<TrueReader<T>> valid,
+        Action<ResultsCollector<T>> invalid
+    )
+    {
+        if (this.IsValid)
+        {
+            var dict =
+                this._results.Select(
+                        pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
+                    )
+                    .ToDictionary();
+            valid(new TrueReader<T>(dict));
+        }
+        else
+            invalid(this);
     }
 
     public IEnumerator<KeyValuePair<T, ValidationResult>> GetEnumerator()

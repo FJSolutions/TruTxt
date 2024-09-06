@@ -14,7 +14,7 @@ public class ResultCollectorTests
         Assert.NotNull(results);
         Assert.NotEmpty(results);
         Assert.True(result.IsValid);
-        Assert.True(results.IsValid());
+        Assert.True(results.IsValid);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class ResultCollectorTests
         Assert.NotEmpty(results);
         Assert.Equal(2, results.Count());
         Assert.True(result.IsValid);
-        Assert.True(results.IsValid());
+        Assert.True(results.IsValid);
     }
 
     [Fact]
@@ -55,11 +55,11 @@ public class ResultCollectorTests
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("ConfirmPassword");
 
-        Assert.True(results.IsValid());
+        Assert.True(results.IsValid);
 
         results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
 
-        Assert.True(results.IsValid());
+        Assert.True(results.IsValid);
     }
 
     [Fact]
@@ -70,10 +70,10 @@ public class ResultCollectorTests
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("ConfirmPassword");
 
-        Assert.True(results.IsValid());
+        Assert.True(results.IsValid);
 
         results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
 
-        Assert.False(results.IsValid());
+        Assert.False(results.IsValid);
     }
 }
