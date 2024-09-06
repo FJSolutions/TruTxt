@@ -1,7 +1,7 @@
 namespace TrueTextTests;
 
 using TrueText;
-using static TrueText.ValidationResult<string>;
+using static TrueText.ValidationResult;
 
 public class ValidationResultTests
 {
@@ -15,7 +15,7 @@ public class ValidationResultTests
         Assert.NotEmpty(result.Text);
         Assert.Equal("FBJ", result.Text);
         Assert.True(result.IsValid);
-        Assert.IsType<Valid<string>>(result);
+        Assert.IsType<Valid>(result);
         Assert.Equal("FBJ", result.AsValid().Value);
     }
 
@@ -29,8 +29,8 @@ public class ValidationResultTests
         Assert.NotEmpty(result.Text);
         Assert.Equal("FBJ", result.Text);
         Assert.False(result.IsValid);
-        Assert.IsType<Invalid<string>>(result);
-        Assert.Equal(1, result.AsInvalid().Errors.Length);
+        Assert.IsType<Invalid>(result);
+        Assert.Single(result.AsInvalid().Errors);
         Assert.Equal("Invalid", result.AsInvalid().Errors[0]);
     }
 
@@ -45,7 +45,7 @@ public class ValidationResultTests
         Assert.NotEmpty(result.Text);
         Assert.Equal("FBJ", result.Text);
         Assert.True(result.IsValid);
-        Assert.IsType<Valid<string>>(result);
+        Assert.IsType<Valid>(result);
         Assert.Equal("FBJ", result.AsValid().Value);
     }
 
@@ -57,7 +57,7 @@ public class ValidationResultTests
 
         Assert.Equal("FBJ", result.Text);
         Assert.False(result.IsValid);
-        Assert.IsType<Invalid<string>>(result);
+        Assert.IsType<Invalid>(result);
         Assert.Equal("FBJ", result.AsInvalid().Text);
         Assert.Equal("Invalid", result.AsInvalid().Errors[0]);
     }
@@ -70,7 +70,7 @@ public class ValidationResultTests
 
         Assert.Equal("FBJ", result.Text);
         Assert.False(result.IsValid);
-        Assert.IsType<Invalid<string>>(result);
+        Assert.IsType<Invalid>(result);
         Assert.Equal("FBJ", result.AsInvalid().Text);
         Assert.Equal("Invalid", result.AsInvalid().Errors[0]);
     }
@@ -82,7 +82,7 @@ public class ValidationResultTests
                      + Invalid("Nadine", "Invalid2");
 
         Assert.False(result.IsValid);
-        Assert.IsType<Invalid<string>>(result);
+        Assert.IsType<Invalid>(result);
         Assert.Equal("Nadine", result.AsInvalid().Text);
         Assert.Equal("Invalid", result.AsInvalid().Errors[0]);
         Assert.Equal("Invalid2", result.AsInvalid().Errors[1]);
@@ -116,39 +116,8 @@ public class ValidationResultTests
         var result = Pure("123");
 
         Assert.NotNull(result);
-        Assert.IsType<Valid<string>>(result);
+        Assert.IsType<Valid>(result);
         Assert.Equal("123", result.AsValid().Value);
-    }
-
-    [Fact]
-    public void ValidationResultInt32Test()
-    {
-        var result = Pure("123")
-            .AsInt32();
-
-        Assert.NotNull(result);
-        Assert.IsType<Valid<int>>(result);
-        Assert.Equal(123, result.AsValid().Value);
-    }
-
-    [Fact]
-    public void ValidateResultReduceValueTest()
-    {
-        var result = Pure("123")
-            .AsInt32()
-            .Reduce(0);
-
-        Assert.Equal(123, result);
-    }
-
-    [Fact]
-    public void ValidateResultReduceFuncTest()
-    {
-        var result = Invalid("abc", "Invalid number")
-            .AsInt32()
-            .Reduce(() => 0);
-
-        Assert.Equal(0, result);
     }
 
     [Fact]

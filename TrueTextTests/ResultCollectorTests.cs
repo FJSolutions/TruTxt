@@ -39,11 +39,41 @@ public class ResultCollectorTests
         var results = ResultsCollector<string>.Create("Francis", result);
         results += V.Min(2).Apply("NJ").WithKey("Nadine");
 
-        var name = results.GetResult("Francis").Reduce();
+        var name = results.Get("Francis").Reduce();
         Assert.Equal("FBJ", name);
-        name = results.GetResult("Nadine").Reduce();
+        name = results.Get("Nadine").Reduce();
         Assert.Equal("NJ", name);
-        name = results.GetResult("Jarrod").Reduce();
+        name = results.Get("Jarrod").Reduce();
         Assert.Equal("", name);
+    }
+
+    [Fact]
+    public void ComparisonValidTest()
+    {
+        var newPassword = PasswordPolicy.Medium().NewPassword();
+        var results = new ResultsCollector<string>()
+                      + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("NewPassword")
+                      + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("ConfirmPassword");
+
+        Assert.True(results.IsValid());
+
+        results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
+
+        Assert.True(results.IsValid());
+    }
+
+    [Fact]
+    public void ComparisonInvalidTest()
+    {
+        var policy = PasswordPolicy.Medium();
+        var results = new ResultsCollector<string>()
+                      + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("NewPassword")
+                      + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("ConfirmPassword");
+
+        Assert.True(results.IsValid());
+
+        results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
+
+        Assert.False(results.IsValid());
     }
 }

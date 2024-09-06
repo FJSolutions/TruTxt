@@ -1,7 +1,7 @@
 namespace TrueTextTests;
 
 using TrueText;
-using static TrueText.ValidationResult<string>;
+using static TrueText.ValidationResult;
 using V = TrueText.Validator;
 
 public class ValidatorTests
@@ -28,7 +28,7 @@ public class ValidatorTests
         var validator = V.Min(3) && V.Max(7);
         var result = validator.Apply("Five");
 
-        Assert.IsType<Valid<string>>(result);
+        Assert.IsType<Valid>(result);
         Assert.True(result.IsValid);
     }
 
@@ -38,7 +38,7 @@ public class ValidatorTests
         var validator = V.Min(3) && V.Max(7);
         var result = validator.Apply("22");
 
-        Assert.IsType<Invalid<string>>(result);
+        Assert.IsType<Invalid>(result);
         Assert.False(result.IsValid);
     }
 
@@ -48,7 +48,7 @@ public class ValidatorTests
         var validator = V.Min(3) && V.Max(7);
         var result = validator.Apply("Seventeen");
 
-        Assert.IsType<Invalid<string>>(result);
+        Assert.IsType<Invalid>(result);
         Assert.False(result.IsValid);
     }
 

@@ -1,8 +1,10 @@
-﻿namespace TrueText;
+﻿using System.Globalization;
+
+namespace TrueText;
 
 using System.Text;
 using System.Text.RegularExpressions;
-using Result = ValidationResult<string>;
+using TrueText;
 
 /// <summary>
 /// A data-structure that contains the validation or transformation logic core to the library.
@@ -10,29 +12,29 @@ using Result = ValidationResult<string>;
 public sealed class Validator
 {
     // Fields
-    private readonly Func<string, Result> _func;
+    private readonly Func<string, ValidationResult> _func;
 
     /// <summary>
-    /// Creates a new Validator
+    /// Creates a new Validator`
     /// </summary>
-    /// <param name="func">The Validator <see cref="Func{String, Result}"/></param>
-    public Validator(Func<string, Result> func)
+    /// <param name="func">The Validator <see cref="Func{String, ValidationResult}"/></param>
+    public Validator(Func<string, ValidationResult> func)
     {
         this._func = func;
     }
 
     /// <summary>
-    /// Applies the Validator function to the supplied value, returning a <see cref="ValidationResult{T}"/>
+    /// Applies the Validator function to the supplied value, returning a <see cref="ValidationResult"/>
     /// </summary>
     /// <param name="input">The <see cref="String"/> to validate</param>
-    /// <returns>A <see cref="ValidationResult{T}"/> instance</returns>
-    public Result Apply(string input)
+    /// <returns>A <see cref="ValidationResult"/> instance</returns>
+    public ValidationResult Apply(string input)
     {
         return _func(input);
     }
 
     /// <summary>
-    /// Combines <see cref="Validator"/>s, returning the combination of their results. 
+    /// Combines <see cref="Validator"/>s, returning the combination of their ValidationResults. 
     /// </summary>
     /// <param name="other">The other <see cref="Validator"/> to combine this one with</param>
     /// <returns>A new <see cref="Validator"/> instance</returns>
@@ -49,7 +51,7 @@ public sealed class Validator
     }
 
     /// <summary>
-    /// Combines <see cref="Validator"/>s, returning the first <see cref="Valid{T}"/> result, if any. 
+    /// Combines <see cref="Validator"/>s, returning the first <see cref="Valid{T}"/> ValidationResult, if any. 
     /// </summary>
     /// <param name="other">The other <see cref="Validator"/> to combine this one with</param>
     /// <returns>A new <see cref="Validator"/> instance</returns>
@@ -57,9 +59,9 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            var result = this.Apply(input);
-            if (result.IsValid)
-                return result;
+            var ValidationResult = this.Apply(input);
+            if (ValidationResult.IsValid)
+                return ValidationResult;
 
             return other.Apply(input);
         });
@@ -111,7 +113,7 @@ public sealed class Validator
         return new Validator(input =>
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
-            return Result.Pure(input);
+            return ValidationResult.Pure(input);
         });
     }
 
@@ -123,16 +125,17 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
             var sb = new StringBuilder(input.Length);
 
             foreach (var c in input)
             {
                 if (char.IsDigit(c))
                     sb.Append(c);
+                //! Extract decimal points too!
             }
 
-            return Result.Pure(sb.ToString());
+            return ValidationResult.Pure(sb.ToString());
         });
     }
 
@@ -152,11 +155,11 @@ public sealed class Validator
         var optional = new Validator(
             input =>
             {
-                input = input?.Trim() ?? string.Empty;
-                if (input.Length == 0)
-                    return Result.Valid(input);
+                input = string.IsNullOrEmpty(input) ? string.Empty : input;
+                if (string.IsNullOrWhiteSpace(input))
+                    return ValidationResult.Valid(input);
 
-                return Result.Invalid(string.Empty, input);
+                return ValidationResult.Invalid(string.Empty, input);
             }
         );
 
@@ -174,11 +177,12 @@ public sealed class Validator
         var required = new Validator(
             input =>
             {
+                input = string.IsNullOrEmpty(input) ? string.Empty : input;
                 if (string.IsNullOrWhiteSpace(input))
-                    return Result.Invalid("The value cannot be null, empty, or just whitespace",
+                    return ValidationResult.Invalid("The value cannot be null, empty, or just whitespace",
                         string.Empty);
 
-                return Result.Valid(input);
+                return ValidationResult.Valid(input);
             }
         );
 
@@ -194,11 +198,11 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
             if (input.Length >= length)
-                return Result.Valid(input);
+                return ValidationResult.Valid(input);
 
-            return Result.Invalid($"The input is shorter than {length}", input);
+            return ValidationResult.Invalid($"The input is shorter than {length}", input);
         });
     }
 
@@ -211,11 +215,11 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
             if (input.Length < length)
-                return Result.Valid(input);
+                return ValidationResult.Valid(input);
 
-            return Result.Invalid($"The input must be sorter than {length}", input);
+            return ValidationResult.Invalid($"The input must be sorter than {length}", input);
         });
     }
 
@@ -240,7 +244,7 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
             var sb = new StringBuilder(input.Length);
 
             foreach (var c in input)
@@ -250,10 +254,10 @@ public sealed class Validator
                 else if (c == '_')
                     continue;
                 else
-                    return Result.Invalid("The input should only contain numbers", input);
+                    return ValidationResult.Invalid("The input should only contain numbers", input);
             }
 
-            return Result.Valid(sb.ToString());
+            return ValidationResult.Valid(sb.ToString());
         });
     }
 
@@ -265,7 +269,7 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
             var sb = new StringBuilder(input.Length);
             var decimalPointCount = 0;
@@ -282,15 +286,15 @@ public sealed class Validator
                 else if (char.IsWhiteSpace(c))
                     continue;
                 else
-                    return Result.Invalid($"'{input}' is not a valid decimal number", input);
+                    return ValidationResult.Invalid($"'{input}' is not a valid decimal number", input);
             }
 
             if (sb.Length == 0)
-                return Result.Invalid($"'{input}' is not a valid decimal number", input);
+                return ValidationResult.Invalid($"'{input}' is not a valid decimal number", input);
             if (decimalPointCount > 1)
-                return Result.Invalid($"'{input}' has more than one decimal pint in it", input);
+                return ValidationResult.Invalid($"'{input}' has more than one decimal pint in it", input);
 
-            return Result.Valid(sb.ToString());
+            return ValidationResult.Valid(sb.ToString());
         });
     }
 
@@ -300,16 +304,17 @@ public sealed class Validator
     /// <returns>An <see cref="Validator"/> instance</returns>
     public static Validator Regex(string pattern)
     {
+        //? Investigate caching compiled regexes under their pattern 
         var regex = new Lazy<Regex>(() => new Regex(pattern,
             RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase));
 
         return new Validator(input =>
         {
-            input = string.IsNullOrEmpty(input) ? string.Empty : input.Trim();
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
             if (regex.Value.IsMatch(input))
-                return Result.Valid(input.ToLowerInvariant());
+                return ValidationResult.Valid(input.ToLowerInvariant());
 
-            return Result.Invalid($"'{input}' is not a valid email address", input);
+            return ValidationResult.Invalid($"'{input}' is not a valid email address", input);
         });
     }
 
@@ -331,13 +336,13 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            input ??= string.Empty;
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
             if (policy.MaximumLength < input.Length)
-                return Result.Invalid("The password is too long", input);
+                return ValidationResult.Invalid(input, "The password is too long");
 
             if (policy.MinimumLength > input.Length)
-                return Result.Invalid("The password is too short", input);
+                return ValidationResult.Invalid(input, "The password is too short");
 
             var upperCaseCount = 0;
             var lowerCaseCount = 0;
@@ -358,21 +363,21 @@ public sealed class Validator
                     digitCount += 1;
             }
 
-            var result = Result.Valid(input);
-            
+            var result = ValidationResult.Valid(input);
+
             if (!policy.IsSpaceAllowed && hasSpace)
-                result += Result.Invalid("The password may not contain spaces", input);
+                result += ValidationResult.Invalid("The password may not contain spaces", input);
             if (policy.RequiredNumberOfLowerCaseLetters > lowerCaseCount)
-                result += Result.Invalid(
+                result += ValidationResult.Invalid(
                     $"There must be at least {policy.RequiredNumberOfLowerCaseLetters} lower case letters", input);
             if (policy.RequiredNumberOfUpperCaseLetters > upperCaseCount)
-                result += Result.Invalid(
+                result += ValidationResult.Invalid(
                     $"There must be at least {policy.RequiredNumberOfUpperCaseLetters} upper case letters", input);
             if (policy.RequiredNumberOfDigits > digitCount)
-                result += Result.Invalid(
+                result += ValidationResult.Invalid(
                     $"There must be at least {policy.RequiredNumberOfDigits} digits (number characters)", input);
             if (policy.RequiredNumberOfSymbols > symbolCount)
-                result += Result.Invalid(
+                result += ValidationResult.Invalid(
                     $"There must be at least {policy.RequiredNumberOfSymbols} symbol characters (${policy.ListOfAcceptedSymbols})",
                     input);
 
