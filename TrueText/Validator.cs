@@ -1,16 +1,19 @@
-﻿using System.Globalization;
+﻿using System.Collections.Concurrent;
 
 namespace TrueText;
 
 using System.Text;
 using System.Text.RegularExpressions;
-using TrueText;
+using System.Globalization;
 
 /// <summary>
 /// A data-structure that contains the validation or transformation logic core to the library.
 /// </summary>
 public sealed class Validator
 {
+    // Static
+    private static ConcurrentDictionary<string, Regex> _regexes;
+
     // Fields
     private readonly Func<string, ValidationResult> _func;
 
@@ -98,6 +101,21 @@ public sealed class Validator
     /// <param name="validator"></param>
     /// <returns><c>false</c></returns>
     public static bool operator false(Validator validator) => false;
+
+    /********************************************
+     *
+     * Private static members
+     * 
+     ********************************************/
+
+    private static Regex GetRegexForPattern(string pattern)
+    {
+        if (_regexes == null)
+            _regexes = new ConcurrentDictionary<string, Regex>();
+
+        return _regexes.GetOrAdd(pattern,
+            (_) => new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase));
+    }
 
     /*********************************************
      * 
@@ -330,14 +348,12 @@ public sealed class Validator
     /// <returns>An <see cref="Validator"/> instance</returns>
     public static Validator Regex(string pattern)
     {
-        //? Investigate caching compiled regexes under their pattern 
-        var regex = new Lazy<Regex>(() => new Regex(pattern,
-            RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase));
+        var regex = GetRegexForPattern(pattern);
 
         return new Validator(input =>
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
-            if (regex.Value.IsMatch(input))
+            if (regex.IsMatch(input))
                 return ValidationResult.Valid(input.ToLowerInvariant());
 
             return ValidationResult.Invalid($"'{input}' is not a valid email address", input);
@@ -409,7 +425,6 @@ public sealed class Validator
 
             return result;
         });
-    
     }
 
     /// <summary>
@@ -430,10 +445,11 @@ public sealed class Validator
                 return new Valid(dt.ToString("s"), input);
             }
 
-            return ValidationResult.Invalid(input, $"Could not parse the input as a date and time in the format supplied ('{pattern}').");
+            return ValidationResult.Invalid(input,
+                $"Could not parse the input as a date and time in the format supplied ('{pattern}').");
         });
     }
-    
+
     /// <summary>
     /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="DateOnly"/> based on the date pattern provided.
     /// <para>The pattern is a standard format pattern.</para> 
@@ -449,10 +465,11 @@ public sealed class Validator
             if (DateOnly.TryParseExact(input, pattern, null, DateTimeStyles.None, out var dt))
                 return new Valid(dt.ToString("yyyy-MM-dd"), input);
 
-            return ValidationResult.Invalid(input, $"Could not parse the input as date only in the format supplied ('{pattern}').");
+            return ValidationResult.Invalid(input,
+                $"Could not parse the input as date only in the format supplied ('{pattern}').");
         });
     }
-    
+
     /// <summary>
     /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="TimeOnly"/> based on the date pattern provided.
     /// <para>The pattern is a standard format pattern.</para> 
@@ -468,7 +485,8 @@ public sealed class Validator
             if (TimeOnly.TryParseExact(input, pattern, null, DateTimeStyles.None, out var dt))
                 return new Valid(dt.ToString("HH:mm:ss"), input);
 
-            return ValidationResult.Invalid(input, $"Could not parse the input as time only in the format supplied ('{pattern}').");
+            return ValidationResult.Invalid(input,
+                $"Could not parse the input as time only in the format supplied ('{pattern}').");
         });
     }
 
