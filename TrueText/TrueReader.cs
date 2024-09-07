@@ -36,7 +36,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Int64</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="long"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public long GetInt64(T key)
     {
@@ -56,7 +56,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Int32</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="int"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public int GetInt32(T key)
     {
@@ -76,7 +76,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Int16</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="short"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public short GetInt16(T key)
     {
@@ -93,10 +93,10 @@ public class TrueReader<T>
     }
 
     /// <summary>
-    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Int8</c>.
+    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Byte</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="byte"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public byte GetUInt8(T key)
     {
@@ -116,7 +116,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>UInt64</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="ulong"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public ulong GetUInt64(T key)
     {
@@ -136,7 +136,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>UInt32</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="uint"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public uint GetUInt32(T key)
     {
@@ -156,7 +156,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>UInt16</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="ushort"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public ushort GetUInt16(T key)
     {
@@ -173,10 +173,10 @@ public class TrueReader<T>
     }
 
     /// <summary>
-    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Int8</c>.
+    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>SByte</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="SByte"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public sbyte GetInt8(T key)
     {
@@ -196,7 +196,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Decimal</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="Decimal"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public decimal GetDecimal(T key)
     {
@@ -216,7 +216,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Double</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="Double"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public double GetDouble(T key)
     {
@@ -236,7 +236,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Single</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="Single"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public float GetSingle(T key)
     {
@@ -251,12 +251,12 @@ public class TrueReader<T>
             throw new TrueTextException(ex.Message, ex);
         }
     }
-    
+
     /// <summary>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Guid</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="Guid"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public Guid GetGuid(T key)
     {
@@ -276,7 +276,7 @@ public class TrueReader<T>
     /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>Bool</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
-    /// <returns>The string value of the key in the data source.</returns>
+    /// <returns>The <see cref="bool"/> value of the key in the data source.</returns>
     /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
     public bool GetBoolean(T key)
     {
@@ -297,10 +297,63 @@ public class TrueReader<T>
         throw new TrueTextException($"$Unable to convert '{value}' to a boolean");
     }
 
+    /// <summary>
+    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>DateTime</c>.
+    /// </summary>
+    /// <param name="key">The key value to look-up in the data store</param>
+    /// <returns>The <see cref="DateTime"/> value of the key in the data source.</returns>
+    /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
+    public DateTime GetDateTime(T key)
+    {
+        var value = GetString(key);
 
-    //? Date, Time, DateTime
+        try
+        {
+            return Convert.ToDateTime(value);
+        }
+        catch (Exception e)
+        {
+            throw new TrueTextException($"$Unable to convert '{value}' to a date and time", e);
+        }
+    }
 
-    //? Char
-    
-    //? Byte[]
+    /// <summary>
+    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>DateOnly</c>.
+    /// </summary>
+    /// <param name="key">The key value to look-up in the data store</param>
+    /// <returns>The <see cref="DateOnly"/> value of the key in the data source.</returns>
+    /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
+    public DateOnly GetDate(T key)
+    {
+        var value = GetString(key);
+
+        try
+        {
+            return DateOnly.Parse(value);
+        }
+        catch (Exception e)
+        {
+            throw new TrueTextException($"$Unable to convert '{value}' to a date and time", e);
+        }
+    }
+
+    /// <summary>
+    /// Gets a value from the validated TrueText validation results source, and tries to convert it to a <c>TimeOnly</c>.
+    /// </summary>
+    /// <param name="key">The key value to look-up in the data store</param>
+    /// <returns>The <see cref="TimeOnly"/> value of the key in the data source.</returns>
+    /// <exception cref="TrueTextException">If the key is not found in the data source an exception is thrown</exception>
+    public TimeOnly GetTime(T key)
+    {
+        var value = GetString(key);
+
+        try
+        {
+            return TimeOnly.Parse(value);
+        }
+        catch (Exception e)
+        {
+            throw new TrueTextException($"$Unable to convert '{value}' to a date and time", e);
+        }
+    }
 }

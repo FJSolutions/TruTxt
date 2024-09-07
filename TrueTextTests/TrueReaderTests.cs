@@ -441,7 +441,7 @@ public class TrueReaderTests
                       + V.Required().Apply("A3976519-1B13-4F5E-8014-6D514F4FF76E").WithKey("ID");
 
         results.Match(
-            valid: reader => Assert.Equal(Guid.Parse("A3976519-1B13-4F5E-8014-6D514F4FF76E"),reader.GetGuid("ID")),
+            valid: reader => Assert.Equal(Guid.Parse("A3976519-1B13-4F5E-8014-6D514F4FF76E"), reader.GetGuid("ID")),
             invalid: _ => Assert.Fail()
         );
     }
@@ -457,5 +457,76 @@ public class TrueReaderTests
             invalid: _ => Assert.Fail()
         );
     }
-    
+
+    [Fact]
+    public void TrueReaderReadDateTimeSuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsDateTime("dd/MM/yyyy").Apply("25/10/1965").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Equal(new DateTime(1965, 10, 25), reader.GetDateTime("DoB")),
+            invalid: _ => Assert.Fail()
+        );
+    }
+
+    [Fact]
+    public void TrueReaderReadDateTimeUnsuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsDateTime("dd/MM/yyyy").Apply("1965-10-25").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Fail(),
+            invalid: i => Assert.Equal("1965-10-25", i.Get("DoB").Text)
+        );
+    }
+
+    [Fact]
+    public void TrueReaderReadDateSuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsDate("MM/dd/yyyy").Apply("10/25/1965").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Equal(new DateOnly(1965, 10, 25), reader.GetDate("DoB")),
+            invalid: _ => Assert.Fail()
+        );
+    }
+
+    [Fact]
+    public void TrueReaderReadDateUnsuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsDateTime("dd/MM/yyyy").Apply("1965-10-25").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Fail(),
+            invalid: i => Assert.Equal("1965-10-25", i.Get("DoB").Text)
+        );
+    }
+
+    [Fact]
+    public void TrueReaderReadTimeSuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsTime("H:mm").Apply("8:17").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Equal(new TimeOnly(8, 17, 0), reader.GetTime("DoB")),
+            invalid: _ => Assert.Fail()
+        );
+    }
+
+    [Fact]
+    public void TrueReaderReadTimeUnsuccessfulTest()
+    {
+        var results = ResultsCollector<string>.Create("Name", V.Min(3).Apply("Francis"))
+                      + V.IsDateTime("HH:mm").Apply("1965-10-25").WithKey("DoB");
+
+        results.Match(
+            valid: reader => Assert.Fail(),
+            invalid: i => Assert.Equal("1965-10-25", i.Get("DoB").Text)
+        );
+    }
 }

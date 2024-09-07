@@ -225,4 +225,72 @@ public class BuiltInValidatorTests
         
         Assert.False(result.IsValid);
     }
+
+    [Fact]
+    public void DateTimeBritishFormatValidTest()
+    {
+        var result = V.IsDateTime("dd/MM/yy").Apply("25/10/65");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("25/10/65", result.Text);
+        Assert.Equal("1965-10-25T00:00:00", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void DateTimeUsFormatValidTest()
+    {
+        var result = V.IsDateTime("MM/dd/yyyy").Apply("10/25/1965");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("10/25/1965", result.Text);
+        Assert.Equal("1965-10-25T00:00:00", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void DateTimeFormatInvalidTest()
+    {
+        var result = V.IsDateTime("dd/MM/yy").Apply("25th Oct 1965");
+        
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void DateUsFormatValidTest()
+    {
+        var result = V.IsDate("MM/dd/yyyy").Apply("10/25/1965");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("10/25/1965", result.Text);
+        Assert.Equal("1965-10-25", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void DateBritishFormatValidTest()
+    {
+        var result = V.IsDate("d/M/yyyy").Apply("25/10/1965");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("25/10/1965", result.Text);
+        Assert.Equal("1965-10-25", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void TwelveHourTimeFormatValidTest()
+    {
+        var result = V.IsTime("hh:mm tt").Apply("12:15 pm");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("12:15 pm", result.Text);
+        Assert.Equal("12:15:00", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void TwentyFourHourTimeFormatValidTest()
+    {
+        var result = V.IsTime("HH:mm:ss").Apply("12:15:54");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("12:15:54", result.Text);
+        Assert.Equal("12:15:54", result.AsValid().Value);
+    }
 }

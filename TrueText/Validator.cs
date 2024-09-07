@@ -409,5 +409,66 @@ public sealed class Validator
 
             return result;
         });
+    
+    }
+
+    /// <summary>
+    /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="DateTime"/> based on the date pattern provided.
+    /// <para>The pattern is a standard format pattern.</para> 
+    /// </summary>
+    /// <param name="pattern">The <see cref="DateTime"/> format pattern.</param>
+    /// <returns>A <see cref="Validator"/> instance</returns>
+    public static Validator IsDateTime(string pattern)
+    {
+        return new Validator(input =>
+        {
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
+            if (DateTime.TryParseExact(input, pattern, null, DateTimeStyles.None, out var dt))
+            {
+                // The "s" format string parameter output the DateTime in sortable ISO 8601 format 
+                return new Valid(dt.ToString("s"), input);
+            }
+
+            return ValidationResult.Invalid(input, $"Could not parse the input as a date and time in the format supplied ('{pattern}').");
+        });
+    }
+    
+    /// <summary>
+    /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="DateOnly"/> based on the date pattern provided.
+    /// <para>The pattern is a standard format pattern.</para> 
+    /// </summary>
+    /// <param name="pattern">The <see cref="DateOnly"/> format pattern.</param>
+    /// <returns>A <see cref="Validator"/> instance</returns>
+    public static Validator IsDate(string pattern)
+    {
+        return new Validator(input =>
+        {
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
+            if (DateOnly.TryParseExact(input, pattern, null, DateTimeStyles.None, out var dt))
+                return new Valid(dt.ToString("yyyy-MM-dd"), input);
+
+            return ValidationResult.Invalid(input, $"Could not parse the input as date only in the format supplied ('{pattern}').");
+        });
+    }
+    
+    /// <summary>
+    /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="TimeOnly"/> based on the date pattern provided.
+    /// <para>The pattern is a standard format pattern.</para> 
+    /// </summary>
+    /// <param name="pattern">The <see cref="TimeOnly"/> format pattern.</param>
+    /// <returns>A <see cref="Validator"/> instance</returns>
+    public static Validator IsTime(string pattern)
+    {
+        return new Validator(input =>
+        {
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
+            if (TimeOnly.TryParseExact(input, pattern, null, DateTimeStyles.None, out var dt))
+                return new Valid(dt.ToString("HH:mm:ss"), input);
+
+            return ValidationResult.Invalid(input, $"Could not parse the input as time only in the format supplied ('{pattern}').");
+        });
     }
 }
