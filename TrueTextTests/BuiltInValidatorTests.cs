@@ -293,4 +293,23 @@ public class BuiltInValidatorTests
         Assert.Equal("12:15:54", result.Text);
         Assert.Equal("12:15:54", result.AsValid().Value);
     }
+
+    [Fact]
+    public void GuidValidTest()
+    {
+        var result = V.IsGuid().Apply("{B70183FC-704E-4027-BC8A-68E7016B9942}");
+        
+        Assert.True(result.IsValid);
+        Assert.Equal("{B70183FC-704E-4027-BC8A-68E7016B9942}", result.Text);
+        Assert.Equal("B70183FC704E4027BC8A68E7016B9942", result.AsValid().Value);
+    }
+
+    [Fact]
+    public void GuidInvalidTest()
+    {
+        var result = V.IsGuid().Apply("φ70183FC-704E-4027-BC8A-68E7016B9942");
+        
+        Assert.False(result.IsValid);
+        Assert.Equal("φ70183FC-704E-4027-BC8A-68E7016B9942", result.Text);
+    }
 }

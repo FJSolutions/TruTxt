@@ -471,4 +471,22 @@ public sealed class Validator
             return ValidationResult.Invalid(input, $"Could not parse the input as time only in the format supplied ('{pattern}').");
         });
     }
+
+    /// <summary>
+    /// A <see cref="Validator"/> that tries to parse an input string to a <see cref="Guid"/> based on the date pattern provided.
+    /// <para>The pattern is a standard format pattern.</para> 
+    /// </summary>
+    /// <returns>A <see cref="Validator"/> instance</returns>
+    public static Validator IsGuid()
+    {
+        return new Validator(input =>
+        {
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
+            if (Guid.TryParse(input, out var guid))
+                return new Valid(guid.ToString("N").ToUpperInvariant(), input);
+
+            return ValidationResult.Invalid(input, $"Unable to parse '{input}' as a GUID");
+        });
+    }
 }
