@@ -9,7 +9,7 @@ public class ResultCollectorTests
     public void ResultCollectorCreationTest()
     {
         var result = V.Min(3).Apply("FBJ");
-        var results = ResultsCollector<string>.Create("Test", result);
+        var results = ResultsCollector.Create("Test", result);
 
         Assert.NotNull(results);
         Assert.NotEmpty(results);
@@ -21,7 +21,7 @@ public class ResultCollectorTests
     public void ResultCollectorAddWithKeyTest()
     {
         var result = V.Min(3).Apply("FBJ");
-        var results = ResultsCollector<string>.Create("Francis", result);
+        var results = ResultsCollector.Create("Francis", result);
         results += V.Min(2).Apply("NJ").WithKey("Nadine");
 
 
@@ -36,7 +36,7 @@ public class ResultCollectorTests
     public void ResultCollectorGetByKeyTest()
     {
         var result = V.Min(3).Apply("FBJ");
-        var results = ResultsCollector<string>.Create("Francis", result);
+        var results = ResultsCollector.Create("Francis", result);
         results += V.Min(2).Apply("NJ").WithKey("Nadine");
 
         var name = results.Get("Francis").Reduce();
@@ -51,7 +51,7 @@ public class ResultCollectorTests
     public void ComparisonValidTest()
     {
         var newPassword = PasswordPolicy.Medium().NewPassword();
-        var results = new ResultsCollector<string>()
+        var results = new ResultsCollector()
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("ConfirmPassword");
 
@@ -66,7 +66,7 @@ public class ResultCollectorTests
     public void ComparisonInvalidTest()
     {
         var policy = PasswordPolicy.Medium();
-        var results = new ResultsCollector<string>()
+        var results = new ResultsCollector()
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("ConfirmPassword");
 

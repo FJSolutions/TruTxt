@@ -1,7 +1,6 @@
-﻿using TrueText;
+﻿namespace TrueTextTests;
 
-namespace TrueTextTests;
-
+using TrueText;
 using V = TrueText.Validator;
 
 public class PasswordTests
@@ -14,10 +13,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("FBJ");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyMinInvalidTest()
     {
@@ -26,10 +25,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("Ox");
-        
+
         Assert.False(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyMaxValidTest()
     {
@@ -38,10 +37,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("Fifteen");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyMaxInvalidTest()
     {
@@ -50,10 +49,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("Fifteen");
-        
+
         Assert.False(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyNoLowercaseTest()
     {
@@ -62,10 +61,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("FBJ");
-        
+
         Assert.False(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyLowercaseTest()
     {
@@ -74,10 +73,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("FBj");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyNoUppercaseTest()
     {
@@ -86,10 +85,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("fbj");
-        
+
         Assert.False(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyUppercaseTest()
     {
@@ -98,10 +97,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("Fbj");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicySymbolsTest()
     {
@@ -110,10 +109,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("F@J");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyAllowWhitespaceTest()
     {
@@ -122,10 +121,10 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("F J");
-        
+
         Assert.True(result.IsValid);
     }
-    
+
     [Fact]
     public void BasicPolicyNoAllowWhitespaceTest()
     {
@@ -134,7 +133,7 @@ public class PasswordTests
             .Build();
         var result = V.Password(policy)
             .Apply("F J");
-        
+
         Assert.False(result.IsValid);
     }
 }

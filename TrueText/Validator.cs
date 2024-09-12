@@ -342,6 +342,29 @@ public sealed class Validator
         });
     }
 
+    public static Validator IsBoolean()
+    {
+        return new Validator(input =>
+        {
+            input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
+            switch (input.ToLowerInvariant())
+            {
+                case "true":
+                case "on":
+                case "yes":
+                case "1":
+                case "false":
+                case "off":
+                case "no":
+                case "0":
+                    return ValidationResult.Valid(input);
+                default:
+                    return ValidationResult.Invalid(input, $"Unrecognised boolean input '{input}'");
+            }
+        });
+    }
+
     /// <summary>
     /// Creates a <see cref="System.Text.RegularExpressions.Regex"/> pattern validator.
     /// </summary>
