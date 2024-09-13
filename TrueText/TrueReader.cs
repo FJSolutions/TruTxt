@@ -43,14 +43,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToInt64(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<long>($"$Unable to convert '{value}' to a long integer", key, value);
-        }
+        return TrueParser.ParseInt64(value).Match<Result<long>>(
+            some: val => new Ok<long>(val),
+            none: () => new Failure<long>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -62,14 +58,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToInt32(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<int>($"$Unable to convert '{value}' to an integer", key, value);
-        }
+        return TrueParser.ParseInt32(value).Match<Result<int>>(
+            some: val => new Ok<int>(val),
+            none: () => new Failure<int>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -81,14 +73,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToInt16(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<short>($"$Unable to convert '{value}' to a short integer", key, value);
-        }
+        return TrueParser.ParseInt16(value).Match<Result<short>>(
+            some: val => new Ok<short>(val),
+            none: () => new Failure<short>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -100,14 +88,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToByte(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<byte>($"$Unable to convert '{value}' to a byte", key, value);
-        }
+        return TrueParser.ParseUInt8(value).Match<Result<byte>>(
+            some: val => new Ok<byte>(val),
+            none: () => new Failure<byte>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -119,14 +103,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToUInt64(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<ulong>($"$Unable to convert '{value}' to an unsigned long integer", key, value);
-        }
+        return TrueParser.ParseUInt64(value).Match<Result<ulong>>(
+            some: val => new Ok<ulong>(val),
+            none: () => new Failure<ulong>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -138,14 +118,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToUInt32(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<uint>($"$Unable to convert '{value}' to an unsigned integer", key, value);
-        }
+        return TrueParser.ParseUInt32(value).Match<Result<uint>>(
+            some: val => new Ok<uint>(val),
+            none: () => new Failure<uint>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -158,14 +134,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToUInt16(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<ushort>($"$Unable to convert '{value}' to an unsigned 16 bit integer", key, value);
-        }
+        return TrueParser.ParseUInt16(value).Match<Result<ushort>>(
+            some: val => new Ok<ushort>(val),
+            none: () => new Failure<ushort>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -178,14 +150,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToSByte(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<sbyte>($"$Unable to convert '{value}' to a signed byte", key, value);
-        }
+        return TrueParser.ParseInt8(value).Match<Result<sbyte>>(
+            some: val => new Ok<sbyte>(val),
+            none: () => new Failure<sbyte>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -198,14 +166,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToDecimal(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<decimal>($"$Unable to convert '{value}' to a decimal number", key, value);
-        }
+        return TrueParser.ParseDecimal(value).Match<Result<decimal>>(
+            some: val => new Ok<decimal>(val),
+            none: () => new Failure<decimal>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -218,14 +182,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToDouble(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<double>($"$Unable to convert '{value}' to a double precision floating point number", key, value);
-        }
+        return TrueParser.ParseDouble(value).Match<Result<double>>(
+            some: val => new Ok<double>(val),
+            none: () => new Failure<double>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -238,14 +198,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToSingle(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<float>($"$Unable to convert '{value}' to a single precision floating point number", key, value);
-        }
+        return TrueParser.ParseSingle(value).Match<Result<float>>(
+            some: val => new Ok<float>(val),
+            none: () => new Failure<float>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -258,14 +214,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Guid.Parse(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<Guid>($"$Unable to convert '{value}' to a GUID", key, value);
-        }
+        return TrueParser.ParseGuid(value).Match<Result<Guid>>(
+            some: val => new Ok<Guid>(val),
+            none: () => new Failure<Guid>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -278,21 +230,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        switch (value.ToLowerInvariant())
-        {
-            case "true":
-            case "on":
-            case "yes":
-            case "1":
-                return true;
-            case "false":
-            case "off":
-            case "no":
-            case "0":
-                return false;
-        }
-
-        return new Failure<bool>($"$Unable to convert '{value}' to a boolean", key, value);
+        return TrueParser.ParseBool(value).Match<Result<bool>>(
+            some: val => new Ok<bool>(val),
+            none: () => new Failure<bool>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -305,14 +246,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return Convert.ToDateTime(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<DateTime>($"$Unable to convert '{value}' to a date and time", key, value);
-        }
+        return TrueParser.ParseDateTime(value).Match<Result<DateTime>>(
+            some: val => new Ok<DateTime>(val),
+            none: () => new Failure<DateTime>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -325,14 +262,10 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return DateOnly.Parse(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<DateOnly>($"$Unable to convert '{value}' to a date", key, value);
-        }
+        return TrueParser.ParseDate(value).Match<Result<DateOnly>>(
+            some: val => new Ok<DateOnly>(val),
+            none: () => new Failure<DateOnly>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 
     /// <summary>
@@ -344,15 +277,17 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        try
-        {
-            return TimeOnly.Parse(value);
-        }
-        catch (Exception)
-        {
-            return new Failure<TimeOnly>($"$Unable to convert '{value}' to a time", key, value);
-        }
+        return TrueParser.ParseTime(value).Match<Result<TimeOnly>>(
+            some: val => new Ok<TimeOnly>(val),
+            none: () => new Failure<TimeOnly>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
+    
+    /*************************************
+     *
+     *              UNTESTED
+     * 
+     *************************************/
 
     /// <summary>
     /// Indicates whether the value for the supplied <param name="key"></param> is null, empty, or whitespace.
@@ -364,6 +299,13 @@ public class TrueReader
         return string.IsNullOrWhiteSpace(GetValue(key));
     }
 
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="int"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="defaultValue"></param>
+    /// <returns></returns>
     public Result<int> GetOptionalInt32(string key, int defaultValue = default)
     {
         var value = GetValue(key);
@@ -371,8 +313,10 @@ public class TrueReader
         if (string.IsNullOrWhiteSpace(value))
             return defaultValue;
 
-        //! TODO Refactor to have c single place where this conversion is done, internally.
-        return GetInt32(key);
+        return TrueParser.ParseInt32(value).Match<Result<int>>(
+            some: val => new Ok<int>(val),
+            none: () => new Failure<int>($"'{value}' cannot be converted to an integer", key, value)
+        );
     }
 }
 

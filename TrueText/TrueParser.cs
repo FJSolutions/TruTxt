@@ -206,10 +206,84 @@ public static class TrueParser
 
         return new None<Guid>();
     }
-    
-    // DateTime
-    // DateOnly
-    // TimeOnly
+
+    /// <summary>
+    /// Parses a <see cref="String"/> value as an <see cref="DateTime"/>
+    /// </summary>
+    /// <param name="value">The value to parse as an <see cref="DateTime"/></param>
+    /// <returns>A <see cref="Option{TValue}"/></returns>
+    public static Option<DateTime> ParseDateTime(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            if (DateTime.TryParse(value, out var val))
+                return new Some<DateTime>(val);
+        }
+
+        return new None<DateTime>();
+    }
+
+    /// <summary>
+    /// Parses a <see cref="String"/> value as an <see cref="DateOnly"/>
+    /// </summary>
+    /// <param name="value">The value to parse as an <see cref="DateOnly"/></param>
+    /// <returns>A <see cref="Option{TValue}"/></returns>
+    public static Option<DateOnly> ParseDate(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            if (DateOnly.TryParse(value, out var val))
+                return new Some<DateOnly>(val);
+        }
+
+        return new None<DateOnly>();
+    }
+
+    /// <summary>
+    /// Parses a <see cref="String"/> value as an <see cref="TimeOnly"/>
+    /// </summary>
+    /// <param name="value">The value to parse as an <see cref="TimeOnly"/></param>
+    /// <returns>A <see cref="Option{TValue}"/></returns>
+    public static Option<TimeOnly> ParseTime(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            if (TimeOnly.TryParse(value, out var val))
+                return new Some<TimeOnly>(val);
+        }
+
+        return new None<TimeOnly>();
+    }
+
+    /// <summary>
+    /// Parses a <see cref="String"/> value as an <see cref="Boolean"/>
+    /// </summary>
+    /// <param name="value">The value to parse as an <see cref="Boolean"/></param>
+    /// <returns>A <see cref="Option{TValue}"/></returns>
+    public static Option<bool> ParseBool(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            if (bool.TryParse(value, out var val))
+                return new Some<bool>(val);
+            
+            switch (value.ToLowerInvariant())
+            {
+                case "true":
+                case "on":
+                case "yes":
+                case "1":
+                    return new Some<bool>(true);
+                case "false":
+                case "off":
+                case "no":
+                case "0":
+                    return new Some<bool>(false);
+            }
+        }
+
+        return new None<bool>();
+    }
 }
 
 public abstract record Option<TValue>

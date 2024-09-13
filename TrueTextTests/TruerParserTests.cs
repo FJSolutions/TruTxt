@@ -1,9 +1,18 @@
-﻿namespace TrueTextTests;
+﻿using Xunit.Abstractions;
+
+namespace TrueTextTests;
 
 using static TrueText.TrueParser;
 
 public class TruerParserTests
 {
+    private readonly ITestOutputHelper _output;
+    
+    public TruerParserTests(ITestOutputHelper output)
+    {
+        this._output = output;
+    }
+
     [Fact]
     public void ParseStringTest()
     {
@@ -414,6 +423,111 @@ public class TruerParserTests
         ParseUInt64("B808889A-3545-4DD7-A4C5-5AF6FBAAD09Z").Match(
             some: value =>
             {
+                Assert.Fail();
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.True(true);
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseSomeDateTimeTest()
+    {
+        ParseDateTime("1965-10-25 00:12:01").Match(
+            some: value =>
+            {
+                Assert.Equal(new DateTime(1965, 10, 25, 0,12,1), value);
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseNoneDateTimeTest()
+    {
+        ParseDateTime("Oct 25 1965 25:12:01").Match(
+            some: value =>
+            {
+                this._output.WriteLine("{0}", value);
+                Assert.Fail();
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.True(true);
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseSomeDateTest()
+    {
+        ParseDate("1965-10-25").Match(
+            some: value =>
+            {
+                Assert.Equal(new DateOnly(1965, 10, 25), value);
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseNoneDateTest()
+    {
+        ParseDate("Oct 32 1965").Match(
+            some: value =>
+            {
+                this._output.WriteLine("{0}", value);
+                Assert.Fail();
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.True(true);
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseSomeTimeTest()
+    {
+        ParseTime("23:59:59").Match(
+            some: value =>
+            {
+                Assert.Equal(new TimeOnly(23,59,59), value);
+                return string.Empty;
+            },
+            none: () =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ParseNonTimeTest()
+    {
+        ParseTime("23:59:60").Match(
+            some: value =>
+            {
+                this._output.WriteLine("{0}", value);
                 Assert.Fail();
                 return string.Empty;
             },

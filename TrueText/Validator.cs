@@ -62,9 +62,9 @@ public sealed class Validator
     {
         return new Validator(input =>
         {
-            var ValidationResult = this.Apply(input);
-            if (ValidationResult.IsValid)
-                return ValidationResult;
+            var result = this.Apply(input);
+            if (result.IsValid)
+                return result;
 
             return other.Apply(input);
         });
@@ -308,8 +308,9 @@ public sealed class Validator
     /// <summary>
     /// Creates an <see cref="Validator"/> instance that checks that the input only comprises of only numbers with an decimal point (ignoring whitespace).
     /// </summary>
+    /// <param name="allowSigned">Indicates if the decimal number can have a preceding plus or minus sign</param>
     /// <returns>An <see cref="Validator"/> instance</returns>
-    public static Validator IsDecimal()
+    public static Validator IsDecimal(bool allowSigned = true)
     {
         return new Validator(input =>
         {
@@ -317,6 +318,8 @@ public sealed class Validator
 
             var sb = new StringBuilder(input.Length);
             var decimalPointCount = 0;
+            
+            //! TODO Move the implementation to use the TrueParser
 
             foreach (var c in input)
             {
@@ -348,20 +351,10 @@ public sealed class Validator
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
-            switch (input.ToLowerInvariant())
-            {
-                case "true":
-                case "on":
-                case "yes":
-                case "1":
-                case "false":
-                case "off":
-                case "no":
-                case "0":
-                    return ValidationResult.Valid(input);
-                default:
-                    return ValidationResult.Invalid(input, $"Unrecognised boolean input '{input}'");
-            }
+            return TrueParser.ParseBool(input).Match(
+                some: val => ValidationResult.Valid(input),
+                none: () => ValidationResult.Invalid(input, $"Unrecognised boolean input '{input}'")
+            );
         });
     }
 

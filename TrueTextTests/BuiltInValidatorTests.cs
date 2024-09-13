@@ -311,4 +311,22 @@ public class BuiltInValidatorTests
         Assert.False(result.IsValid);
         Assert.Equal("φ70183FC-704E-4027-BC8A-68E7016B9942", result.Text);
     }
+
+    [Fact]
+    public void BoollValidTest()
+    {
+        var result = V.IsBoolean().Apply("Yes");
+
+        Assert.True(result.IsValid);
+        Assert.Equal("Yes", result.Text);
+    }
+
+    [Fact]
+    public void BoolInvalidTest()
+    {
+        var result = V.IsBoolean().Apply("Nope");
+
+        Assert.False(result.IsValid);
+        Assert.Equal("Nope", result.Text);
+    }
 }
