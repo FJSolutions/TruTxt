@@ -1,10 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿namespace TrueText;
 
-namespace TrueText;
-
+using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Globalization;
 
 /// <summary>
 /// A data-structure that contains the validation or transformation logic core to the library.
@@ -54,7 +53,7 @@ public sealed class Validator
     }
 
     /// <summary>
-    /// Combines <see cref="Validator"/>s, returning the first <see cref="Valid{T}"/> ValidationResult, if any. 
+    /// Combines <see cref="Validator"/>s, returning the first <see cref="Valid"/> ValidationResult, if any. 
     /// </summary>
     /// <param name="other">The other <see cref="Validator"/> to combine this one with</param>
     /// <returns>A new <see cref="Validator"/> instance</returns>
@@ -110,8 +109,7 @@ public sealed class Validator
 
     private static Regex GetRegexForPattern(string pattern)
     {
-        if (_regexes == null)
-            _regexes = new ConcurrentDictionary<string, Regex>();
+        _regexes ??= new ConcurrentDictionary<string, Regex>();
 
         return _regexes.GetOrAdd(pattern,
             (_) => new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase));
@@ -203,7 +201,8 @@ public sealed class Validator
                 if (string.IsNullOrWhiteSpace(input))
                     return ValidationResult.Valid(input);
 
-                return ValidationResult.Invalid(string.Empty, input);
+                //? This method must still be more thoroughly validated to work properly
+                return ValidationResult.Invalid(input, string.Empty);
             }
         );
 
@@ -223,8 +222,8 @@ public sealed class Validator
             {
                 input = string.IsNullOrEmpty(input) ? string.Empty : input;
                 if (string.IsNullOrWhiteSpace(input))
-                    return ValidationResult.Invalid("The value cannot be null, empty, or just whitespace",
-                        string.Empty);
+                    return ValidationResult.Invalid(string.Empty,
+                        "The value cannot be null, empty, or just whitespace");
 
                 return ValidationResult.Valid(input);
             }
@@ -246,7 +245,7 @@ public sealed class Validator
             if (input.Length >= length)
                 return ValidationResult.Valid(input);
 
-            return ValidationResult.Invalid($"The input is shorter than {length}", input);
+            return ValidationResult.Invalid(input, $"The input is shorter than {length}");
         });
     }
 
@@ -263,7 +262,7 @@ public sealed class Validator
             if (input.Length < length)
                 return ValidationResult.Valid(input);
 
-            return ValidationResult.Invalid($"The input must be sorter than {length}", input);
+            return ValidationResult.Invalid(input, $"The input must be sorter than {length}");
         });
     }
 
@@ -284,21 +283,45 @@ public sealed class Validator
     /// Creates an <see cref="Validator"/> instance that checks that the input only comprises of only numbers (ignoring whitespace).
     /// </summary>
     /// <returns>An <see cref="Validator"/> instance</returns>
-    public static Validator IsInteger()
+    public static Validator IsInteger(bool allowSign = true)
     {
         return new Validator(input =>
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
+
             var sb = new StringBuilder(input.Length);
+            var noSigns = 0;
 
             foreach (var c in input)
             {
                 if (char.IsDigit(c))
                     sb.Append(c);
+                else if (c == '-')
+                {
+                    noSigns += 1;
+                    sb.Append(c);
+                }
                 else if (c == '_')
                     continue;
                 else
-                    return ValidationResult.Invalid("The input should only contain numbers", input);
+                    return ValidationResult.Invalid(input, "The input should only contain numbers");
+            }
+
+            if (sb.Length == 0)
+                return ValidationResult.Invalid(input, "The input contains no numbers");
+
+            switch (noSigns)
+            {
+                case 0:
+                    break;
+                case 1:
+                    if (allowSign && sb[0] != '-')
+                        return ValidationResult.Invalid(input, "The sign must be the first character in the input");
+                    if (!allowSign)
+                        return ValidationResult.Invalid(input, "Signs are not allowed in the input");
+                    break;
+                default:
+                    return ValidationResult.Invalid(input, "The input is ambiguous as a signed integer");
             }
 
             return ValidationResult.Valid(sb.ToString());
@@ -318,8 +341,7 @@ public sealed class Validator
 
             var sb = new StringBuilder(input.Length);
             var decimalPointCount = 0;
-            
-            //! TODO Move the implementation to use the TrueParser
+            var signCount = 0;
 
             foreach (var c in input)
             {
@@ -330,21 +352,54 @@ public sealed class Validator
                     decimalPointCount += 1;
                     sb.Append('.');
                 }
-                else if (char.IsWhiteSpace(c))
-                    continue;
+                else if (c == '-')
+                {
+                    signCount += 1;
+                    sb.Append(c);
+                }
                 else
-                    return ValidationResult.Invalid($"'{input}' is not a valid decimal number", input);
+                    return ValidationResult.Invalid(input, $"'{input}' is not a valid decimal number");
             }
 
             if (sb.Length == 0)
-                return ValidationResult.Invalid($"'{input}' is not a valid decimal number", input);
+                return ValidationResult.Invalid(input, $"'{input}' is not a valid decimal number");
             if (decimalPointCount > 1)
-                return ValidationResult.Invalid($"'{input}' has more than one decimal pint in it", input);
+                return ValidationResult.Invalid(input, $"'{input}' has more than one decimal pint in it");
+
+            switch (signCount)
+            {
+                case 0:
+                    break;
+                case 1:
+                    if (allowSigned && sb[0] != '-')
+                        return ValidationResult.Invalid(input, $"'{input}' is not a valid decimal number");
+                    if (!allowSigned)
+                        return ValidationResult.Invalid(input, $"'{input}' is not allowed to be negative");
+                    break;
+                default:
+                    return ValidationResult.Invalid(input, $"'{input}' has more than one decimal pint in it");
+            }
 
             return ValidationResult.Valid(sb.ToString());
         });
     }
 
+    /// <summary>
+    /// Creates a validator that will parse the input as a boolean value.
+    /// <para>The following values are valid boolean strings (case insensitive)
+    /// <ul>
+    /// <li>true (<see langword="true"/>)</li>
+    /// <li>on (<see langword="true"/>)</li>
+    /// <li>yes (<see langword="true"/>)</li>
+    /// <li>1 (<see langword="true"/>)</li>
+    /// <li>false (<see langword="false"/>)</li>
+    /// <li>off (<see langword="false"/>)</li>
+    /// <li>no (<see langword="false"/>)</li>
+    /// <li>0 (<see langword="false"/>)</li>
+    /// </ul> 
+    /// </para>
+    /// </summary>
+    /// <returns>An <see cref="Validator"/> instance</returns>
     public static Validator IsBoolean()
     {
         return new Validator(input =>
@@ -352,7 +407,7 @@ public sealed class Validator
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
             return TrueParser.ParseBool(input).Match(
-                some: val => ValidationResult.Valid(input),
+                some: _ => ValidationResult.Valid(input),
                 none: () => ValidationResult.Invalid(input, $"Unrecognised boolean input '{input}'")
             );
         });
@@ -372,7 +427,7 @@ public sealed class Validator
             if (regex.IsMatch(input))
                 return ValidationResult.Valid(input.ToLowerInvariant());
 
-            return ValidationResult.Invalid($"'{input}' is not a valid email address", input);
+            return ValidationResult.Invalid(input, $"'{input}' is not a valid email address");
         });
     }
 
@@ -424,20 +479,19 @@ public sealed class Validator
             var result = ValidationResult.Valid(input);
 
             if (!policy.IsSpaceAllowed && hasSpace)
-                result += ValidationResult.Invalid("The password may not contain spaces", input);
+                result += ValidationResult.Invalid(input, "The password may not contain spaces");
             if (policy.RequiredNumberOfLowerCaseLetters > lowerCaseCount)
-                result += ValidationResult.Invalid(
-                    $"There must be at least {policy.RequiredNumberOfLowerCaseLetters} lower case letters", input);
+                result += ValidationResult.Invalid(input,
+                    $"There must be at least {policy.RequiredNumberOfLowerCaseLetters} lower case letters");
             if (policy.RequiredNumberOfUpperCaseLetters > upperCaseCount)
-                result += ValidationResult.Invalid(
-                    $"There must be at least {policy.RequiredNumberOfUpperCaseLetters} upper case letters", input);
+                result += ValidationResult.Invalid(input,
+                    $"There must be at least {policy.RequiredNumberOfUpperCaseLetters} upper case letters");
             if (policy.RequiredNumberOfDigits > digitCount)
-                result += ValidationResult.Invalid(
-                    $"There must be at least {policy.RequiredNumberOfDigits} digits (number characters)", input);
+                result += ValidationResult.Invalid(input,
+                    $"There must be at least {policy.RequiredNumberOfDigits} digits (number characters)");
             if (policy.RequiredNumberOfSymbols > symbolCount)
-                result += ValidationResult.Invalid(
-                    $"There must be at least {policy.RequiredNumberOfSymbols} symbol characters (${policy.ListOfAcceptedSymbols})",
-                    input);
+                result += ValidationResult.Invalid(input,
+                    $"There must be at least {policy.RequiredNumberOfSymbols} symbol characters (${policy.ListOfAcceptedSymbols})");
 
             return result;
         });
@@ -517,10 +571,10 @@ public sealed class Validator
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
-            if (Guid.TryParse(input, out var guid))
-                return new Valid(guid.ToString("N").ToUpperInvariant(), input);
-
-            return ValidationResult.Invalid(input, $"Unable to parse '{input}' as a GUID");
+            return TrueParser.ParseGuid(input).Match(
+                some: _ => ValidationResult.Valid(input),
+                none: () => ValidationResult.Invalid(input, $"Unable to parse '{input}' as a GUID")
+            );
         });
     }
 }

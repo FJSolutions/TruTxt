@@ -123,7 +123,7 @@ public class BuiltInValidatorTests
     }
 
     [Fact]
-    public void IntegerValidatorValidTest()
+    public void ValidatorIntegerValidTest()
     {
         var result = V.IsInteger()
             .Apply("10_000");
@@ -133,7 +133,27 @@ public class BuiltInValidatorTests
     }
 
     [Fact]
-    public void IntegerValidatorInvalidTest()
+    public void ValidatorSignedIntegerValidTest()
+    {
+        var result = V.IsInteger(true)
+            .Apply("-10_000");
+
+        Assert.True(result.IsValid);
+        Assert.Equal("-10000", result.Text);
+    }
+
+    [Fact]
+    public void ValidatorNonSignedIntegerInvalidTest()
+    {
+        var result = V.IsInteger(false)
+            .Apply("-10_000");
+
+        Assert.False(result.IsValid);
+        Assert.Equal("-10_000", result.Text);
+    }
+
+    [Fact]
+    public void ValidatorIntegerInvalidTest()
     {
         var result = V.IsInteger()
             .Apply("R 10,000");
@@ -142,7 +162,7 @@ public class BuiltInValidatorTests
     }
 
     [Fact]
-    public void DecimalValidatorValidTest()
+    public void ValidatorDecimalValidTest()
     {
         var result = V.IsDecimal()
             .Apply("123.456");
@@ -152,7 +172,37 @@ public class BuiltInValidatorTests
     }
 
     [Fact]
-    public void DecimalValidatorInvalidExtraDotTest()
+    public void ValidatorNegativeDecimalValidTest()
+    {
+        var result = V.IsDecimal(true)
+            .Apply("-123.456");
+
+        Assert.True(result.IsValid);
+        Assert.Equal("-123.456", result.Text);
+    }
+
+    [Fact]
+    public void ValidatorNegativeDecimalInvalidTest()
+    {
+        var result = V.IsDecimal(false)
+            .Apply("-123.456");
+
+        Assert.False(result.IsValid);
+        Assert.Equal("-123.456", result.Text);
+    }
+
+    [Fact]
+    public void ValidatorDecimalWithDashInvalidTest()
+    {
+        var result = V.IsDecimal(false)
+            .Apply("123.-456");
+
+        Assert.False(result.IsValid);
+        Assert.Equal("123.-456", result.Text);
+    }
+
+    [Fact]
+    public void ValidatorDecimalInvalidExtraDotTest()
     {
         var result = V.IsDecimal()
             .Apply("123.45.6");
@@ -300,7 +350,7 @@ public class BuiltInValidatorTests
 
         Assert.True(result.IsValid);
         Assert.Equal("{B70183FC-704E-4027-BC8A-68E7016B9942}", result.Text);
-        Assert.Equal("B70183FC704E4027BC8A68E7016B9942", result.AsValid().Value);
+        Assert.Equal("{B70183FC-704E-4027-BC8A-68E7016B9942}", result.AsValid().Value);
     }
 
     [Fact]
@@ -313,7 +363,7 @@ public class BuiltInValidatorTests
     }
 
     [Fact]
-    public void BoollValidTest()
+    public void BoolValidTest()
     {
         var result = V.IsBoolean().Apply("Yes");
 

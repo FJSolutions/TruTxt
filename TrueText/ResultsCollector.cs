@@ -133,7 +133,7 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
                 return valid(data.Value);
 
             // Otherwise, fallthrough after adding the data processor failure error to this collector
-            if (dataResult is Failure<TModel> failure)
+            if (dataResult is Fail<TModel> failure)
                 this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.Error }));
         }
 

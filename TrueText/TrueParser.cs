@@ -10,9 +10,9 @@ public static class TrueParser
     public static Option<string> ParseString(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return new Some<string>(string.Empty);
+            return Option<string>.Some(string.Empty);
 
-        return new Some<string>(value);
+        return Option<string>.Some(value);
     }
 
     /// <summary>
@@ -25,10 +25,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (sbyte.TryParse(value, out var val))
-                return new Some<sbyte>(val);
+                return Option<sbyte>.Some(val);
         }
 
-        return new None<sbyte>();
+        return Option<sbyte>.None();
     }
 
     /// <summary>
@@ -41,10 +41,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (short.TryParse(value, out var val))
-                return new Some<short>(val);
+                return Option<short>.Some(val);
         }
 
-        return new None<short>();
+        return Option<short>.None();
     }
 
     /// <summary>
@@ -57,10 +57,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (int.TryParse(value, out var val))
-                return new Some<int>(val);
+                return Option<int>.Some(val);
         }
 
-        return new None<int>();
+        return Option<int>.None();
     }
 
     /// <summary>
@@ -73,10 +73,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (long.TryParse(value, out var val))
-                return new Some<long>(val);
+                return Option<long>.Some(val);
         }
 
-        return new None<long>();
+        return Option<long>.None();
     }
 
     /// <summary>
@@ -89,10 +89,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (byte.TryParse(value, out var val))
-                return new Some<byte>(val);
+                return Option<byte>.Some(val);
         }
 
-        return new None<byte>();
+        return Option<byte>.None();
     }
 
     /// <summary>
@@ -105,10 +105,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (ushort.TryParse(value, out var val))
-                return new Some<ushort>(val);
+                return Option<ushort>.Some(val);
         }
 
-        return new None<ushort>();
+        return Option<ushort>.None();
     }
 
     /// <summary>
@@ -121,10 +121,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (uint.TryParse(value, out var val))
-                return new Some<uint>(val);
+                return Option<uint>.Some(val);
         }
 
-        return new None<uint>();
+        return Option<uint>.None();
     }
 
     /// <summary>
@@ -137,10 +137,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (ulong.TryParse(value, out var val))
-                return new Some<ulong>(val);
+                return Option<ulong>.Some(val);
         }
 
-        return new None<ulong>();
+        return Option<ulong>.None();
     }
 
     /// <summary>
@@ -153,10 +153,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (float.TryParse(value, out var val))
-                return new Some<float>(val);
+                return Option<float>.Some(val);
         }
 
-        return new None<float>();
+        return Option<float>.None();
     }
 
     /// <summary>
@@ -169,10 +169,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (double.TryParse(value, out var val))
-                return new Some<double>(val);
+                return Option<double>.Some(val);
         }
 
-        return new None<double>();
+        return Option<double>.None();
     }
 
     /// <summary>
@@ -185,10 +185,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (decimal.TryParse(value, out var val))
-                return new Some<decimal>(val);
+                return Option<decimal>.Some(val);
         }
 
-        return new None<decimal>();
+        return Option<decimal>.None();
     }
 
     /// <summary>
@@ -201,10 +201,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (Guid.TryParse(value, out var val))
-                return new Some<Guid>(val);
+                return Option<Guid>.Some(val);
         }
 
-        return new None<Guid>();
+        return Option<Guid>.None();
     }
 
     /// <summary>
@@ -217,10 +217,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (DateTime.TryParse(value, out var val))
-                return new Some<DateTime>(val);
+                return Option<DateTime>.Some(val);
         }
 
-        return new None<DateTime>();
+        return Option<DateTime>.None();
     }
 
     /// <summary>
@@ -233,10 +233,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (DateOnly.TryParse(value, out var val))
-                return new Some<DateOnly>(val);
+                return Option<DateOnly>.Some(val);
         }
 
-        return new None<DateOnly>();
+        return Option<DateOnly>.None();
     }
 
     /// <summary>
@@ -249,10 +249,10 @@ public static class TrueParser
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (TimeOnly.TryParse(value, out var val))
-                return new Some<TimeOnly>(val);
+                return Option<TimeOnly>.Some(val);
         }
 
-        return new None<TimeOnly>();
+        return Option<TimeOnly>.None();
     }
 
     /// <summary>
@@ -264,65 +264,21 @@ public static class TrueParser
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
-            if (bool.TryParse(value, out var val))
-                return new Some<bool>(val);
-            
             switch (value.ToLowerInvariant())
             {
                 case "true":
                 case "on":
                 case "yes":
                 case "1":
-                    return new Some<bool>(true);
+                    return Option<bool>.Some(true);
                 case "false":
                 case "off":
                 case "no":
                 case "0":
-                    return new Some<bool>(false);
+                    return Option<bool>.Some(false);
             }
         }
 
-        return new None<bool>();
+        return Option<bool>.None();
     }
 }
-
-public abstract record Option<TValue>
-{
-    private protected Option()
-    {
-    }
-
-    public TResult Match<TResult>(Func<TValue, TResult> some, Func<TResult> none)
-    {
-        return this switch
-        {
-            Some<TValue> s => some(s.Value),
-            None<TValue> _ => none(),
-            _ => throw new TrueTextException("Unknown Option type")
-        };
-    }
-
-    public Option<TResult> Map<TResult>(Func<TValue, TResult> mapper)
-    {
-        return this switch
-        {
-            Some<TValue> s => new Some<TResult>(mapper(s.Value)),
-            None<TValue> _ => new None<TResult>(),
-            _ => throw new TrueTextException("Unknown Option type")
-        };
-    }
-
-    public Option<TResult> Bind<TResult>(Func<TValue, Option<TResult>> binder)
-    {
-        return this switch
-        {
-            Some<TValue> s => binder(s.Value),
-            None<TValue> _ => new None<TResult>(),
-            _ => throw new TrueTextException("Unknown Option type")
-        };
-    }
-}
-
-internal sealed record Some<T>(T Value) : Option<T>;
-
-internal sealed record None<T> : Option<T>;

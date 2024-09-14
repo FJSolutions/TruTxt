@@ -5,7 +5,7 @@ namespace TrueText;
 /// </summary>
 /// <param name="Text">The text that was being validated</param>
 /// <param name="IsValid">An indicator of whether the result is valid or not</param>
-/// <typeparam name="T">The type of the Value property of a <see cref="Valid"/> result.</typeparam>
+/// <typeparam name="T">The type of the Instance property of a <see cref="Valid"/> result.</typeparam>
 public abstract record ValidationResult(string Text, bool IsValid)
 {
     /// <summary>
@@ -56,16 +56,16 @@ public abstract record ValidationResult(string Text, bool IsValid)
     }
 
     /// <summary>
-    /// Maps the Value of a <see cref="Valid"/> <see cref="ValidationResult"/> to a new <see cref="Valid"/> 
+    /// Maps the Instance of a <see cref="Valid"/> <see cref="ValidationResult"/> to a new <see cref="Valid"/> 
     /// </summary>
-    /// <param name="fn">The <see cref="Func{T, TResult}">"></see> to transform the Value of a <see cref="Valid"/></param>
+    /// <param name="fn">The <see cref="Func{T, TResult}">"></see> to transform the Instance of a <see cref="Valid"/></param>
     /// <returns>A <see cref="ValidationResult"/> instance</returns>
     public ValidationResult Map(Func<string, string> fn) => this.IsValid
         ? new Valid(fn(this.AsValid().Value), this.Text)
         : new Invalid(this.Text, this.AsInvalid().Errors);
 
     /// <summary>
-    /// Filters the <see cref="ValidationResult"/>, if it is a <see cref="Valid"/> result then the Value is
+    /// Filters the <see cref="ValidationResult"/>, if it is a <see cref="Valid"/> result then the Instance is
     /// checked against the <param name="predicate"></param> and passed through if successful; or replaced with an <see cref="InValid"/>
     /// using the supplied <paramref name="message"/>.
     /// </summary>
