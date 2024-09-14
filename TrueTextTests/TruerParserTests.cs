@@ -17,7 +17,7 @@ public class TruerParserTests
     public void ParseStringTest()
     {
         ParseString("").Match(
-            some: s => string.Empty,
+            some: _ => string.Empty,
             none: () =>
             {
                 Assert.Fail();
@@ -47,7 +47,7 @@ public class TruerParserTests
     public void ParseNoneInt8Test()
     {
         ParseInt8("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -81,7 +81,7 @@ public class TruerParserTests
     public void ParseNoneInt16Test()
     {
         ParseInt16("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -115,7 +115,7 @@ public class TruerParserTests
     public void ParseNoneInt32Test()
     {
         ParseInt32("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -149,7 +149,7 @@ public class TruerParserTests
     public void ParseNoneInt64Test()
     {
         ParseInt64("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -183,7 +183,7 @@ public class TruerParserTests
     public void ParseNoneUInt8Test()
     {
         ParseUInt8("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -217,7 +217,7 @@ public class TruerParserTests
     public void ParseNoneUInt16Test()
     {
         ParseUInt16("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -251,7 +251,7 @@ public class TruerParserTests
     public void ParseNoneUInt32Test()
     {
         ParseUInt32("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -285,7 +285,7 @@ public class TruerParserTests
     public void ParseNoneUInt64Test()
     {
         ParseUInt64("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -319,7 +319,7 @@ public class TruerParserTests
     public void ParseNoneFloatTest()
     {
         ParseUInt64("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -353,7 +353,7 @@ public class TruerParserTests
     public void ParseNoneDoubleTest()
     {
         ParseUInt64("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -387,7 +387,7 @@ public class TruerParserTests
     public void ParseNoneDecimalTest()
     {
         ParseUInt64("A").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;
@@ -421,7 +421,7 @@ public class TruerParserTests
     public void ParseNoneGuidTest()
     {
         ParseUInt64("B808889A-3545-4DD7-A4C5-5AF6FBAAD09Z").Match(
-            some: value =>
+            some: _ =>
             {
                 Assert.Fail();
                 return string.Empty;

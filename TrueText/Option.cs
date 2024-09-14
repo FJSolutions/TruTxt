@@ -34,7 +34,7 @@ public abstract record Option<TValue>
         return this switch
         {
             Some<TValue> s => Option<TResult>.Some(mapper(s.Value)),
-            None<TValue> _ => Option<TResult>.None(),
+            None<TValue> _ => No.Value,
             _ => throw new TrueTextException("Unknown Option type")
         };
     }
@@ -51,12 +51,12 @@ public abstract record Option<TValue>
         return this switch
         {
             Some<TValue> s => binder(s.Value),
-            None<TValue> _ => Option<TResult>.None(),
+            None<TValue> _ => No.Value,
             _ => throw new TrueTextException("Unknown Option type")
         };
     }
     
-    // public static implicit operator Option<TValue>(Nothing nothing) => new None<TValue>();
+    public static implicit operator Option<TValue>(No no) => new None<TValue>();
 
     /// <summary>
     /// Creates a <see cref="None"/> instance, typed as an <see cref="Option{TValue}"/>
@@ -85,14 +85,20 @@ internal sealed record Some<TValue>(TValue Value) : Option<TValue>;
 /// <typeparam name="TValue">The type of the value that is absent</typeparam>
 internal sealed record None<TValue> : Option<TValue>;
 
-// public sealed class Nothing
-// {
-//     private Nothing()
-//     {
-//     }
-//     
-//     // ReSharper disable once InconsistentNaming
-//     private static readonly Nothing INSTANCE = new Nothing();
-//
-//     public static Nothing Instance => INSTANCE;
-// }
+/// <summary>
+/// A helper class for returning a value that is implicitly converted to a strongly types <see cref="None{TValue}"/> 
+/// </summary>
+public sealed record No
+{
+    /// <summary>
+    /// A private constructor to prevent external instantiation
+    /// </summary>
+    private No()
+    {
+    }
+    
+    /// <summary>
+    /// Gets a no-value instance that can be implicitly converted to a strongly types <see cref="None{TValue}"/>
+    /// </summary>
+    public static No Value { get; } = new No();
+}
