@@ -51,7 +51,7 @@ public class ResultCollectorTests
     public void ComparisonValidTest()
     {
         var newPassword = PasswordPolicy.Medium().NewPassword();
-        var results = new ResultsCollector()
+        var results = ResultsCollector.Create()
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(newPassword).WithKey("ConfirmPassword");
 
@@ -66,13 +66,13 @@ public class ResultCollectorTests
     public void ComparisonInvalidTest()
     {
         var policy = PasswordPolicy.Medium();
-        var results = new ResultsCollector()
+        var results = ResultsCollector.Create()
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("NewPassword")
                       + V.Password(PasswordPolicy.Medium()).Apply(policy.NewPassword()).WithKey("ConfirmPassword");
 
         Assert.True(results.IsValid);
 
-        results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
+        results = results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
 
         Assert.False(results.IsValid);
     }

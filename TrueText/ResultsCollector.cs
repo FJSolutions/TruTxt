@@ -1,42 +1,34 @@
-namespace TrueText;
-
 using System.Collections;
 
+namespace TrueText;
+
+using System.Collections.Immutable;
+
 /// <summary>
-/// Represents a keyed collection of <see cref="ValidationResult"/>s. 
+/// Represents a keyed collection of <see cref="ValidationResult"/>s.
 /// </summary>
-public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResult>>
+/// <param name="Results">An existing <see cref="ImmutableDictionary{TKey,TValue}"/> of keyed results</param>
+/// <param name="IsValid">Gets a value indicating whether all the <see cref="ValidationResult"/>s collected are in the valid state.</param>
+public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Results, bool IsValid) : IEnumerable<KeyValuePair<string, ValidationResult>>
 {
-    // Fields
-    private readonly Dictionary<string, ValidationResult> _results;
-
-    public ResultsCollector()
-    {
-        this._results = new Dictionary<string, ValidationResult>(8);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether all the <see cref="ValidationResult"/>s collected are in the valid state.
-    /// </summary>
-    public bool IsValid { get; private set; }
-
     /// <summary>
     /// Collects the result into this collection under the specific key; or adds it to an existing entry.
     /// </summary>
     /// <param name="key">The key to collect the result under.</param>
     /// <param name="result">The <see cref="ValidationResult"/> to add</param>
     /// <returns>The <see cref="ValidationResult"/> that has been added</returns>
-    public ValidationResult Add(string key, ValidationResult result)
+    public ResultsCollector Add(string key, ValidationResult result)
     {
-        if (this._results.TryGetValue(key, out var r2))
-            this._results[key] = result + r2;
-        else
-            this._results.Add(key, result);
+        if (this.Results.TryGetValue(key, out var r2))
+        {
+            var builder = this.Results.ToBuilder();
+            builder[key] = result + r2;
+            var results = builder.ToImmutableDictionary();
+            var isValid = results.Values.All(r => r.IsValid);
+            return new ResultsCollector(results, isValid);
+        }
 
-        // Update the valid status of this ResultCollector
-        this.IsValid = this._results.Values.All(r => r.IsValid);
-
-        return result;
+        return new ResultsCollector(this.Results.Add(key, result), result.IsValid);
     }
 
     /// <summary>
@@ -46,61 +38,10 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
     /// <returns>A <see cref="ValidationResult"/> instance</returns>
     public ValidationResult Get(string key)
     {
-        if (this._results.TryGetValue(key, out var result))
-            return result;
-
-        return ValidationResult.Pure(string.Empty);
+        return this.Results.TryGetValue(key, out var result)
+            ? result
+            : ValidationResult.Pure(string.Empty);
     }
-
-    // /// <summary>
-    // /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
-    // /// provided functions, depending on the state. 
-    // /// </summary>
-    // /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
-    // /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
-    // /// <typeparam name="TResult">The type of the return value</typeparam>
-    // /// <returns>A <typeparamref name="TResult"/> instance</returns>
-    // public TResult Match<TResult>(
-    //     Func<TrueReader, TResult> valid,
-    //     Func<ResultsCollector, TResult> invalid
-    // )
-    // {
-    //     if (!this.IsValid)
-    //     {
-    //         var dict =
-    //             this._results.Select(
-    //                     pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
-    //                 )
-    //                 .ToDictionary();
-    //         return valid(new TrueReader(dict));
-    //     }
-    //
-    //     return invalid(this);
-    // }
-    //
-    // /// <summary>
-    // /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
-    // /// provided functions, depending on the state. 
-    // /// </summary>
-    // /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
-    // /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
-    // public void Match(
-    //     Action<TrueReader> valid,
-    //     Action<ResultsCollector> invalid
-    // )
-    // {
-    //     if (this.IsValid)
-    //     {
-    //         var dict =
-    //             this._results.Select(
-    //                     pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
-    //                 )
-    //                 .ToDictionary();
-    //         valid(new TrueReader(dict));
-    //     }
-    //     else
-    //         invalid(this);
-    // }
 
     /// <summary>
     /// Maps this <see cref="ResultsCollector"/> through a <see cref="TrueReader"/> data mapper and then to a the <param name="valid"></param> function.
@@ -122,7 +63,7 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
         {
             // Run the data processor and get an interim value to pass into the valid function
             var dict =
-                this._results.Select(
+                this.Results.Select(
                         pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
                     )
                     .ToDictionary();
@@ -141,16 +82,6 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
         return invalid(this);
     }
 
-    public IEnumerator<KeyValuePair<string, ValidationResult>> GetEnumerator()
-    {
-        return _results.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return ((IEnumerable)_results).GetEnumerator();
-    }
-
     /// <summary>
     /// Looks up and then compares two results from the <see cref="ResultsCollector"/>
     /// </summary>
@@ -162,13 +93,12 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
     {
         var result1 = Get(key1);
         var result2 = Get(key2);
-        if (result1.IsValid && result2.IsValid)
-        {
-            if (result1.AsValid().Value != result2.AsValid().Value)
-                this.Add(key2, new Invalid(result2.Text, new[] { message }));
-        }
 
-        return this;
+        if (!result1.IsValid || !result2.IsValid) return this;
+
+        return result1.AsValid().Value != result2.AsValid().Value
+            ? this.Add(key2, new Invalid(result2.Text, new[] { message }))
+            : this;
     }
 
     /// <summary>
@@ -179,8 +109,7 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
     /// <returns>The <see cref="ResultsCollector"/></returns>
     public static ResultsCollector operator +(ResultsCollector lhs, Tuple<string, ValidationResult> rhs)
     {
-        lhs.Add(rhs.Item1, rhs.Item2);
-        return lhs;
+        return lhs.Add(rhs.Item1, rhs.Item2);
     }
 
     /// <summary>
@@ -192,10 +121,28 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
     /// <returns>The new <see cref="ResultsCollector"/></returns>
     public static ResultsCollector Create(string key, ValidationResult result)
     {
-        return new ResultsCollector
-        {
-            { key, result }
-        };
+        var builder = ImmutableDictionary.Create<string, ValidationResult>();
+        return new ResultsCollector(builder.Add(key, result), result.IsValid);
+    }
+
+    /// <summary>
+    /// Creates an empty <see cref="ResultsCollector"/>
+    /// </summary>
+    /// <returns>The new <see cref="ResultsCollector"/></returns>
+    public static ResultsCollector Create()
+    {
+        return new ResultsCollector(ImmutableDictionary<string, ValidationResult>.Empty, true);
+    }
+
+    IEnumerator<KeyValuePair<string, ValidationResult>> IEnumerable<KeyValuePair<string, ValidationResult>>.
+        GetEnumerator()
+    {
+        return Results.GetEnumerator();
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return ((IEnumerable)Results).GetEnumerator();
     }
 }
 
