@@ -52,55 +52,55 @@ public class ResultsCollector : IEnumerable<KeyValuePair<string, ValidationResul
         return ValidationResult.Pure(string.Empty);
     }
 
-    /// <summary>
-    /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
-    /// provided functions, depending on the state. 
-    /// </summary>
-    /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
-    /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
-    /// <typeparam name="TResult">The type of the return value</typeparam>
-    /// <returns>A <typeparamref name="TResult"/> instance</returns>
-    public TResult Match<TResult>(
-        Func<TrueReader, TResult> valid,
-        Func<ResultsCollector, TResult> invalid
-    )
-    {
-        if (!this.IsValid)
-        {
-            var dict =
-                this._results.Select(
-                        pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
-                    )
-                    .ToDictionary();
-            return valid(new TrueReader(dict));
-        }
-
-        return invalid(this);
-    }
-
-    /// <summary>
-    /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
-    /// provided functions, depending on the state. 
-    /// </summary>
-    /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
-    /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
-    public void Match(
-        Action<TrueReader> valid,
-        Action<ResultsCollector> invalid
-    )
-    {
-        if (this.IsValid)
-        {
-            var dict =
-                this._results.Select(
-                        pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
-                    )
-                    .ToDictionary();
-            valid(new TrueReader(dict));
-        }
-        else
-            invalid(this);
-    }
+    // /// <summary>
+    // /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
+    // /// provided functions, depending on the state. 
+    // /// </summary>
+    // /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
+    // /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
+    // /// <typeparam name="TResult">The type of the return value</typeparam>
+    // /// <returns>A <typeparamref name="TResult"/> instance</returns>
+    // public TResult Match<TResult>(
+    //     Func<TrueReader, TResult> valid,
+    //     Func<ResultsCollector, TResult> invalid
+    // )
+    // {
+    //     if (!this.IsValid)
+    //     {
+    //         var dict =
+    //             this._results.Select(
+    //                     pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
+    //                 )
+    //                 .ToDictionary();
+    //         return valid(new TrueReader(dict));
+    //     }
+    //
+    //     return invalid(this);
+    // }
+    //
+    // /// <summary>
+    // /// Matches on the state of this <see cref="ResultsCollector"/> and automatically runs one or the other of the two
+    // /// provided functions, depending on the state. 
+    // /// </summary>
+    // /// <param name="valid">The function to run when the <see cref="ResultsCollector"/> is on a valid state</param>
+    // /// <param name="invalid">The function that runs when the <see cref="ResultsCollector"/> is in an invalid state</param>
+    // public void Match(
+    //     Action<TrueReader> valid,
+    //     Action<ResultsCollector> invalid
+    // )
+    // {
+    //     if (this.IsValid)
+    //     {
+    //         var dict =
+    //             this._results.Select(
+    //                     pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
+    //                 )
+    //                 .ToDictionary();
+    //         valid(new TrueReader(dict));
+    //     }
+    //     else
+    //         invalid(this);
+    // }
 
     /// <summary>
     /// Maps this <see cref="ResultsCollector"/> through a <see cref="TrueReader"/> data mapper and then to a the <param name="valid"></param> function.

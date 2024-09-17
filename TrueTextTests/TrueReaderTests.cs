@@ -14,29 +14,29 @@ public class TrueReaderTests
 
     private record Person(string Name, int Age);
 
-    [Fact]
-    public void MathTrueReaderValidTest()
-    {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
-                      + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
-
-        results.Match(
-            valid: Assert.NotNull,
-            invalid: _ => Assert.Fail()
-        );
-    }
-
-    [Fact]
-    public void MatchTrueReaderInvalidTest()
-    {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
-                      + V.Required(V.IsInteger()).Apply("nan").WithKey("Age");
-
-        results.Match(
-            valid: _ => Assert.Fail(),
-            invalid: Assert.NotNull
-        );
-    }
+    // [Fact]
+    // public void MathTrueReaderValidTest()
+    // {
+    //     var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+    //                   + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
+    //
+    //     results.Match(
+    //         valid: Assert.NotNull,
+    //         invalid: _ => Assert.Fail()
+    //     );
+    // }
+    //
+    // [Fact]
+    // public void MatchTrueReaderInvalidTest()
+    // {
+    //     var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+    //                   + V.Required(V.IsInteger()).Apply("nan").WithKey("Age");
+    //
+    //     results.Match(
+    //         valid: _ => Assert.Fail(),
+    //         invalid: Assert.NotNull
+    //     );
+    // }
 
     [Fact]
     public void TrueReaderReadStringSuccessfulTest()
