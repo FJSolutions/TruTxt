@@ -282,12 +282,6 @@ public class TrueReader
             none: () => Result<TimeOnly>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
-    
-    /*************************************
-     *
-     *              UNTESTED
-     * 
-     *************************************/
 
     /// <summary>
     /// Indicates whether the value for the supplied <param name="key"></param> is null, empty, or whitespace.
@@ -299,28 +293,54 @@ public class TrueReader
         return string.IsNullOrWhiteSpace(GetValue(key));
     }
 
+    private static Result<Option<T>> SomeResult<T>(T value) => new Ok<Option<T>>(Option<T>.Some(value));
+    private static Result<Option<T>> NoResult<T>() => new Ok<Option<T>>(Option<T>.None());
+    private static Result<Option<T>> FailOption<T>(string error, string key, string text) => new Fail<Option<T>>(error, key, text);
+
     /// <summary>
     /// Tries to get an optional value from the data source and convert it to an <see cref="int"/>.
     /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
     /// </summary>
     /// <param name="key"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
-    public Result<int> GetOptionalInt32(string key, int defaultValue = default)
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<string>> GetOptionalString(string key)
     {
         var value = GetValue(key);
 
         if (string.IsNullOrWhiteSpace(value))
-            return defaultValue;
+            return NoResult<string>();
+
+        return TrueParser.ParseString(value).Match(
+            some: SomeResult,
+            none: () => FailOption<string>($"'{value}' cannot be converted to an string", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="int"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<int>> GetOptionalInt32(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<int>();
 
         return TrueParser.ParseInt32(value).Match(
-            some: Result<int>.Ok,
-            none: () => Result<int>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            some: SomeResult,
+            none: () => FailOption<int>($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 }
 
-// Result type
+/**************************************
+ *
+ * Result type
+ * 
+ *************************************/
 
 /// <summary>
 /// Represents the result of a <see cref="TrueReader"/> read method. 

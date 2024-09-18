@@ -21,9 +21,8 @@ public class ResultCollectorTests
     public void ResultCollectorAddWithKeyTest()
     {
         var result = V.Min(3).Apply("FBJ");
-        var results = ResultsCollector.Create("Francis", result);
-        results += V.Min(2).Apply("NJ").WithKey("Nadine");
-
+        var results = ResultsCollector.Create("Francis", result)
+                      + V.Min(2).Apply("NJ").WithKey("Nadine");
 
         Assert.NotNull(results);
         Assert.NotEmpty(results);
@@ -36,8 +35,8 @@ public class ResultCollectorTests
     public void ResultCollectorGetByKeyTest()
     {
         var result = V.Min(3).Apply("FBJ");
-        var results = ResultsCollector.Create("Francis", result);
-        results += V.Min(2).Apply("NJ").WithKey("Nadine");
+        var results = ResultsCollector.Create("Francis", result)
+                      + V.Min(2).Apply("NJ").WithKey("Nadine");
 
         var name = results.Get("Francis").Reduce();
         Assert.Equal("FBJ", name);

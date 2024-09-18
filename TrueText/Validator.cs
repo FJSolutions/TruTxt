@@ -198,15 +198,21 @@ public sealed class Validator
             input =>
             {
                 input = string.IsNullOrEmpty(input) ? string.Empty : input;
+                
                 if (string.IsNullOrWhiteSpace(input))
+                    return ValidationResult.Valid(string.Empty);
+                
+                if(validators.Length == 0)
                     return ValidationResult.Valid(input);
-
-                //? This method must still be more thoroughly validated to work properly
+                
+                // Invalid because it has content and that content needs to be validated 
                 return ValidationResult.Invalid(input, string.Empty);
             }
         );
 
-        return optional.OrElse(validators.Aggregate((acc, next) => acc.AndThen(next)));
+        return validators.Length == 0
+            ? optional
+            : optional.OrElse(validators.Aggregate((acc, next) => acc.AndThen(next)));
     }
 
 
@@ -229,7 +235,9 @@ public sealed class Validator
             }
         );
 
-        return validators.Aggregate(required, (acc, next) => acc.AndThen(next));
+        return validators.Length == 0
+            ? required
+            : validators.Aggregate(required, (acc, next) => acc.AndThen(next));
     }
 
     /// <summary>

@@ -732,4 +732,120 @@ public class TrueReaderTests
             }
         );
     }
+
+    [Fact]
+    public void IsEmptyTrueTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional(V.IsInteger()).Apply("\t").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.True(reader.IsEmpty("Age"));
+                return new Ok<int>(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void IsEmptyFalseTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional(V.IsInteger()).Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.False(reader.IsEmpty("Age"));
+
+                return
+                    from age in reader.GetOptionalInt32("Age") select age;
+            },
+            valid: d =>
+            {
+                return d.Match(
+                    some: v =>
+                    {
+                        Assert.Equal(58, v);
+                        return string.Empty;
+                    },
+                    none: () =>
+                    {
+                        Assert.Fail();
+                        return string.Empty;
+                    }
+                );
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void IsEmptyFalseReduceOptionTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional(V.IsInteger()).Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.False(reader.IsEmpty("Age"));
+
+                return
+                    from age in reader.GetOptionalInt32("Age") select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadStringOptionOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("Franc").WithKey("Nickname");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<string>>>(reader.GetOptionalString("Nickname"));
+
+                return
+                    from nickname in reader.GetOptionalString("Nickname") select nickname.Reduce();
+            },
+            valid: d =>
+            {
+                Assert.Equal("Franc", d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
 }

@@ -55,7 +55,39 @@ public abstract record Option<TValue>
             _ => throw new TrueTextException("Unknown Option type")
         };
     }
-    
+
+    /// <summary>
+    /// Reduces an <see cref="Option{TValue}"/> to a value. 
+    /// </summary>
+    /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
+    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
+    /// <exception cref="TrueTextException"></exception>
+    public TValue Reduce(TValue defaultValue = default)
+    {
+        return this switch
+        {
+            Some<TValue> s => s.Value,
+            None<TValue> _ => defaultValue,
+            _ => throw new TrueTextException("Unknown Option type")
+        };
+    }
+
+    /// <summary>
+    /// Reduces an <see cref="Option{TValue}"/> to a value. 
+    /// </summary>
+    /// <param name="defaultValue">A function that returns a value if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
+    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
+    /// <exception cref="TrueTextException"></exception>
+    public TValue Reduce(Func<TValue> defaultValue)
+    {
+        return this switch
+        {
+            Some<TValue> s => s.Value,
+            None<TValue> _ => defaultValue(),
+            _ => throw new TrueTextException("Unknown Option type")
+        };
+    }
+
     public static implicit operator Option<TValue>(No no) => new None<TValue>();
 
     /// <summary>
@@ -63,7 +95,7 @@ public abstract record Option<TValue>
     /// </summary>
     /// <returns>A <see cref="None"/> <see cref="Option{TValue}"/></returns>
     public static Option<TValue> None() => new None<TValue>();
-    
+
     /// <summary>
     /// Creates a <see cref="Some"/> instance with the supplied value, typed as an <see cref="Option{TValue}"/>
     /// </summary>
@@ -96,7 +128,7 @@ public sealed record No
     private No()
     {
     }
-    
+
     /// <summary>
     /// Gets a no-value instance that can be implicitly converted to a strongly types <see cref="None{TValue}"/>
     /// </summary>
