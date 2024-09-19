@@ -1,6 +1,7 @@
 ﻿namespace TrueText;
 
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -198,13 +199,13 @@ public sealed class Validator
             input =>
             {
                 input = string.IsNullOrEmpty(input) ? string.Empty : input;
-                
+
                 if (string.IsNullOrWhiteSpace(input))
                     return ValidationResult.Valid(string.Empty);
-                
-                if(validators.Length == 0)
+
+                if (validators.Length == 0)
                     return ValidationResult.Valid(input);
-                
+
                 // Invalid because it has content and that content needs to be validated 
                 return ValidationResult.Invalid(input, string.Empty);
             }
@@ -425,7 +426,7 @@ public sealed class Validator
     /// Creates a <see cref="System.Text.RegularExpressions.Regex"/> pattern validator.
     /// </summary>
     /// <returns>An <see cref="Validator"/> instance</returns>
-    public static Validator Regex(string pattern)
+    public static Validator Regex([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
     {
         var regex = GetRegexForPattern(pattern);
 
@@ -511,7 +512,7 @@ public sealed class Validator
     /// </summary>
     /// <param name="pattern">The <see cref="DateTime"/> format pattern.</param>
     /// <returns>A <see cref="Validator"/> instance</returns>
-    public static Validator IsDateTime(string pattern)
+    public static Validator IsDateTime([StringSyntax(StringSyntaxAttribute.DateTimeFormat)] string pattern)
     {
         return new Validator(input =>
         {
@@ -534,7 +535,7 @@ public sealed class Validator
     /// </summary>
     /// <param name="pattern">The <see cref="DateOnly"/> format pattern.</param>
     /// <returns>A <see cref="Validator"/> instance</returns>
-    public static Validator IsDate(string pattern)
+    public static Validator IsDate([StringSyntax(StringSyntaxAttribute.DateOnlyFormat)] string pattern)
     {
         return new Validator(input =>
         {
@@ -554,7 +555,7 @@ public sealed class Validator
     /// </summary>
     /// <param name="pattern">The <see cref="TimeOnly"/> format pattern.</param>
     /// <returns>A <see cref="Validator"/> instance</returns>
-    public static Validator IsTime(string pattern)
+    public static Validator IsTime([StringSyntax(StringSyntaxAttribute.TimeOnlyFormat)] string pattern)
     {
         return new Validator(input =>
         {

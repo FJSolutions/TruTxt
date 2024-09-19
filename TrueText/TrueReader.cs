@@ -317,6 +317,44 @@ public class TrueReader
     }
 
     /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="sbyte"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<sbyte>> GetOptionalInt8(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<sbyte>();
+
+        return TrueParser.ParseInt8(value).Match(
+            some: SomeResult,
+            none: () => FailOption<sbyte>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="short"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<short>> GetOptionalInt16(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<short>();
+
+        return TrueParser.ParseInt16(value).Match(
+            some: SomeResult,
+            none: () => FailOption<short>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
     /// Tries to get an optional value from the data source and convert it to an <see cref="int"/>.
     /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
     /// </summary>

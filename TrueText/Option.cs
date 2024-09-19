@@ -62,7 +62,7 @@ public abstract record Option<TValue>
     /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
     /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
     /// <exception cref="TrueTextException"></exception>
-    public TValue Reduce(TValue defaultValue = default)
+    public TValue Reduce(TValue defaultValue)
     {
         return this switch
         {
