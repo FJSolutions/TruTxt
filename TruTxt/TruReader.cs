@@ -16,6 +16,12 @@ public class TruReader
         this._data = data;
     }
 
+    /// <summary>
+    /// Tries to get a value from the underlying data source.
+    /// </summary>
+    /// <param name="key">the key for the data</param>
+    /// <returns>A string value for the supplied key</returns>
+    /// <exception cref="TruTxtException"> is thrown if the key was not present in the data source.</exception>
     private string GetValue(string key)
     {
         if (this._data.TryGetValue(key, out var value))
@@ -45,7 +51,7 @@ public class TruReader
 
         return TruParser.ParseInt64(value).Match(
             some: Result<long>.Ok,
-            none: () => Result<long>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<long>.Fail($"'{value}' cannot be converted to an Int64", key, value)
         );
     }
 
@@ -60,7 +66,7 @@ public class TruReader
 
         return TruParser.ParseInt32(value).Match(
             some: Result<int>.Ok,
-            none: () => Result<int>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<int>.Fail($"'{value}' cannot be converted to an Int32", key, value)
         );
     }
 
@@ -75,7 +81,7 @@ public class TruReader
 
         return TruParser.ParseInt16(value).Match(
             some: Result<short>.Ok,
-            none: () => Result<short>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<short>.Fail($"'{value}' cannot be converted to an Int16", key, value)
         );
     }
 
@@ -90,7 +96,7 @@ public class TruReader
 
         return TruParser.ParseUInt8(value).Match(
             some: Result<byte>.Ok,
-            none: () => Result<byte>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<byte>.Fail($"'{value}' cannot be converted to a Byte", key, value)
         );
     }
 
@@ -105,7 +111,7 @@ public class TruReader
 
         return TruParser.ParseUInt64(value).Match(
             some: Result<ulong>.Ok,
-            none: () => Result<ulong>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<ulong>.Fail($"'{value}' cannot be converted to a UInt64", key, value)
         );
     }
 
@@ -120,7 +126,7 @@ public class TruReader
 
         return TruParser.ParseUInt32(value).Match(
             some: Result<uint>.Ok,
-            none: () => Result<uint>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<uint>.Fail($"'{value}' cannot be converted to a UInt32", key, value)
         );
     }
 
@@ -136,7 +142,7 @@ public class TruReader
 
         return TruParser.ParseUInt16(value).Match(
             some: Result<ushort>.Ok,
-            none: () => Result<ushort>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<ushort>.Fail($"'{value}' cannot be converted to a UInt16", key, value)
         );
     }
 
@@ -152,7 +158,7 @@ public class TruReader
 
         return TruParser.ParseInt8(value).Match(
             some: Result<sbyte>.Ok,
-            none: () => Result<sbyte>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<sbyte>.Fail($"'{value}' cannot be converted to a SByte", key, value)
         );
     }
 
@@ -168,7 +174,7 @@ public class TruReader
 
         return TruParser.ParseDecimal(value).Match(
             some: Result<decimal>.Ok,
-            none: () => Result<decimal>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<decimal>.Fail($"'{value}' cannot be converted to a Decimal", key, value)
         );
     }
 
@@ -184,7 +190,7 @@ public class TruReader
 
         return TruParser.ParseDouble(value).Match(
             some: Result<double>.Ok,
-            none: () => Result<double>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<double>.Fail($"'{value}' cannot be converted to a Double", key, value)
         );
     }
 
@@ -200,7 +206,7 @@ public class TruReader
 
         return TruParser.ParseSingle(value).Match(
             some: Result<float>.Ok,
-            none: () => Result<float>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<float>.Fail($"'{value}' cannot be converted to a Single", key, value)
         );
     }
 
@@ -216,7 +222,7 @@ public class TruReader
 
         return TruParser.ParseGuid(value).Match(
             some: Result<Guid>.Ok,
-            none: () => Result<Guid>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<Guid>.Fail($"'{value}' cannot be converted to a GUID", key, value)
         );
     }
 
@@ -232,7 +238,7 @@ public class TruReader
 
         return TruParser.ParseBool(value).Match(
             some: Result<bool>.Ok,
-            none: () => Result<bool>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<bool>.Fail($"'{value}' cannot be converted to a boolean", key, value)
         );
     }
 
@@ -248,7 +254,7 @@ public class TruReader
 
         return TruParser.ParseDateTime(value).Match(
             some: Result<DateTime>.Ok,
-            none: () => Result<DateTime>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<DateTime>.Fail($"'{value}' cannot be converted to a DateTime", key, value)
         );
     }
 
@@ -264,7 +270,7 @@ public class TruReader
 
         return TruParser.ParseDate(value).Match(
             some: Result<DateOnly>.Ok,
-            none: () => Result<DateOnly>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<DateOnly>.Fail($"'{value}' cannot be converted to a DateOnly", key, value)
         );
     }
 
@@ -279,7 +285,7 @@ public class TruReader
 
         return TruParser.ParseTime(value).Match(
             some: Result<TimeOnly>.Ok,
-            none: () => Result<TimeOnly>.Fail($"'{value}' cannot be converted to an integer", key, value)
+            none: () => Result<TimeOnly>.Fail($"'{value}' cannot be converted to a TimeOnly", key, value)
         );
     }
 
@@ -312,7 +318,7 @@ public class TruReader
 
         return TruParser.ParseString(value).Match(
             some: SomeResult,
-            none: () => FailOption<string>($"'{value}' cannot be converted to an string", key, value)
+            none: () => FailOption<string>($"'{value}' cannot be converted to a string", key, value)
         );
     }
 
@@ -331,7 +337,7 @@ public class TruReader
 
         return TruParser.ParseInt8(value).Match(
             some: SomeResult,
-            none: () => FailOption<sbyte>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<sbyte>($"'{value}' cannot be converted to a SByte", key, value)
         );
     }
 
@@ -350,7 +356,7 @@ public class TruReader
 
         return TruParser.ParseInt16(value).Match(
             some: SomeResult,
-            none: () => FailOption<short>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<short>($"'{value}' cannot be converted to a Int16", key, value)
         );
     }
 
@@ -369,7 +375,7 @@ public class TruReader
 
         return TruParser.ParseInt32(value).Match(
             some: SomeResult,
-            none: () => FailOption<int>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<int>($"'{value}' cannot be converted to a Int32", key, value)
         );
     }
 
@@ -388,7 +394,7 @@ public class TruReader
 
         return TruParser.ParseInt64(value).Match(
             some: SomeResult,
-            none: () => FailOption<long>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<long>($"'{value}' cannot be converted to a Int64", key, value)
         );
     }
 
@@ -407,7 +413,7 @@ public class TruReader
 
         return TruParser.ParseUInt8(value).Match(
             some: SomeResult,
-            none: () => FailOption<byte>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<byte>($"'{value}' cannot be converted to a UInt8", key, value)
         );
     }
 
@@ -426,7 +432,7 @@ public class TruReader
 
         return TruParser.ParseUInt16(value).Match(
             some: SomeResult,
-            none: () => FailOption<ushort>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<ushort>($"'{value}' cannot be converted to a UInt16", key, value)
         );
     }
 
@@ -445,7 +451,7 @@ public class TruReader
 
         return TruParser.ParseUInt32(value).Match(
             some: SomeResult,
-            none: () => FailOption<uint>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<uint>($"'{value}' cannot be converted to a UInt32", key, value)
         );
     }
 
@@ -464,18 +470,161 @@ public class TruReader
 
         return TruParser.ParseUInt64(value).Match(
             some: SomeResult,
-            none: () => FailOption<ulong>($"'{value}' cannot be converted to an integer", key, value)
+            none: () => FailOption<ulong>($"'{value}' cannot be converted to a UInt64", key, value)
         );
     }
-    
-    // Single
-    // Double
-    // Decimal 
-    // Boolean
-    // Guid
-    // DateTime
-    // DateOnly
-    // TimeOnly
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="float"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<float>> GetOptionalSingle(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<float>();
+
+        return TruParser.ParseSingle(value).Match(
+            some: SomeResult,
+            none: () => FailOption<float>($"'{value}' cannot be converted to a single", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="double"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<double>> GetOptionalDouble(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<double>();
+
+        return TruParser.ParseDouble(value).Match(
+            some: SomeResult,
+            none: () => FailOption<double>($"'{value}' cannot be converted to a double", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="decimal"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<decimal>> GetOptionalDecimal(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<decimal>();
+
+        return TruParser.ParseDecimal(value).Match(
+            some: SomeResult,
+            none: () => FailOption<decimal>($"'{value}' cannot be converted to a decimal", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="bool"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<bool>> GetOptionalBoolean(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<bool>();
+
+        return TruParser.ParseBool(value).Match(
+            some: SomeResult,
+            none: () => FailOption<bool>($"'{value}' cannot be converted to a boolean", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="Guid"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<Guid>> GetOptionalGuid(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<Guid>();
+
+        return TruParser.ParseGuid(value).Match(
+            some: SomeResult,
+            none: () => FailOption<Guid>($"'{value}' cannot be converted to a GUID", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="DateTime"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<DateTime>> GetOptionalDateTime(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<DateTime>();
+
+        return TruParser.ParseDateTime(value).Match(
+            some: SomeResult,
+            none: () => FailOption<DateTime>($"'{value}' cannot be converted to a DateTime", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="DateOnly"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<DateOnly>> GetOptionalDate(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<DateOnly>();
+
+        return TruParser.ParseDate(value).Match(
+            some: SomeResult,
+            none: () => FailOption<DateOnly>($"'{value}' cannot be converted to a DateOnly", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to a <see cref="TimeOnly"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<TimeOnly>> GetOptionalTime(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<TimeOnly>();
+
+        return TruParser.ParseTime(value).Match(
+            some: SomeResult,
+            none: () => FailOption<TimeOnly>($"'{value}' cannot be converted to a TimeOnly", key, value)
+        );
+    }
 }
 
 /**************************************

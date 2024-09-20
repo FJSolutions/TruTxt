@@ -1318,4 +1318,452 @@ public class TruReaderTests
             }
         );
     }
+
+    [Fact]
+    public void ReadSomeSingleOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("299.99").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<float>>>(reader.GetOptionalSingle("Price"));
+
+                return
+                    from age in reader.GetOptionalSingle("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(299.99, d, 0.0001);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneSingleOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<float>>>(reader.GetOptionalSingle("Price"));
+
+                return
+                    from age in reader.GetOptionalSingle("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0.0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeDoubleOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("299.99").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<double>>>(reader.GetOptionalDouble("Price"));
+
+                return
+                    from age in reader.GetOptionalDouble("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(299.99, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneDoubleOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<double>>>(reader.GetOptionalDouble("Price"));
+
+                return
+                    from age in reader.GetOptionalDouble("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0.0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeDecimalOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("299.99").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
+
+                return
+                    from age in reader.GetOptionalDecimal("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(299.99m, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneDecimalOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Price");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
+
+                return
+                    from age in reader.GetOptionalDecimal("Price")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0.0m, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeBooleanOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("Yes").WithKey("IsActive");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
+
+                return
+                    from isActive in reader.GetOptionalBoolean("IsActive")
+                    select isActive.Reduce(false);
+            },
+            valid: d =>
+            {
+                Assert.True(d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneBooleanOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("IsActive");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
+
+                return
+                    from isActive in reader.GetOptionalBoolean("IsActive")
+                    select isActive.Reduce(false);
+            },
+            valid: d =>
+            {
+                Assert.False(d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeGuidOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("4B15CEF5-0AF2-4154-8DDF-0EA9FD3B5510").WithKey("ID");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<Guid>>>(reader.GetOptionalGuid("ID"));
+
+                return
+                    from isActive in reader.GetOptionalGuid("ID")
+                    select isActive.Reduce(Guid.Empty);
+            },
+            valid: d =>
+            {
+                Assert.Equal(Guid.Parse("4B15CEF5-0AF2-4154-8DDF-0EA9FD3B5510"),d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneGuidOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("ID");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<Guid>>>(reader.GetOptionalGuid("ID"));
+
+                return
+                    from isActive in reader.GetOptionalGuid("ID")
+                    select isActive.Reduce(Guid.Empty);
+            },
+            valid: d =>
+            {
+                Assert.Equal(Guid.Empty,d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeDateTimeOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("2024-09-20 14:22").WithKey("CurrentDate");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
+
+                return
+                    from currentDate in reader.GetOptionalDateTime("CurrentDate")
+                    select currentDate.Reduce(DateTime.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(new DateTime(2024, 9, 20, 14, 22, 0),d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneDateTimeTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("CurrentDate");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
+
+                return
+                    from currentDate in reader.GetOptionalDateTime("CurrentDate")
+                    select currentDate.Reduce(DateTime.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(DateTime.MinValue, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeTimeOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("14:22").WithKey("CurrentTime");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
+
+                return
+                    from currentDate in reader.GetOptionalTime("CurrentTime")
+                    select currentDate.Reduce(TimeOnly.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(new TimeOnly(14, 22, 0),d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneTimeTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("CurrentTime");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
+
+                return
+                    from currentDate in reader.GetOptionalTime("CurrentTime")
+                    select currentDate.Reduce(TimeOnly.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(TimeOnly.MinValue, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeDateOkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("2024-09-20").WithKey("CurrentDate");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
+
+                return
+                    from currentDate in reader.GetOptionalDate("CurrentDate")
+                    select currentDate.Reduce(DateOnly.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(new DateOnly(2024, 9, 20),d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneDateTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("CurrentDate");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
+
+                return
+                    from currentDate in reader.GetOptionalDate("CurrentDate")
+                    select currentDate.Reduce(DateOnly.MinValue);
+            },
+            valid: d =>
+            {
+                Assert.Equal(DateOnly.MinValue, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
 }
