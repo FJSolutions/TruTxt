@@ -1,4 +1,4 @@
-namespace TrueText;
+namespace TruTxt;
 
 /// <summary>
 /// An abstract base record type for the <see cref="Valid"/> and <see cref="InValid"/> record types 

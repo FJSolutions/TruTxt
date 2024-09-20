@@ -1,4 +1,4 @@
-﻿namespace TrueText;
+﻿namespace TruTxt;
 
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
@@ -415,7 +415,7 @@ public sealed class Validator
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
-            return TrueParser.ParseBool(input).Match(
+            return TruParser.ParseBool(input).Match(
                 some: _ => ValidationResult.Valid(input),
                 none: () => ValidationResult.Invalid(input, $"Unrecognised boolean input '{input}'")
             );
@@ -580,7 +580,7 @@ public sealed class Validator
         {
             input = string.IsNullOrEmpty(input) ? string.Empty : input;
 
-            return TrueParser.ParseGuid(input).Match(
+            return TruParser.ParseGuid(input).Match(
                 some: _ => ValidationResult.Valid(input),
                 none: () => ValidationResult.Invalid(input, $"Unable to parse '{input}' as a GUID")
             );

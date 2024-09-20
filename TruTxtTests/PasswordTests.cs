@@ -1,7 +1,7 @@
-﻿namespace TrueTextTests;
+﻿namespace TruTxtTests;
 
-using TrueText;
-using V = TrueText.Validator;
+using TruTxt;
+using V = TruTxt.Validator;
 
 public class PasswordTests
 {

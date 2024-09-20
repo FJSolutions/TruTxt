@@ -1,4 +1,4 @@
-﻿namespace TrueText;
+﻿namespace TruTxt;
 
 using System.Text;
 

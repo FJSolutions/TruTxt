@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrueText\TrueText.csproj" />
+    <ProjectReference Include="..\TruTxt\TruTxt.csproj" />
   </ItemGroup>
 
 </Project>

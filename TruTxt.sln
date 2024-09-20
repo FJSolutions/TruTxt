@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueText", "TrueText\TrueText.csproj", "{FA99438B-7762-4498-B6D9-7C28EF4471F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruTxt", "TruTxt\TruTxt.csproj", "{FA99438B-7762-4498-B6D9-7C28EF4471F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueTextTests", "TrueTextTests\TrueTextTests.csproj", "{14976C5B-39F3-4FCF-9CDC-437971B3D885}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruTxtTests", "TruTxtTests\TruTxtTests.csproj", "{14976C5B-39F3-4FCF-9CDC-437971B3D885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

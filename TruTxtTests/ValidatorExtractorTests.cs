@@ -1,6 +1,6 @@
-﻿namespace TrueTextTests;
+﻿namespace TruTxtTests;
 
-using V = TrueText.Validator;
+using V = TruTxt.Validator;
 
 public class ValidatorExtractorTests
 {

@@ -1,6 +1,6 @@
-﻿namespace TrueText;
+﻿namespace TruTxt;
 
-public static class TrueParser
+public static class TruParser
 {
     /// <summary>
     /// Parses a <see cref="String"/> value as a <see cref="string"/>

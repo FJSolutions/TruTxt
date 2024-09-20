@@ -1,9 +1,9 @@
-﻿namespace TrueText;
+﻿namespace TruTxt;
 
 /// <summary>
 /// A class that can read validated text and trues to convert it to strongly typed values
 /// </summary>
-public class TrueReader
+public class TruReader
 {
     private readonly Dictionary<string, string> _data;
 
@@ -11,7 +11,7 @@ public class TrueReader
     /// The constructor is internal so it can only be created from 
     /// </summary>
     /// <param name="data"></param>
-    internal TrueReader(Dictionary<string, string> data)
+    internal TruReader(Dictionary<string, string> data)
     {
         this._data = data;
     }
@@ -21,11 +21,11 @@ public class TrueReader
         if (this._data.TryGetValue(key, out var value))
             return value;
 
-        throw new TrueTextException($"The key, '{key}, could not be found in the reader");
+        throw new TruTxtException($"The key, '{key}, could not be found in the reader");
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and returns it as a <c>String</c>.
+    /// Tries to get a value from the validated TruTxt validation results source, and returns it as a <c>String</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -35,7 +35,7 @@ public class TrueReader
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="long"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="long"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -43,14 +43,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseInt64(value).Match(
+        return TruParser.ParseInt64(value).Match(
             some: Result<long>.Ok,
             none: () => Result<long>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="int"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="int"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -58,14 +58,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseInt32(value).Match(
+        return TruParser.ParseInt32(value).Match(
             some: Result<int>.Ok,
             none: () => Result<int>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="short"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="short"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -73,14 +73,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseInt16(value).Match(
+        return TruParser.ParseInt16(value).Match(
             some: Result<short>.Ok,
             none: () => Result<short>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="byte"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="byte"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -88,14 +88,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseUInt8(value).Match(
+        return TruParser.ParseUInt8(value).Match(
             some: Result<byte>.Ok,
             none: () => Result<byte>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="ulong"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="ulong"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -103,14 +103,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseUInt64(value).Match(
+        return TruParser.ParseUInt64(value).Match(
             some: Result<ulong>.Ok,
             none: () => Result<ulong>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="UInt32"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="UInt32"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -118,14 +118,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseUInt32(value).Match(
+        return TruParser.ParseUInt32(value).Match(
             some: Result<uint>.Ok,
             none: () => Result<uint>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="ushort"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="ushort"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="ushort"/> value of the key in the data source.</returns>
@@ -134,14 +134,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseUInt16(value).Match(
+        return TruParser.ParseUInt16(value).Match(
             some: Result<ushort>.Ok,
             none: () => Result<ushort>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="SByte"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="SByte"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="SByte"/> value of the key in the data source.</returns>
@@ -150,14 +150,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseInt8(value).Match(
+        return TruParser.ParseInt8(value).Match(
             some: Result<sbyte>.Ok,
             none: () => Result<sbyte>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="Decimal"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="Decimal"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="Decimal"/> value of the key in the data source.</returns>
@@ -166,14 +166,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseDecimal(value).Match(
+        return TruParser.ParseDecimal(value).Match(
             some: Result<decimal>.Ok,
             none: () => Result<decimal>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="Double"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="Double"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="Double"/> value of the key in the data source.</returns>
@@ -182,14 +182,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseDouble(value).Match(
+        return TruParser.ParseDouble(value).Match(
             some: Result<double>.Ok,
             none: () => Result<double>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="Single"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="Single"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="Single"/> value of the key in the data source.</returns>
@@ -198,14 +198,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseSingle(value).Match(
+        return TruParser.ParseSingle(value).Match(
             some: Result<float>.Ok,
             none: () => Result<float>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="Guid"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="Guid"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="Guid"/> value of the key in the data source.</returns>
@@ -214,14 +214,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseGuid(value).Match(
+        return TruParser.ParseGuid(value).Match(
             some: Result<Guid>.Ok,
             none: () => Result<Guid>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="bool"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="bool"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="bool"/> value of the key in the data source.</returns>
@@ -230,14 +230,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseBool(value).Match(
+        return TruParser.ParseBool(value).Match(
             some: Result<bool>.Ok,
             none: () => Result<bool>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="DateTime"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="DateTime"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="DateTime"/> value of the key in the data source.</returns>
@@ -246,14 +246,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseDateTime(value).Match(
+        return TruParser.ParseDateTime(value).Match(
             some: Result<DateTime>.Ok,
             none: () => Result<DateTime>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <c>DateOnly</c>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <c>DateOnly</c>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>The <see cref="DateOnly"/> value of the key in the data source.</returns>
@@ -262,14 +262,14 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseDate(value).Match(
+        return TruParser.ParseDate(value).Match(
             some: Result<DateOnly>.Ok,
             none: () => Result<DateOnly>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
     }
 
     /// <summary>
-    /// Tries to get a value from the validated TrueText validation results source, and tries to convert it to a <see cref="TimeOnly"/>.
+    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="TimeOnly"/>.
     /// </summary>
     /// <param name="key">The key value to look-up in the data store</param>
     /// <returns>A <see cref="Result{A}"/> containing the value is successful; or a <see cref="Fail{TValue}"/> with an error message</returns>
@@ -277,7 +277,7 @@ public class TrueReader
     {
         var value = GetValue(key);
 
-        return TrueParser.ParseTime(value).Match(
+        return TruParser.ParseTime(value).Match(
             some: Result<TimeOnly>.Ok,
             none: () => Result<TimeOnly>.Fail($"'{value}' cannot be converted to an integer", key, value)
         );
@@ -310,7 +310,7 @@ public class TrueReader
         if (string.IsNullOrWhiteSpace(value))
             return NoResult<string>();
 
-        return TrueParser.ParseString(value).Match(
+        return TruParser.ParseString(value).Match(
             some: SomeResult,
             none: () => FailOption<string>($"'{value}' cannot be converted to an string", key, value)
         );
@@ -329,7 +329,7 @@ public class TrueReader
         if (string.IsNullOrWhiteSpace(value))
             return NoResult<sbyte>();
 
-        return TrueParser.ParseInt8(value).Match(
+        return TruParser.ParseInt8(value).Match(
             some: SomeResult,
             none: () => FailOption<sbyte>($"'{value}' cannot be converted to an integer", key, value)
         );
@@ -348,7 +348,7 @@ public class TrueReader
         if (string.IsNullOrWhiteSpace(value))
             return NoResult<short>();
 
-        return TrueParser.ParseInt16(value).Match(
+        return TruParser.ParseInt16(value).Match(
             some: SomeResult,
             none: () => FailOption<short>($"'{value}' cannot be converted to an integer", key, value)
         );
@@ -367,11 +367,115 @@ public class TrueReader
         if (string.IsNullOrWhiteSpace(value))
             return NoResult<int>();
 
-        return TrueParser.ParseInt32(value).Match(
+        return TruParser.ParseInt32(value).Match(
             some: SomeResult,
             none: () => FailOption<int>($"'{value}' cannot be converted to an integer", key, value)
         );
     }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="long"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<long>> GetOptionalInt64(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<long>();
+
+        return TruParser.ParseInt64(value).Match(
+            some: SomeResult,
+            none: () => FailOption<long>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="byte"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<byte>> GetOptionalUInt8(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<byte>();
+
+        return TruParser.ParseUInt8(value).Match(
+            some: SomeResult,
+            none: () => FailOption<byte>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="short"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<ushort>> GetOptionalUInt16(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<ushort>();
+
+        return TruParser.ParseUInt16(value).Match(
+            some: SomeResult,
+            none: () => FailOption<ushort>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="uint"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<uint>> GetOptionalUInt32(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<uint>();
+
+        return TruParser.ParseUInt32(value).Match(
+            some: SomeResult,
+            none: () => FailOption<uint>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+
+    /// <summary>
+    /// Tries to get an optional value from the data source and convert it to an <see cref="ulong"/>.
+    /// <para>If the source value is empty or whitespace, then the default value is returned as a success value</para>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>A <see cref="Result{TValue}"/> containing an <see cref="Option{TValue}"/></returns>
+    public Result<Option<ulong>> GetOptionalUInt64(string key)
+    {
+        var value = GetValue(key);
+
+        if (string.IsNullOrWhiteSpace(value))
+            return NoResult<ulong>();
+
+        return TruParser.ParseUInt64(value).Match(
+            some: SomeResult,
+            none: () => FailOption<ulong>($"'{value}' cannot be converted to an integer", key, value)
+        );
+    }
+    
+    // Single
+    // Double
+    // Decimal 
+    // Boolean
+    // Guid
+    // DateTime
+    // DateOnly
+    // TimeOnly
 }
 
 /**************************************
@@ -381,7 +485,7 @@ public class TrueReader
  *************************************/
 
 /// <summary>
-/// Represents the result of a <see cref="TrueReader"/> read method. 
+/// Represents the result of a <see cref="TruReader"/> read method. 
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 public abstract record Result<TValue>
@@ -399,7 +503,7 @@ public abstract record Result<TValue>
         {
             Ok<TValue>(var v) => ok(v),
             Fail<TValue>(var message, var key, var text) => fail(message, key, text),
-            _ => throw new TrueTextException("Unknown Result type")
+            _ => throw new TruTxtException("Unknown Result type")
         };
     }
 
@@ -419,7 +523,7 @@ public abstract record Result<TValue>
                 fail(message, key, text);
                 break;
             default:
-                throw new TrueTextException("Unknown Result type");
+                throw new TruTxtException("Unknown Result type");
         }
     }
 
@@ -435,7 +539,7 @@ public abstract record Result<TValue>
         {
             Ok<TValue> valid => mapper(valid.Value),
             Fail<TValue> failure => Result<TResult>.Fail(failure.Error, failure.Key, failure.Text),
-            _ => throw new TrueTextException("Unknown result type!")
+            _ => throw new TruTxtException("Unknown result type!")
         };
     }
 
@@ -451,7 +555,7 @@ public abstract record Result<TValue>
         {
             Ok<TValue> valid => binder(valid.Value),
             Fail<TValue> failure => Result<TResult>.Fail(failure.Error, failure.Key, failure.Text),
-            _ => throw new TrueTextException("Unknown result type!")
+            _ => throw new TruTxtException("Unknown result type!")
         };
     }
 

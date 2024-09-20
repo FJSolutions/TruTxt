@@ -1,14 +1,14 @@
 ﻿using Xunit.Abstractions;
 
-namespace TrueTextTests;
+namespace TruTxtTests;
 
-using static TrueText.TrueParser;
+using static TruTxt.TruParser;
 
-public class TruerParserTests
+public class TruParserTests
 {
     private readonly ITestOutputHelper _output;
     
-    public TruerParserTests(ITestOutputHelper output)
+    public TruParserTests(ITestOutputHelper output)
     {
         this._output = output;
     }

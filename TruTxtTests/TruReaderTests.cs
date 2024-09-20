@@ -1,13 +1,13 @@
-﻿namespace TrueTextTests;
+﻿namespace TruTxtTests;
 
-using TrueText;
-using V = TrueText.Validator;
+using TruTxt;
+using V = TruTxt.Validator;
 
-public class TrueReaderTests
+public class TruReaderTests
 {
     // private readonly ITestOutputHelper _output;
     //
-    // public TrueReaderTests(ITestOutputHelper output)
+    // public TruReaderTests(ITestOutputHelper output)
     // {
     //     this._output = output;
     // }
@@ -1023,11 +1023,292 @@ public class TrueReaderTests
                 Assert.IsType<Ok<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
 
                 return
-                    from age in reader.GetOptionalInt8("Age") select age.Reduce(0);
+                    from age in reader.GetOptionalInt8("Age")
+                    select age.Reduce(0);
             },
             valid: d =>
             {
                 Assert.Equal(0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeInt64OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<long>>>(reader.GetOptionalInt64("Age"));
+
+                return
+                    from age in reader.GetOptionalInt64("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneInt64OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<long>>>(reader.GetOptionalInt64("Age"));
+
+                return
+                    from age in reader.GetOptionalInt64("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeUInt32OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<uint>>>(reader.GetOptionalUInt32("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt32("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58u, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneUInt32OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<uint>>>(reader.GetOptionalUInt32("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt32("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0u, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeUInt16OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt16("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneUInt16OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt16("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeUInt8OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<byte>>>(reader.GetOptionalUInt8("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt8("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneUInt8OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<byte>>>(reader.GetOptionalUInt8("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt8("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadSomeUInt64OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply("58").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt64("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(58ul, d);
+                return string.Empty;
+            },
+            invalid: r =>
+            {
+                Assert.Fail();
+                return string.Empty;
+            }
+        );
+    }
+
+    [Fact]
+    public void ReadNoneUInt64OkTest()
+    {
+        var results = ResultsCollector.Create()
+                      + V.Optional().Apply(" ").WithKey("Age");
+
+        results.MapWithReader(
+            reader =>
+            {
+                Assert.IsType<Ok<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
+
+                return
+                    from age in reader.GetOptionalUInt64("Age")
+                    select age.Reduce(0);
+            },
+            valid: d =>
+            {
+                Assert.Equal(0ul, d);
                 return string.Empty;
             },
             invalid: r =>

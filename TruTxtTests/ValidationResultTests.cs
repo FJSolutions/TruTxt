@@ -1,7 +1,7 @@
-namespace TrueTextTests;
+namespace TruTxtTests;
 
-using TrueText;
-using static TrueText.ValidationResult;
+using TruTxt;
+using static TruTxt.ValidationResult;
 
 public class ValidationResultTests
 {

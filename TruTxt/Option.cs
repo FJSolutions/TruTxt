@@ -1,4 +1,4 @@
-﻿namespace TrueText;
+﻿namespace TruTxt;
 
 /// <summary>
 /// A data structure that represents the presence ort absence of a valuer 
@@ -19,7 +19,7 @@ public abstract record Option<TValue>
         {
             Some<TValue> s => some(s.Value),
             None<TValue> _ => none(),
-            _ => throw new TrueTextException("Unknown Option type")
+            _ => throw new TruTxtException("Unknown Option type")
         };
     }
 
@@ -35,7 +35,7 @@ public abstract record Option<TValue>
         {
             Some<TValue> s => Option<TResult>.Some(mapper(s.Value)),
             None<TValue> _ => No.Value,
-            _ => throw new TrueTextException("Unknown Option type")
+            _ => throw new TruTxtException("Unknown Option type")
         };
     }
 
@@ -52,7 +52,7 @@ public abstract record Option<TValue>
         {
             Some<TValue> s => binder(s.Value),
             None<TValue> _ => No.Value,
-            _ => throw new TrueTextException("Unknown Option type")
+            _ => throw new TruTxtException("Unknown Option type")
         };
     }
 
@@ -61,14 +61,14 @@ public abstract record Option<TValue>
     /// </summary>
     /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
     /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
-    /// <exception cref="TrueTextException"></exception>
+    /// <exception cref="TruTxtException"></exception>
     public TValue Reduce(TValue defaultValue)
     {
         return this switch
         {
             Some<TValue> s => s.Value,
             None<TValue> _ => defaultValue,
-            _ => throw new TrueTextException("Unknown Option type")
+            _ => throw new TruTxtException("Unknown Option type")
         };
     }
 
@@ -77,14 +77,14 @@ public abstract record Option<TValue>
     /// </summary>
     /// <param name="defaultValue">A function that returns a value if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
     /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
-    /// <exception cref="TrueTextException"></exception>
+    /// <exception cref="TruTxtException"></exception>
     public TValue Reduce(Func<TValue> defaultValue)
     {
         return this switch
         {
             Some<TValue> s => s.Value,
             None<TValue> _ => defaultValue(),
-            _ => throw new TrueTextException("Unknown Option type")
+            _ => throw new TruTxtException("Unknown Option type")
         };
     }
 

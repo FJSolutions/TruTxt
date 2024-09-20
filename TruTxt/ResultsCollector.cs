@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace TrueText;
+namespace TruTxt;
 
 using System.Collections.Immutable;
 
@@ -44,7 +44,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     }
 
     /// <summary>
-    /// Maps this <see cref="ResultsCollector"/> through a <see cref="TrueReader"/> data mapper and then to a the <param name="valid"></param> function.
+    /// Maps this <see cref="ResultsCollector"/> through a <see cref="TruReader"/> data mapper and then to a the <param name="valid"></param> function.
     /// <para>the point of the <param name="dataProcessor"></param> function is to safely transform valid text input to strongly typed values.</para> 
     /// </summary>
     /// <param name="dataProcessor">The data processing function</param>
@@ -54,7 +54,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// <typeparam name="TResult">The function's result type</typeparam>
     /// <returns>A <see cref="TResult"/></returns>
     public TResult MapWithReader<TModel, TResult>(
-        Func<TrueReader, Result<TModel>> dataProcessor,
+        Func<TruReader, Result<TModel>> dataProcessor,
         Func<TModel, TResult> valid,
         Func<ResultsCollector, TResult> invalid)
     {
@@ -67,7 +67,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
                         pair => KeyValuePair.Create(pair.Key, pair.Value.AsValid().Value)
                     )
                     .ToDictionary();
-            var dataResult = dataProcessor(new TrueReader(dict));
+            var dataResult = dataProcessor(new TruReader(dict));
 
             // Call the valid function if data processing was successful and return its result 
             if (dataResult is Ok<TModel> data)
