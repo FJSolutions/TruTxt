@@ -1,7 +1,7 @@
 namespace TruTxt;
 
 /// <summary>
-/// An abstract base record type for the <see cref="Valid"/> and <see cref="InValid"/> record types 
+/// An abstract base record type for the <see cref="Valid"/> and <see cref="Invalid"/> record types 
 /// </summary>
 /// <param name="Text">The text that was being validated</param>
 /// <param name="IsValid">An indicator of whether the result is valid or not</param>
@@ -40,7 +40,6 @@ public abstract record ValidationResult(string Text, bool IsValid)
         errors.AddRange(((rhs as Invalid)!).Errors);
         return new Invalid(rhs.Text, errors.ToArray());
     }
-
 
     /// <summary>
     /// Provides a matching function that returns a <typeparam name="T"></typeparam>

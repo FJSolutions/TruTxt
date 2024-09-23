@@ -1,5 +1,9 @@
 ﻿namespace TruTxt;
 
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
+
+[Pure]
 public static class TruParser
 {
     /// <summary>
@@ -7,6 +11,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as a <see cref="String"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<string> ParseString(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -20,6 +25,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="sbyte"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<sbyte> ParseInt8(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -36,6 +42,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="short"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<short> ParseInt16(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -52,6 +59,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="int"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<int> ParseInt32(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -68,6 +76,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="long"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<long> ParseInt64(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -84,6 +93,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="byte"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<byte> ParseUInt8(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -100,6 +110,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="ushort"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<ushort> ParseUInt16(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -116,6 +127,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="uint"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<uint> ParseUInt32(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -132,6 +144,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="ulong"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<ulong> ParseUInt64(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -148,6 +161,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="float"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<float> ParseSingle(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -164,6 +178,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="double"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<double> ParseDouble(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -180,6 +195,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="decimal"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<decimal> ParseDecimal(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -196,6 +212,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="Guid"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<Guid> ParseGuid(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -212,6 +229,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="DateTime"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<DateTime> ParseDateTime(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -228,6 +246,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="DateOnly"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<DateOnly> ParseDate(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -244,6 +263,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="TimeOnly"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<TimeOnly> ParseTime(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
@@ -260,6 +280,7 @@ public static class TruParser
     /// </summary>
     /// <param name="value">The value to parse as an <see cref="Boolean"/></param>
     /// <returns>A <see cref="Option{TValue}"/></returns>
+    [Pure]
     public static Option<bool> ParseBool(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))

@@ -1,5 +1,7 @@
 ﻿namespace TruTxt;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// A data structure that represents the presence ort absence of a valuer 
 /// </summary>
@@ -62,7 +64,7 @@ public abstract record Option<TValue>
     /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
     /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
     /// <exception cref="TruTxtException"></exception>
-    public TValue Reduce(TValue defaultValue)
+    public TValue Reduce([NotNull] TValue defaultValue)
     {
         return this switch
         {
@@ -101,7 +103,7 @@ public abstract record Option<TValue>
     /// </summary>
     /// <param name="value">The value of the <see cref="Some"/></param>
     /// <returns>A <see cref="Some"/> <see cref="Option{TValue}"/></returns>
-    public static Option<TValue> Some(TValue value) => new Some<TValue>(value);
+    public static Option<TValue> Some([NotNull] TValue value) => new Some<TValue>(value);
 }
 
 /// <summary>
@@ -109,7 +111,7 @@ public abstract record Option<TValue>
 /// </summary>
 /// <param name="Value">The contained value</param>
 /// <typeparam name="TValue">The type of the contained value</typeparam>
-internal sealed record Some<TValue>(TValue Value) : Option<TValue>;
+internal sealed record Some<TValue>([NotNull] TValue Value) : Option<TValue>;
 
 /// <summary>
 /// Represents an <see cref="Option{TValue}"/> that contains no value

@@ -18,7 +18,7 @@ public sealed class PasswordPolicy
     private PasswordPolicy()
     {
         MinimumLength = 1;
-        MaximumLength = UInt16.MaxValue;
+        MaximumLength = ushort.MaxValue;
         IsSpaceAllowed = false;
         RequiredNumberOfLowerCaseLetters = 0;
         RequiredNumberOfUpperCaseLetters = 0;
@@ -30,12 +30,12 @@ public sealed class PasswordPolicy
     /// <summary>
     /// The minimum length of the password 
     /// </summary>
-    public UInt16 MinimumLength { get; private set; }
+    public ushort MinimumLength { get; private set; }
 
     /// <summary>
     /// The maximum length of the password
     /// </summary>
-    public UInt16 MaximumLength { get; private set; }
+    public ushort MaximumLength { get; private set; }
 
     /// <summary>
     /// The number of upper case letters required for the password
@@ -79,8 +79,8 @@ public sealed class PasswordPolicy
                      this.RequiredNumberOfUpperCaseLetters;
         if (length < this.MinimumLength)
             length = this.MinimumLength;
-        if (length < 6)
-            length = 6;
+        if (length < 7)
+            length = 7;
 
         var rand = new Random();
         var characters = new List<char>();
@@ -176,7 +176,7 @@ public sealed class PasswordPolicy
     {
         return new PasswordPolicy()
         {
-            MinimumLength = 12,
+            MinimumLength = 13,
             RequiredNumberOfDigits = 2,
             RequiredNumberOfSymbols = 2,
             RequiredNumberOfUpperCaseLetters = 3,
@@ -192,7 +192,7 @@ public sealed class PasswordPolicy
         // Fields
         private readonly PasswordPolicy _policy;
 
-        internal PolicyBuilder(PasswordPolicy policy)
+        internal protected PolicyBuilder(PasswordPolicy policy)
         {
             this._policy = policy;
         }
@@ -211,7 +211,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="minLength">The minimum length of the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder MinimumLength(UInt16 minLength)
+        public PolicyBuilder MinimumLength(ushort minLength)
         {
             this._policy.MinimumLength = minLength;
             return this;
@@ -222,7 +222,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="maxLength">The maximum length of the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder MaximumLength(UInt16 maxLength)
+        public PolicyBuilder MaximumLength(ushort maxLength)
         {
             this._policy.MaximumLength = maxLength;
             return this;
@@ -244,7 +244,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="requiredNumberOfUpperCaseLetters">The number of required upper case letters in the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder RequiredNumberOfUpperCaseLetters(UInt16 requiredNumberOfUpperCaseLetters)
+        public PolicyBuilder RequiredNumberOfUpperCaseLetters(ushort requiredNumberOfUpperCaseLetters)
         {
             this._policy.RequiredNumberOfUpperCaseLetters = requiredNumberOfUpperCaseLetters;
             return this;
@@ -255,7 +255,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="requiredNumberOfLowerCaseLetters">The number of required lower case letters in the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder RequiredNumberOfLowerCaseLetters(UInt16 requiredNumberOfLowerCaseLetters)
+        public PolicyBuilder RequiredNumberOfLowerCaseLetters(ushort requiredNumberOfLowerCaseLetters)
         {
             this._policy.RequiredNumberOfLowerCaseLetters = requiredNumberOfLowerCaseLetters;
             return this;
@@ -266,7 +266,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="requiredNumberOfDigits">The number of required digit characters in the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder RequiredNumberOfDigits(UInt16 requiredNumberOfDigits)
+        public PolicyBuilder RequiredNumberOfDigits(ushort requiredNumberOfDigits)
         {
             this._policy.RequiredNumberOfDigits = requiredNumberOfDigits;
             return this;
@@ -277,7 +277,7 @@ public sealed class PasswordPolicy
         /// </summary>
         /// <param name="requiredNumberOfSymbols">The number of required symbol characters in the password</param>
         /// <returns>The <see cref="PolicyBuilder"/> instance</returns>
-        public PolicyBuilder RequiredNumberOfSymbols(UInt16 requiredNumberOfSymbols)
+        public PolicyBuilder RequiredNumberOfSymbols(ushort requiredNumberOfSymbols)
         {
             this._policy.RequiredNumberOfSymbols = requiredNumberOfSymbols;
             return this;

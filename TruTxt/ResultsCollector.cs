@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace TruTxt;
 
@@ -8,8 +10,11 @@ using System.Collections.Immutable;
 /// Represents a keyed collection of <see cref="ValidationResult"/>s.
 /// </summary>
 /// <param name="Results">An existing <see cref="ImmutableDictionary{TKey,TValue}"/> of keyed results</param>
-/// <param name="IsValid">Gets a value indicating whether all the <see cref="ValidationResult"/>s collected are in the valid state.</param>
-public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Results, bool IsValid) : IEnumerable<KeyValuePair<string, ValidationResult>>
+/// <param name="IsValid">Gets a value indicating whether all the <see cref="ValidationResult"/>s
+/// collected are in the valid state.</param>
+[Pure]
+public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Results, bool IsValid) :
+    IEnumerable<KeyValuePair<string, ValidationResult>>
 {
     /// <summary>
     /// Collects the result into this collection under the specific key; or adds it to an existing entry.
@@ -17,7 +22,8 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// <param name="key">The key to collect the result under.</param>
     /// <param name="result">The <see cref="ValidationResult"/> to add</param>
     /// <returns>The <see cref="ValidationResult"/> that has been added</returns>
-    public ResultsCollector Add(string key, ValidationResult result)
+    [Pure]
+    public ResultsCollector Add([NotNull]string key, ValidationResult result)
     {
         if (this.Results.TryGetValue(key, out var r2))
         {
@@ -36,7 +42,8 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// </summary>
     /// <param name="key">The key that the <see cref="ValidationResult"/> was collected under.</param>
     /// <returns>A <see cref="ValidationResult"/> instance</returns>
-    public ValidationResult Get(string key)
+    [Pure]
+    public ValidationResult Get([NotNull]string key)
     {
         return this.Results.TryGetValue(key, out var result)
             ? result
@@ -53,11 +60,14 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// <typeparam name="TModel">The type of the data model</typeparam>
     /// <typeparam name="TResult">The function's result type</typeparam>
     /// <returns>A <see cref="TResult"/></returns>
+    [Pure]
     public TResult MapWithReader<TModel, TResult>(
         Func<TruReader, Result<TModel>> dataProcessor,
         Func<TModel, TResult> valid,
         Func<ResultsCollector, TResult> invalid)
     {
+        var me = this;
+        
         // If this is a valid result collector
         if (this.IsValid)
         {
@@ -75,11 +85,11 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
 
             // Otherwise, fallthrough after adding the data processor failure error to this collector
             if (dataResult is Fail<TModel> failure)
-                this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.Error }));
+                me = this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.Error }));
         }
 
         // Process the errors
-        return invalid(this);
+        return invalid(me);
     }
 
     /// <summary>
@@ -89,7 +99,8 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// <param name="key2">The key value of the second result to compare with</param>
     /// <param name="message">The error message to add if the comparison fails</param>
     /// <returns>A reference to this <see cref="ResultsCollector"/></returns>
-    public ResultsCollector CompareResults(string key1, string key2, string message)
+    [Pure]
+    public ResultsCollector CompareResults([NotNull]string key1, [NotNull]string key2, [NotNull]string message)
     {
         var result1 = Get(key1);
         var result2 = Get(key2);
@@ -119,6 +130,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// <param name="key">The key to collect the result under.</param>
     /// <param name="result">The <see cref="ValidationResult"/> to add</param>
     /// <returns>The new <see cref="ResultsCollector"/></returns>
+    [Pure]
     public static ResultsCollector Create(string key, ValidationResult result)
     {
         var builder = ImmutableDictionary.Create<string, ValidationResult>();
@@ -129,6 +141,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
     /// Creates an empty <see cref="ResultsCollector"/>
     /// </summary>
     /// <returns>The new <see cref="ResultsCollector"/></returns>
+    [Pure]
     public static ResultsCollector Create()
     {
         return new ResultsCollector(ImmutableDictionary<string, ValidationResult>.Empty, true);
@@ -148,6 +161,13 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
 
 public static class ResultCollectorExtensions
 {
+    /// <summary>
+    /// Creates a <see cref="Tuple"/> that can be Added to a <see cref="ResultsCollector"/>
+    /// </summary>
+    /// <param name="result">The <see cref="ValidationResult"/> to add to the collection</param>
+    /// <param name="key">the key name to add the <see cref="ValidationResult"/> under</param>
+    /// <returns>A <see cref="Tuple"/> contsining the key name and <see cref="ValidationResult"/> to add to a
+    /// <see cref="ResultsCollector"/>.</returns>
     public static Tuple<string, ValidationResult> WithKey(this ValidationResult result, string key) =>
         Tuple.Create(key, result);
 }
