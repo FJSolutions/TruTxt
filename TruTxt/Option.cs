@@ -1,5 +1,6 @@
 ﻿namespace TruTxt;
 
+using System.Diagnostics.Contracts;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
@@ -9,85 +10,10 @@ using System.Diagnostics.CodeAnalysis;
 public abstract record Option<TValue>
 {
     /// <summary>
-    /// The constructor is private to prevent any other sub-types other than Some and None 
+    /// The constructor is private to prevent any other subtypes other than Some and None 
     /// </summary>
     private protected Option()
     {
-    }
-
-    public TResult Match<TResult>(Func<TValue, TResult> some, Func<TResult> none)
-    {
-        return this switch
-        {
-            Some<TValue> s => some(s.Value),
-            None<TValue> _ => none(),
-            _ => throw new TruTxtException("Unknown Option type")
-        };
-    }
-
-    /// <summary>
-    /// Maps the value contained in this <see cref="Option{TValue}"/>, if present, using the <param name="mapper"></param> function
-    /// </summary>
-    /// <param name="mapper">The function to use to transform the value</param>
-    /// <typeparam name="TResult">The return value of the <see cref="Option{TValue}"/></typeparam>
-    /// <returns>An instance of a <see cref="Option{TValue}"/></returns>
-    public Option<TResult> Map<TResult>(Func<TValue, TResult> mapper)
-    {
-        return this switch
-        {
-            Some<TValue> s => Option<TResult>.Some(mapper(s.Value)),
-            None<TValue> _ => No.Value,
-            _ => throw new TruTxtException("Unknown Option type")
-        };
-    }
-
-    /// <summary>
-    /// Performs a transformation on the value of this <see cref="Option{TValue}"/>, if one is present, using the supplied
-    /// <param name="binder"></param> function.
-    /// </summary>
-    /// <param name="binder">A function that will transform the source value</param>
-    /// <typeparam name="TResult">The type of the result of the transformation</typeparam>
-    /// <returns>An <see cref="Option{TValue}"/></returns>
-    public Option<TResult> Bind<TResult>(Func<TValue, Option<TResult>> binder)
-    {
-        return this switch
-        {
-            Some<TValue> s => binder(s.Value),
-            None<TValue> _ => No.Value,
-            _ => throw new TruTxtException("Unknown Option type")
-        };
-    }
-
-    /// <summary>
-    /// Reduces an <see cref="Option{TValue}"/> to a value. 
-    /// </summary>
-    /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
-    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
-    /// <exception cref="TruTxtException"></exception>
-    public TValue Reduce([NotNull] TValue defaultValue)
-    {
-        return this switch
-        {
-            Some<TValue> s => s.Value,
-            None<TValue> _ => defaultValue,
-            _ => throw new TruTxtException("Unknown Option type")
-        };
-    }
-
-    /// <summary>
-    /// Reduces an <see cref="Option{TValue}"/> to a value. 
-    /// </summary>
-    /// <param name="defaultValue">A function that returns a value if the <see cref="Option{TValue}"/> is a <see cref="None"/></param>
-    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
-    /// <exception cref="TruTxtException"></exception>
-    public TValue Reduce(Func<TValue> defaultValue)
-    {
-        return this switch
-        {
-            Some<TValue> s => s.Value,
-            None<TValue> _ => defaultValue(),
-            _ => throw new TruTxtException("Unknown Option type")
-        };
     }
 
     public static implicit operator Option<TValue>(No no) => new None<TValue>();
@@ -134,5 +60,99 @@ public sealed record No
     /// <summary>
     /// Gets a no-value instance that can be implicitly converted to a strongly types <see cref="None{TValue}"/>
     /// </summary>
-    public static No Value { get; } = new No();
+    public static No Value { get; } = new();
+}
+
+public static class OptionExtensions
+{
+    [Pure]
+    public static TResult Match<TValue, TResult>(this Option<TValue> option, Func<TValue, TResult> some,
+        Func<TResult> none)
+    {
+        return option switch
+        {
+            Some<TValue> s => some(s.Value),
+            None<TValue> _ => none(),
+            _ => throw new TruTxtException("Unknown Option type")
+        };
+    }
+
+
+    /// <summary>
+    /// Maps the value contained in this <see cref="Option{TValue}"/>, if present, using the <param name="mapper"></param> function
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="mapper">The function to use to transform the value</param>
+    /// <typeparam name="TResult">The return value of the <see cref="Option{TValue}"/></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns>An instance of a <see cref="Option{TValue}"/></returns>
+    [Pure]
+    public static Option<TResult> Map<TValue, TResult>(this Option<TValue> option, Func<TValue, TResult> mapper)
+    {
+        return option switch
+        {
+            Some<TValue> s => Option<TResult>.Some(mapper(s.Value)),
+            None<TValue> _ => No.Value,
+            _ => throw new TruTxtException("Unknown Option type")
+        };
+    }
+
+    /// <summary>
+    /// Performs a transformation on the value of this <see cref="Option{TValue}"/>, if one is present, using the supplied
+    /// <param name="binder"></param> function.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="binder">A function that will transform the source value</param>
+    /// <typeparam name="TResult">The type of the result of the transformation</typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns>An <see cref="Option{TValue}"/></returns>
+    [Pure]
+    public static Option<TResult> Bind<TValue, TResult>(this Option<TValue> option,
+        Func<TValue, Option<TResult>> binder)
+    {
+        return option switch
+        {
+            Some<TValue> s => binder(s.Value),
+            None<TValue> _ => No.Value,
+            _ => throw new TruTxtException("Unknown Option type")
+        };
+    }
+
+    /// <summary>
+    /// Reduces an <see cref="Option{TValue}"/> to a value. 
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="defaultValue">The value to return if the <see cref="Option{TValue}"/> is a
+    /// <see cref="None{TValue}"/></param>
+    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
+    /// <exception cref="TruTxtException"></exception>
+    [Pure]
+    public static TValue Reduce<TValue>(this Option<TValue> option, [NotNull] TValue defaultValue)
+    {
+        return option switch
+        {
+            Some<TValue> s => s.Value,
+            None<TValue> _ => defaultValue,
+            _ => throw new TruTxtException("Unknown Option type")
+        };
+    }
+
+    /// <summary>
+    /// Reduces an <see cref="Option{TValue}"/> to a value. 
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="defaultValue">A function that returns a value if the <see cref="Option{TValue}"/> is a
+    /// <see cref="None{TValue}"/></param>
+    /// <returns>A <typeparam name="TValue"> value</typeparam></returns>
+    /// <exception cref="TruTxtException"></exception>
+    [Pure]
+    public static TValue Reduce<TValue>(this Option<TValue> option, Func<TValue> defaultValue)
+    {
+        return option switch
+        {
+            Some<TValue> s => s.Value,
+            None<TValue> _ => defaultValue(),
+            _ => throw new TruTxtException("Unknown Option type")
+        };
+    }
 }

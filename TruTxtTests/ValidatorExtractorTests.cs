@@ -1,5 +1,6 @@
 ﻿namespace TruTxtTests;
 
+using TruTxt;
 using V = TruTxt.Validator;
 
 public class ValidatorExtractorTests
@@ -10,7 +11,7 @@ public class ValidatorExtractorTests
         var result = V.Trim()
             .Apply(" FBJ\t")
             .Reduce(string.Empty);
-        
+
         Assert.Equal("FBJ", result);
     }
 
@@ -20,7 +21,7 @@ public class ValidatorExtractorTests
         var result = V.Trim()
             .Apply("fBj7")
             .Reduce(string.Empty);
-        
+
         Assert.Equal("fBj7", result);
     }
 
@@ -30,7 +31,7 @@ public class ValidatorExtractorTests
         var result = V.ExtractNumber()
             .Apply("Tel: (011) 793-5432 ")
             .Reduce(string.Empty);
-        
+
         Assert.Equal("0117935432", result);
     }
 
@@ -40,7 +41,7 @@ public class ValidatorExtractorTests
         var result = V.ExtractNumber()
             .Apply("This contains no. digits!")
             .Reduce(string.Empty);
-        
+
         Assert.Empty(result);
     }
 
@@ -50,7 +51,7 @@ public class ValidatorExtractorTests
         var result = V.ExtractNumber()
             .Apply("$ 1,000")
             .Reduce(string.Empty);
-        
+
         Assert.Equal("1000", result);
     }
 
@@ -60,7 +61,7 @@ public class ValidatorExtractorTests
         var result = V.ExtractNumber()
             .Apply("$ 1,000.01")
             .Reduce(string.Empty);
-        
+
         Assert.Equal("1000.01", result);
     }
 
@@ -69,7 +70,7 @@ public class ValidatorExtractorTests
     {
         var result = V.ExtractNumber(false)
             .Apply("$ 1,000.01");
-        
+
         Assert.False(result.IsValid);
     }
 }

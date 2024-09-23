@@ -942,7 +942,7 @@ public class TruReaderTests
                 Assert.IsType<Ok<Option<short>>>(reader.GetOptionalInt16("Age"));
 
                 return
-                    from age in reader.GetOptionalInt16("Age") select age.Reduce(0);
+                    from age in reader.GetOptionalInt16("Age") select age.Reduce((short)0);
             },
             valid: d =>
             {
@@ -969,7 +969,7 @@ public class TruReaderTests
                 Assert.IsType<Ok<Option<short>>>(reader.GetOptionalInt16("Age"));
 
                 return
-                    from age in reader.GetOptionalInt16("Age") select age.Reduce(0);
+                    from age in reader.GetOptionalInt16("Age") select age.Reduce((short)0);
             },
             valid: d =>
             {
@@ -996,7 +996,7 @@ public class TruReaderTests
                 Assert.IsType<Ok<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
 
                 return
-                    from age in reader.GetOptionalInt8("Age") select age.Reduce(0);
+                    from age in reader.GetOptionalInt8("Age") select age.Reduce((sbyte)0);
             },
             valid: d =>
             {
@@ -1024,7 +1024,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalInt8("Age")
-                    select age.Reduce(0);
+                    select age.Reduce((sbyte)0);
             },
             valid: d =>
             {
@@ -1108,7 +1108,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt32("Age")
-                    select age.Reduce(0);
+                    select age.Reduce(0u);
             },
             valid: d =>
             {
@@ -1136,7 +1136,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt32("Age")
-                    select age.Reduce(0);
+                    select age.Reduce(0u);
             },
             valid: d =>
             {
@@ -1164,7 +1164,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt16("Age")
-                    select age.Reduce(0);
+                    select age.Reduce((ushort)0);
             },
             valid: d =>
             {
@@ -1192,7 +1192,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt16("Age")
-                    select age.Reduce(0);
+                    select age.Reduce((ushort)0);
             },
             valid: d =>
             {
@@ -1220,7 +1220,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt8("Age")
-                    select age.Reduce(0);
+                    select age.Reduce((byte)0);
             },
             valid: d =>
             {
@@ -1248,7 +1248,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt8("Age")
-                    select age.Reduce(0);
+                    select age.Reduce((byte)0);
             },
             valid: d =>
             {
@@ -1276,7 +1276,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt64("Age")
-                    select age.Reduce(0);
+                    select age.Reduce(0ul);
             },
             valid: d =>
             {
@@ -1304,7 +1304,7 @@ public class TruReaderTests
 
                 return
                     from age in reader.GetOptionalUInt64("Age")
-                    select age.Reduce(0);
+                    select age.Reduce(0ul);
             },
             valid: d =>
             {
@@ -1560,7 +1560,7 @@ public class TruReaderTests
             },
             valid: d =>
             {
-                Assert.Equal(Guid.Parse("4B15CEF5-0AF2-4154-8DDF-0EA9FD3B5510"),d);
+                Assert.Equal(Guid.Parse("4B15CEF5-0AF2-4154-8DDF-0EA9FD3B5510"), d);
                 return string.Empty;
             },
             invalid: r =>
@@ -1588,7 +1588,7 @@ public class TruReaderTests
             },
             valid: d =>
             {
-                Assert.Equal(Guid.Empty,d);
+                Assert.Equal(Guid.Empty, d);
                 return string.Empty;
             },
             invalid: r =>
@@ -1616,7 +1616,7 @@ public class TruReaderTests
             },
             valid: d =>
             {
-                Assert.Equal(new DateTime(2024, 9, 20, 14, 22, 0),d);
+                Assert.Equal(new DateTime(2024, 9, 20, 14, 22, 0), d);
                 return string.Empty;
             },
             invalid: r =>
@@ -1672,7 +1672,7 @@ public class TruReaderTests
             },
             valid: d =>
             {
-                Assert.Equal(new TimeOnly(14, 22, 0),d);
+                Assert.Equal(new TimeOnly(14, 22, 0), d);
                 return string.Empty;
             },
             invalid: r =>
@@ -1728,7 +1728,7 @@ public class TruReaderTests
             },
             valid: d =>
             {
-                Assert.Equal(new DateOnly(2024, 9, 20),d);
+                Assert.Equal(new DateOnly(2024, 9, 20), d);
                 return string.Empty;
             },
             invalid: r =>

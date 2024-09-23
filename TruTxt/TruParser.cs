@@ -1,6 +1,5 @@
 ﻿namespace TruTxt;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 [Pure]

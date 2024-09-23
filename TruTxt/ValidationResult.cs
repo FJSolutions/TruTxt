@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace TruTxt;
 
 /// <summary>
@@ -5,21 +7,8 @@ namespace TruTxt;
 /// </summary>
 /// <param name="Text">The text that was being validated</param>
 /// <param name="IsValid">An indicator of whether the result is valid or not</param>
-/// <typeparam name="T">The type of the Instance property of a <see cref="Valid"/> result.</typeparam>
 public abstract record ValidationResult(string Text, bool IsValid)
 {
-    /// <summary>
-    /// Returns current <see cref="ValidationResult"/> as an <see cref="Invalid"/> instance.
-    /// </summary>
-    /// <returns>An <see cref="Invalid"/> instance; or <code>null</code>.</returns>
-    public Invalid AsInvalid() => (Invalid)this;
-
-    /// <summary>
-    /// Returns current <see cref="ValidationResult"/> as an <see cref="Valid"/> instance.
-    /// </summary>
-    /// <returns>A <see cref="Valid"/> instance; or <code>null</code>.</returns>
-    public Valid AsValid() => (Valid)this;
-
     /// <summary>
     /// Overrides the `+` operator to combine <see cref="ValidationResult"/>.
     /// </summary>
@@ -42,68 +31,11 @@ public abstract record ValidationResult(string Text, bool IsValid)
     }
 
     /// <summary>
-    /// Provides a matching function that returns a <typeparam name="T"></typeparam>
-    /// </summary>
-    /// <param name="validFunc">The <see cref="Func{TResult}"/> function to fire when this <see cref="ValidationResult"/> is <see cref="Valid"/>.</param>
-    /// <param name="invalidFunc">The <see cref="Func{TResult}"/> function to fire when this <see cref="ValidationResult"/> is <see cref="Invalid"/>.</param>
-    public TResult Match<TResult>(Func<Valid, TResult> validFunc, Func<Invalid, TResult> invalidFunc)
-    {
-        if (this.IsValid)
-            return validFunc(this.AsValid());
-
-        return invalidFunc(this.AsInvalid());
-    }
-
-    /// <summary>
-    /// Maps the Instance of a <see cref="Valid"/> <see cref="ValidationResult"/> to a new <see cref="Valid"/> 
-    /// </summary>
-    /// <param name="fn">The <see cref="Func{T, TResult}">"></see> to transform the Instance of a <see cref="Valid"/></param>
-    /// <returns>A <see cref="ValidationResult"/> instance</returns>
-    public ValidationResult Map(Func<string, string> fn) => this.IsValid
-        ? new Valid(fn(this.AsValid().Value), this.Text)
-        : new Invalid(this.Text, this.AsInvalid().Errors);
-
-    /// <summary>
-    /// Filters the <see cref="ValidationResult"/>, if it is a <see cref="Valid"/> result then the Instance is
-    /// checked against the <param name="predicate"></param> and passed through if successful; or replaced with an <see cref="InValid"/>
-    /// using the supplied <paramref name="message"/>.
-    /// </summary>
-    /// <param name="predicate">A predicate function to validate the <see cref="ValidationResult"/> agains</param>
-    /// <param name="message">The message to use in case the <param name="predicate"> fails</param></param>
-    /// <returns>A <see cref="ValidationResult"/> instance</returns>
-    public ValidationResult Filter(Predicate<string> predicate, string message)
-    {
-        if (this.IsValid)
-        {
-            return predicate(this.AsValid().Value)
-                ? this
-                : new Invalid(this.Text, new[] { message });
-        }
-
-        return this;
-    }
-
-    /// <summary>
-    /// Reduces the <see cref="ValidationResult"/> to its value
-    /// (Also sometimes called OrElse) 
-    /// </summary>
-    /// <param name="orElse">The value to supply if this is an <see cref="Invalid"/> result.</param>
-    /// <returns>A <typeparam name="T"></typeparam> value</returns>
-    public string Reduce(string orElse = default) => this.IsValid ? this.AsValid().Value : orElse;
-
-    /// <summary>
-    /// Reduces the <see cref="ValidationResult"/> to its value
-    /// (Also sometimes called OrElse) 
-    /// </summary>
-    /// <param name="orElse">An <see cref="Func{T}"/> that produces a value to supply if this is an <see cref="Invalid"/> result.</param>
-    /// <returns>A <typeparam name="T"></typeparam> value</returns>
-    public string Reduce(Func<string> orElse) => this.IsValid ? this.AsValid().Value : orElse();
-
-    /// <summary>
     /// Factory method that returns a validFunc <see cref="ValidationResult"/> instance. 
     /// </summary>
     /// <param name="text">The Current value of the text to validate</param>
     /// <returns>A <see cref="ValidationResult"/> instance.</returns>
+    [Pure]
     public static ValidationResult Valid(string text) =>
         new Valid(text, text);
 
@@ -113,6 +45,7 @@ public abstract record ValidationResult(string Text, bool IsValid)
     /// <param name="message">the error messages for the validation</param>
     /// <param name="text">The Current value opf the text</param>
     /// <returns>A <see cref="ValidationResult"/> instance.</returns>
+    [Pure]
     public static ValidationResult Invalid(string text, string message) =>
         new Invalid(text, new[] { message });
 
@@ -121,6 +54,7 @@ public abstract record ValidationResult(string Text, bool IsValid)
     /// </summary>
     /// <param name="text">The text to lift into the <see cref="ValidationResult"/></param>
     /// <returns>A <see cref="ValidationResult"/> instance.</returns>
+    [Pure]
     public static ValidationResult Pure(string text) => Valid(text);
 }
 
@@ -129,12 +63,104 @@ public abstract record ValidationResult(string Text, bool IsValid)
 /// </summary>
 /// <param name="Value">The valid value</param>
 /// <param name="Text">The input text to the <see cref="Valid"/> result.</param>
-/// <typeparam name="T">The type of the valid <see cref="ValidationResult"/></typeparam>
 public sealed record Valid(string Value, string Text) : ValidationResult(Text, true);
 
 /// <summary>
 /// Represents a generic, invalid result of a validation
 /// </summary>
 /// <param name="Text">The input text to the <see cref="Valid"/> result.</param>
-/// <typeparam name="T">The type of the valid <see cref="ValidationResult"/></typeparam>
 public sealed record Invalid(string Text, string[] Errors) : ValidationResult(Text, false);
+
+public static class ValidationResultExtensions
+{
+    /// <summary>
+    /// Returns current <see cref="ValidationResult"/> as an <see cref="Invalid"/> instance.
+    /// </summary>
+    /// <returns>An <see cref="Invalid"/> instance; or <code>null</code>.</returns>
+    [Pure]
+    public static Invalid AsInvalid(this ValidationResult result) => (Invalid)result;
+
+    /// <summary>
+    /// Returns current <see cref="ValidationResult"/> as an <see cref="Valid"/> instance.
+    /// </summary>
+    /// <returns>A <see cref="Valid"/> instance; or <code>null</code>.</returns>
+    [Pure]
+    public static Valid AsValid(this ValidationResult result) => (Valid)result;
+
+    /// <summary>
+    /// Provides a matching function that returns a <typeparam name="TResult"></typeparam>
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="validFunc">The <see cref="Func{TResult}"/> function to fire when this <see cref="ValidationResult"/>
+    /// is <see cref="Valid"/>.</param>
+    /// <param name="invalidFunc">The <see cref="Func{TResult}"/> function to fire when this <see cref="ValidationResult"/>
+    /// is <see cref="Invalid"/>.</param>
+    [Pure]
+    public static TResult Match<TResult>(this ValidationResult result, Func<Valid, TResult> validFunc,
+        Func<Invalid, TResult> invalidFunc)
+    {
+        if (result.IsValid)
+            return validFunc(result.AsValid());
+
+        return invalidFunc(result.AsInvalid());
+    }
+
+
+    /// <summary>
+    /// Maps the Instance of a <see cref="Valid"/> <see cref="ValidationResult"/> to a new <see cref="Valid"/> 
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="fn">The <see cref="Func{T, TResult}">"></see> to transform the Instance of a <see cref="Valid"/></param>
+    /// <returns>A <see cref="ValidationResult"/> instance</returns>
+    [Pure]
+    public static ValidationResult Map(this ValidationResult result, Func<string, string> fn) => result.IsValid
+        ? new Valid(fn(result.AsValid().Value), result.Text)
+        : new Invalid(result.Text, result.AsInvalid().Errors);
+
+    /// <summary>
+    /// Filters the <see cref="ValidationResult"/>, if it is a <see cref="Valid"/> result then the Instance is
+    /// checked against the <param name="predicate"></param> and passed through if successful; or replaced with an
+    /// <see cref="Invalid"/>
+    /// using the supplied <paramref name="message"/>.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="predicate">A predicate function to validate the <see cref="ValidationResult"/> agains</param>
+    /// <param name="message">The message to use in case the <param name="predicate"> fails</param></param>
+    /// <returns>A <see cref="ValidationResult"/> instance</returns>
+    [Pure]
+    public static ValidationResult Filter(this ValidationResult result, Predicate<string> predicate, string message)
+    {
+        if (result.IsValid)
+        {
+            return predicate(result.AsValid().Value)
+                ? result
+                : new Invalid(result.Text, new[] { message });
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Reduces the <see cref="ValidationResult"/> to its value
+    /// (Also sometimes called OrElse) 
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="orElse">The value to supply if this is an <see cref="Invalid"/> result.</param>
+    [Pure]
+    public static string Reduce(this ValidationResult result, string orElse = default) =>
+        result.IsValid
+            ? result.AsValid().Value
+            : orElse;
+
+    /// <summary>
+    /// Reduces the <see cref="ValidationResult"/> to its value
+    /// (Also sometimes called OrElse) 
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="orElse">An <see cref="Func{T}"/> that produces a value to supply if this is an <see cref="Invalid"/> result.</param>
+    [Pure]
+    public static string Reduce(this ValidationResult result, Func<string> orElse) =>
+        result.IsValid
+            ? result.AsValid().Value
+            : orElse();
+}
