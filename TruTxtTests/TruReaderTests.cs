@@ -17,7 +17,7 @@ public class TruReaderTests
     // [Fact]
     // public void MathTrueReaderValidTest()
     // {
-    //     var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+    //     var results = ResultsCollector.Empty("FirstName", V.Min(3).Apply("Francis"))
     //                   + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
     //
     //     results.Match(
@@ -29,7 +29,7 @@ public class TruReaderTests
     // [Fact]
     // public void MatchTrueReaderInvalidTest()
     // {
-    //     var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+    //     var results = ResultsCollector.Empty("FirstName", V.Min(3).Apply("Francis"))
     //                   + V.Required(V.IsInteger()).Apply("nan").WithKey("Age");
     //
     //     results.Match(
@@ -41,14 +41,14 @@ public class TruReaderTests
     [Fact]
     public void TrueReaderReadStringSuccessfulTest()
     {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+        var results = ResultsCollector.Create("FirstName", V.Min(3).Apply("Francis"))
                       + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
 
         results.MapWithReader<Person, string>(
             reader =>
             {
                 var result =
-                    from name in reader.GetString("Name")
+                    from name in reader.GetString("FirstName")
                     from age in reader.GetInt32("Age")
                     select new Person(name, age);
 
@@ -82,12 +82,12 @@ public class TruReaderTests
     [Fact]
     public void TrueReaderReadByteTest()
     {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+        var results = ResultsCollector.Create("FirstName", V.Min(3).Apply("Francis"))
                       + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
 
         results.MapWithReader<Person, string>(
             reader =>
-                from name in reader.GetString("Name")
+                from name in reader.GetString("FirstName")
                 from age in reader.GetInt8("Age")
                 select new Person(name, age),
             valid: person =>
@@ -109,12 +109,12 @@ public class TruReaderTests
     [Fact]
     public void TrueReaderReadShortTest()
     {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+        var results = ResultsCollector.Create("FirstName", V.Min(3).Apply("Francis"))
                       + V.Required(V.IsInteger()).Apply("58").WithKey("Age");
 
         results.MapWithReader<Person, string>(
             reader =>
-                from name in reader.GetString("Name")
+                from name in reader.GetString("FirstName")
                 from age in reader.GetInt16("Age")
                 select new Person(name, age),
             valid: person =>
@@ -136,12 +136,12 @@ public class TruReaderTests
     [Fact]
     public void TrueReaderReadIntUnsuccessfulTest()
     {
-        var results = ResultsCollector.Create("Name", V.Min(3).Apply("Francis"))
+        var results = ResultsCollector.Create("FirstName", V.Min(3).Apply("Francis"))
                       + V.Required().Apply("58A").WithKey("Age");
 
         results.MapWithReader<Person, string>(
             reader =>
-                from name in reader.GetString("Name")
+                from name in reader.GetString("FirstName")
                 from age in reader.GetInt32("Age")
                 select new Person(name, age),
             valid: _ =>
@@ -736,7 +736,7 @@ public class TruReaderTests
     [Fact]
     public void IsEmptyTrueTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional(V.IsInteger()).Apply("\t").WithKey("Age");
 
         results.MapWithReader(
@@ -761,7 +761,7 @@ public class TruReaderTests
     [Fact]
     public void IsEmptyFalseTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional(V.IsInteger()).Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -798,7 +798,7 @@ public class TruReaderTests
     [Fact]
     public void IsEmptyFalseReduceOptionTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional(V.IsInteger()).Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -825,7 +825,7 @@ public class TruReaderTests
     [Fact]
     public void ReadStringOptionOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("Franc").WithKey("Nickname");
 
         results.MapWithReader(
@@ -852,7 +852,7 @@ public class TruReaderTests
     [Fact]
     public void ReadStringNoneOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Nickname");
 
         results.MapWithReader(
@@ -879,7 +879,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeInt32OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -906,7 +906,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneInt32OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -933,7 +933,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeInt16OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -960,7 +960,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneInt16OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -987,7 +987,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeInt8OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1014,7 +1014,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneInt8OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1042,7 +1042,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeInt64OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1070,7 +1070,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneInt64OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1098,7 +1098,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeUInt32OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1126,7 +1126,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneUInt32OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1154,7 +1154,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeUInt16OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1182,7 +1182,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneUInt16OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1210,7 +1210,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeUInt8OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1238,7 +1238,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneUInt8OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1266,7 +1266,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeUInt64OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("58").WithKey("Age");
 
         results.MapWithReader(
@@ -1294,7 +1294,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneUInt64OkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Age");
 
         results.MapWithReader(
@@ -1322,7 +1322,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeSingleOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("299.99").WithKey("Price");
 
         results.MapWithReader(
@@ -1350,7 +1350,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneSingleOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Price");
 
         results.MapWithReader(
@@ -1378,7 +1378,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeDoubleOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("299.99").WithKey("Price");
 
         results.MapWithReader(
@@ -1406,7 +1406,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneDoubleOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Price");
 
         results.MapWithReader(
@@ -1434,7 +1434,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeDecimalOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("299.99").WithKey("Price");
 
         results.MapWithReader(
@@ -1462,7 +1462,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneDecimalOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("Price");
 
         results.MapWithReader(
@@ -1490,7 +1490,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeBooleanOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("Yes").WithKey("IsActive");
 
         results.MapWithReader(
@@ -1518,7 +1518,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneBooleanOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("IsActive");
 
         results.MapWithReader(
@@ -1546,7 +1546,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeGuidOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("4B15CEF5-0AF2-4154-8DDF-0EA9FD3B5510").WithKey("ID");
 
         results.MapWithReader(
@@ -1574,7 +1574,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneGuidOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("ID");
 
         results.MapWithReader(
@@ -1602,7 +1602,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeDateTimeOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("2024-09-20 14:22").WithKey("CurrentDate");
 
         results.MapWithReader(
@@ -1630,7 +1630,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneDateTimeTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("CurrentDate");
 
         results.MapWithReader(
@@ -1658,7 +1658,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeTimeOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("14:22").WithKey("CurrentTime");
 
         results.MapWithReader(
@@ -1686,7 +1686,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneTimeTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("CurrentTime");
 
         results.MapWithReader(
@@ -1714,7 +1714,7 @@ public class TruReaderTests
     [Fact]
     public void ReadSomeDateOkTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply("2024-09-20").WithKey("CurrentDate");
 
         results.MapWithReader(
@@ -1742,7 +1742,7 @@ public class TruReaderTests
     [Fact]
     public void ReadNoneDateTest()
     {
-        var results = ResultsCollector.Create()
+        var results = ResultsCollector.Empty()
                       + V.Optional().Apply(" ").WithKey("CurrentDate");
 
         results.MapWithReader(
