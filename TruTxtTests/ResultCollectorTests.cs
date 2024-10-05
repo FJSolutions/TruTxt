@@ -56,7 +56,7 @@ public class ResultCollectorTests
 
         Assert.True(results.IsValid);
 
-        results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
+        results = results.CompareResults("NewPassword", "ConfirmPassword", "The passwords don't match");
 
         Assert.True(results.IsValid);
     }

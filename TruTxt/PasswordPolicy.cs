@@ -189,7 +189,7 @@ public sealed class PasswordPolicy
       // Fields
       private readonly PasswordPolicy _policy;
 
-      internal protected PolicyBuilder(PasswordPolicy policy)
+      internal PolicyBuilder(PasswordPolicy policy)
       {
          this._policy = policy;
       }

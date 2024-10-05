@@ -22,7 +22,7 @@ public class TruReaderTests
     //
     //     results.Match(
     //         valid: Assert.NotNull,
-    //         invalid: _ => Assert.Fail()
+    //         invalid: _ => Assert.Error()
     //     );
     // }
     //
@@ -33,7 +33,7 @@ public class TruReaderTests
     //                   + V.Required(V.IsInteger()).Apply("nan").WithKey("Age");
     //
     //     results.Match(
-    //         valid: _ => Assert.Fail(),
+    //         valid: _ => Assert.Error(),
     //         invalid: Assert.NotNull
     //     );
     // }

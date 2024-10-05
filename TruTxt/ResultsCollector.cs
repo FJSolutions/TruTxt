@@ -63,7 +63,7 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
    /// <returns>A <see cref="TResult"/></returns>
    [Pure]
    public TResult MapWithReader<TModel, TResult>(
-      Func<TruReader, Result<TModel>> dataProcessor,
+      Func<TruReader, ΤruΤxtResult<TModel>> dataProcessor,
       Func<TModel, TResult> valid,
       Func<ResultsCollector, TResult> invalid)
    {
@@ -85,8 +85,8 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
             return valid(data.Value);
 
          // Otherwise, fallthrough after adding the data processor failure error to this collector
-         if (dataResult is Fail<TModel> failure)
-            me = this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.Error }));
+         if (dataResult is Error<TModel> failure)
+            me = this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.ErrorMessage }));
       }
 
       // Process the errors
