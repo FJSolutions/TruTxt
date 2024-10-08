@@ -81,11 +81,11 @@ public record ResultsCollector(ImmutableDictionary<string, ValidationResult> Res
          var dataResult = dataProcessor(new TruReader(dict));
 
          // Call the valid function if data processing was successful and return its result 
-         if (dataResult is Ok<TModel> data)
+         if (dataResult is Success<TModel> data)
             return valid(data.Value);
 
          // Otherwise, fallthrough after adding the data processor failure error to this collector
-         if (dataResult is Error<TModel> failure)
+         if (dataResult is Failure<TModel> failure)
             me = this.Add(failure.Key, new Invalid(failure.Text, new[] { failure.ErrorMessage }));
       }
 

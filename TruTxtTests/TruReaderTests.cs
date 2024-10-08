@@ -22,7 +22,7 @@ public class TruReaderTests
     //
     //     results.Match(
     //         valid: Assert.NotNull,
-    //         invalid: _ => Assert.Error()
+    //         invalid: _ => Assert.Failure()
     //     );
     // }
     //
@@ -33,7 +33,7 @@ public class TruReaderTests
     //                   + V.Required(V.IsInteger()).Apply("nan").WithKey("Age");
     //
     //     results.Match(
-    //         valid: _ => Assert.Error(),
+    //         valid: _ => Assert.Failure(),
     //         invalid: Assert.NotNull
     //     );
     // }
@@ -52,7 +52,7 @@ public class TruReaderTests
                     from age in reader.GetInt32("Age")
                     select new Person(name, age);
 
-                if (result is Ok<Person> ok)
+                if (result is Success<Person> ok)
                 {
                     var person = ok.Value;
 
@@ -743,7 +743,7 @@ public class TruReaderTests
             reader =>
             {
                 Assert.True(reader.IsEmpty("Age"));
-                return new Ok<int>(0);
+                return new Success<int>(0);
             },
             valid: d =>
             {
@@ -831,7 +831,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<string>>>(reader.GetOptionalString("Nickname"));
+                Assert.IsType<Success<Option<string>>>(reader.GetOptionalString("Nickname"));
 
                 return
                     from nickname in reader.GetOptionalString("Nickname") select nickname.Reduce(string.Empty);
@@ -858,7 +858,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<string>>>(reader.GetOptionalString("Nickname"));
+                Assert.IsType<Success<Option<string>>>(reader.GetOptionalString("Nickname"));
 
                 return
                     from nickname in reader.GetOptionalString("Nickname") select nickname.Reduce(string.Empty);
@@ -885,7 +885,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<int>>>(reader.GetOptionalInt32("Age"));
+                Assert.IsType<Success<Option<int>>>(reader.GetOptionalInt32("Age"));
 
                 return
                     from age in reader.GetOptionalInt32("Age") select age.Reduce(0);
@@ -912,7 +912,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<int>>>(reader.GetOptionalInt32("Age"));
+                Assert.IsType<Success<Option<int>>>(reader.GetOptionalInt32("Age"));
 
                 return
                     from age in reader.GetOptionalInt32("Age") select age.Reduce(0);
@@ -939,7 +939,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<short>>>(reader.GetOptionalInt16("Age"));
+                Assert.IsType<Success<Option<short>>>(reader.GetOptionalInt16("Age"));
 
                 return
                     from age in reader.GetOptionalInt16("Age") select age.Reduce((short)0);
@@ -966,7 +966,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<short>>>(reader.GetOptionalInt16("Age"));
+                Assert.IsType<Success<Option<short>>>(reader.GetOptionalInt16("Age"));
 
                 return
                     from age in reader.GetOptionalInt16("Age") select age.Reduce((short)0);
@@ -993,7 +993,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
+                Assert.IsType<Success<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
 
                 return
                     from age in reader.GetOptionalInt8("Age") select age.Reduce((sbyte)0);
@@ -1020,7 +1020,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
+                Assert.IsType<Success<Option<sbyte>>>(reader.GetOptionalInt8("Age"));
 
                 return
                     from age in reader.GetOptionalInt8("Age")
@@ -1048,7 +1048,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<long>>>(reader.GetOptionalInt64("Age"));
+                Assert.IsType<Success<Option<long>>>(reader.GetOptionalInt64("Age"));
 
                 return
                     from age in reader.GetOptionalInt64("Age")
@@ -1076,7 +1076,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<long>>>(reader.GetOptionalInt64("Age"));
+                Assert.IsType<Success<Option<long>>>(reader.GetOptionalInt64("Age"));
 
                 return
                     from age in reader.GetOptionalInt64("Age")
@@ -1104,7 +1104,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<uint>>>(reader.GetOptionalUInt32("Age"));
+                Assert.IsType<Success<Option<uint>>>(reader.GetOptionalUInt32("Age"));
 
                 return
                     from age in reader.GetOptionalUInt32("Age")
@@ -1132,7 +1132,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<uint>>>(reader.GetOptionalUInt32("Age"));
+                Assert.IsType<Success<Option<uint>>>(reader.GetOptionalUInt32("Age"));
 
                 return
                     from age in reader.GetOptionalUInt32("Age")
@@ -1160,7 +1160,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
+                Assert.IsType<Success<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
 
                 return
                     from age in reader.GetOptionalUInt16("Age")
@@ -1188,7 +1188,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
+                Assert.IsType<Success<Option<ushort>>>(reader.GetOptionalUInt16("Age"));
 
                 return
                     from age in reader.GetOptionalUInt16("Age")
@@ -1216,7 +1216,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<byte>>>(reader.GetOptionalUInt8("Age"));
+                Assert.IsType<Success<Option<byte>>>(reader.GetOptionalUInt8("Age"));
 
                 return
                     from age in reader.GetOptionalUInt8("Age")
@@ -1244,7 +1244,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<byte>>>(reader.GetOptionalUInt8("Age"));
+                Assert.IsType<Success<Option<byte>>>(reader.GetOptionalUInt8("Age"));
 
                 return
                     from age in reader.GetOptionalUInt8("Age")
@@ -1272,7 +1272,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
+                Assert.IsType<Success<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
 
                 return
                     from age in reader.GetOptionalUInt64("Age")
@@ -1300,7 +1300,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
+                Assert.IsType<Success<Option<ulong>>>(reader.GetOptionalUInt64("Age"));
 
                 return
                     from age in reader.GetOptionalUInt64("Age")
@@ -1328,7 +1328,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<float>>>(reader.GetOptionalSingle("Price"));
+                Assert.IsType<Success<Option<float>>>(reader.GetOptionalSingle("Price"));
 
                 return
                     from age in reader.GetOptionalSingle("Price")
@@ -1356,7 +1356,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<float>>>(reader.GetOptionalSingle("Price"));
+                Assert.IsType<Success<Option<float>>>(reader.GetOptionalSingle("Price"));
 
                 return
                     from age in reader.GetOptionalSingle("Price")
@@ -1384,7 +1384,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<double>>>(reader.GetOptionalDouble("Price"));
+                Assert.IsType<Success<Option<double>>>(reader.GetOptionalDouble("Price"));
 
                 return
                     from age in reader.GetOptionalDouble("Price")
@@ -1412,7 +1412,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<double>>>(reader.GetOptionalDouble("Price"));
+                Assert.IsType<Success<Option<double>>>(reader.GetOptionalDouble("Price"));
 
                 return
                     from age in reader.GetOptionalDouble("Price")
@@ -1440,7 +1440,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
+                Assert.IsType<Success<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
 
                 return
                     from age in reader.GetOptionalDecimal("Price")
@@ -1468,7 +1468,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
+                Assert.IsType<Success<Option<decimal>>>(reader.GetOptionalDecimal("Price"));
 
                 return
                     from age in reader.GetOptionalDecimal("Price")
@@ -1496,7 +1496,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
+                Assert.IsType<Success<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
 
                 return
                     from isActive in reader.GetOptionalBoolean("IsActive")
@@ -1524,7 +1524,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
+                Assert.IsType<Success<Option<bool>>>(reader.GetOptionalBoolean("IsActive"));
 
                 return
                     from isActive in reader.GetOptionalBoolean("IsActive")
@@ -1552,7 +1552,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<Guid>>>(reader.GetOptionalGuid("ID"));
+                Assert.IsType<Success<Option<Guid>>>(reader.GetOptionalGuid("ID"));
 
                 return
                     from isActive in reader.GetOptionalGuid("ID")
@@ -1580,7 +1580,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<Guid>>>(reader.GetOptionalGuid("ID"));
+                Assert.IsType<Success<Option<Guid>>>(reader.GetOptionalGuid("ID"));
 
                 return
                     from isActive in reader.GetOptionalGuid("ID")
@@ -1608,7 +1608,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
+                Assert.IsType<Success<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
 
                 return
                     from currentDate in reader.GetOptionalDateTime("CurrentDate")
@@ -1636,7 +1636,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
+                Assert.IsType<Success<Option<DateTime>>>(reader.GetOptionalDateTime("CurrentDate"));
 
                 return
                     from currentDate in reader.GetOptionalDateTime("CurrentDate")
@@ -1664,7 +1664,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
+                Assert.IsType<Success<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
 
                 return
                     from currentDate in reader.GetOptionalTime("CurrentTime")
@@ -1692,7 +1692,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
+                Assert.IsType<Success<Option<TimeOnly>>>(reader.GetOptionalTime("CurrentTime"));
 
                 return
                     from currentDate in reader.GetOptionalTime("CurrentTime")
@@ -1720,7 +1720,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
+                Assert.IsType<Success<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
 
                 return
                     from currentDate in reader.GetOptionalDate("CurrentDate")
@@ -1748,7 +1748,7 @@ public class TruReaderTests
         results.MapWithReader(
             reader =>
             {
-                Assert.IsType<Ok<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
+                Assert.IsType<Success<Option<DateOnly>>>(reader.GetOptionalDate("CurrentDate"));
 
                 return
                     from currentDate in reader.GetOptionalDate("CurrentDate")

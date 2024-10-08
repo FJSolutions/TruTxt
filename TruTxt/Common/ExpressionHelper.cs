@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 
-namespace TruTxt;
+namespace TruTxt.Common;
 
-internal static class ExpressionHelper
+public static class ExpressionHelper
 {
    public static string GetPropertyName<T, U>(this Expression<Func<T,U>> expression)
    {

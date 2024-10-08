@@ -34,7 +34,7 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and returns it as a <c>String</c>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<string> GetString(string key)
    {
       return GetValue(key);
@@ -44,14 +44,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="long"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<long> GetInt64(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseInt64(value).Match(
-         some: ΤruΤxtResult<long>.Ok,
-         none: () => ΤruΤxtResult<long>.Error($"'{value}' cannot be converted to an Int64", key, value)
+         some: ΤruΤxtResult<long>.Success,
+         none: () => ΤruΤxtResult<long>.Failure($"'{value}' cannot be converted to an Int64", key, value)
       );
    }
 
@@ -59,14 +59,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="int"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<int> GetInt32(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseInt32(value).Match(
-         some: ΤruΤxtResult<int>.Ok,
-         none: () => ΤruΤxtResult<int>.Error($"'{value}' cannot be converted to an Int32", key, value)
+         some: ΤruΤxtResult<int>.Success,
+         none: () => ΤruΤxtResult<int>.Failure($"'{value}' cannot be converted to an Int32", key, value)
       );
    }
 
@@ -74,14 +74,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="short"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<short> GetInt16(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseInt16(value).Match(
-         some: ΤruΤxtResult<short>.Ok,
-         none: () => ΤruΤxtResult<short>.Error($"'{value}' cannot be converted to an Int16", key, value)
+         some: ΤruΤxtResult<short>.Success,
+         none: () => ΤruΤxtResult<short>.Failure($"'{value}' cannot be converted to an Int16", key, value)
       );
    }
 
@@ -89,14 +89,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="byte"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<byte> GetUInt8(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseUInt8(value).Match(
-         some: ΤruΤxtResult<byte>.Ok,
-         none: () => ΤruΤxtResult<byte>.Error($"'{value}' cannot be converted to a Byte", key, value)
+         some: ΤruΤxtResult<byte>.Success,
+         none: () => ΤruΤxtResult<byte>.Failure($"'{value}' cannot be converted to a Byte", key, value)
       );
    }
 
@@ -104,14 +104,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="ulong"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<ulong> GetUInt64(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseUInt64(value).Match(
-         some: ΤruΤxtResult<ulong>.Ok,
-         none: () => ΤruΤxtResult<ulong>.Error($"'{value}' cannot be converted to a UInt64", key, value)
+         some: ΤruΤxtResult<ulong>.Success,
+         none: () => ΤruΤxtResult<ulong>.Failure($"'{value}' cannot be converted to a UInt64", key, value)
       );
    }
 
@@ -119,14 +119,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="UInt32"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<uint> GetUInt32(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseUInt32(value).Match(
-         some: ΤruΤxtResult<uint>.Ok,
-         none: () => ΤruΤxtResult<uint>.Error($"'{value}' cannot be converted to a UInt32", key, value)
+         some: ΤruΤxtResult<uint>.Success,
+         none: () => ΤruΤxtResult<uint>.Failure($"'{value}' cannot be converted to a UInt32", key, value)
       );
    }
 
@@ -135,14 +135,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="ushort"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<ushort> GetUInt16(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseUInt16(value).Match(
-         some: ΤruΤxtResult<ushort>.Ok,
-         none: () => ΤruΤxtResult<ushort>.Error($"'{value}' cannot be converted to a UInt16", key, value)
+         some: ΤruΤxtResult<ushort>.Success,
+         none: () => ΤruΤxtResult<ushort>.Failure($"'{value}' cannot be converted to a UInt16", key, value)
       );
    }
 
@@ -151,14 +151,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="SByte"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<sbyte> GetInt8(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseInt8(value).Match(
-         some: ΤruΤxtResult<sbyte>.Ok,
-         none: () => ΤruΤxtResult<sbyte>.Error($"'{value}' cannot be converted to a SByte", key, value)
+         some: ΤruΤxtResult<sbyte>.Success,
+         none: () => ΤruΤxtResult<sbyte>.Failure($"'{value}' cannot be converted to a SByte", key, value)
       );
    }
 
@@ -167,14 +167,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="Decimal"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<decimal> GetDecimal(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseDecimal(value).Match(
-         some: ΤruΤxtResult<decimal>.Ok,
-         none: () => ΤruΤxtResult<decimal>.Error($"'{value}' cannot be converted to a Decimal", key, value)
+         some: ΤruΤxtResult<decimal>.Success,
+         none: () => ΤruΤxtResult<decimal>.Failure($"'{value}' cannot be converted to a Decimal", key, value)
       );
    }
 
@@ -183,14 +183,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="Double"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<double> GetDouble(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseDouble(value).Match(
-         some: ΤruΤxtResult<double>.Ok,
-         none: () => ΤruΤxtResult<double>.Error($"'{value}' cannot be converted to a Double", key, value)
+         some: ΤruΤxtResult<double>.Success,
+         none: () => ΤruΤxtResult<double>.Failure($"'{value}' cannot be converted to a Double", key, value)
       );
    }
 
@@ -199,14 +199,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="Single"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<float> GetSingle(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseSingle(value).Match(
-         some: ΤruΤxtResult<float>.Ok,
-         none: () => ΤruΤxtResult<float>.Error($"'{value}' cannot be converted to a Single", key, value)
+         some: ΤruΤxtResult<float>.Success,
+         none: () => ΤruΤxtResult<float>.Failure($"'{value}' cannot be converted to a Single", key, value)
       );
    }
 
@@ -215,14 +215,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="Guid"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<Guid> GetGuid(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseGuid(value).Match(
-         some: ΤruΤxtResult<Guid>.Ok,
-         none: () => ΤruΤxtResult<Guid>.Error($"'{value}' cannot be converted to a GUID", key, value)
+         some: ΤruΤxtResult<Guid>.Success,
+         none: () => ΤruΤxtResult<Guid>.Failure($"'{value}' cannot be converted to a GUID", key, value)
       );
    }
 
@@ -231,14 +231,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="bool"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<bool> GetBoolean(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseBool(value).Match(
-         some: ΤruΤxtResult<bool>.Ok,
-         none: () => ΤruΤxtResult<bool>.Error($"'{value}' cannot be converted to a boolean", key, value)
+         some: ΤruΤxtResult<bool>.Success,
+         none: () => ΤruΤxtResult<bool>.Failure($"'{value}' cannot be converted to a boolean", key, value)
       );
    }
 
@@ -247,14 +247,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="DateTime"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<DateTime> GetDateTime(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseDateTime(value).Match(
-         some: ΤruΤxtResult<DateTime>.Ok,
-         none: () => ΤruΤxtResult<DateTime>.Error($"'{value}' cannot be converted to a DateTime", key, value)
+         some: ΤruΤxtResult<DateTime>.Success,
+         none: () => ΤruΤxtResult<DateTime>.Failure($"'{value}' cannot be converted to a DateTime", key, value)
       );
    }
 
@@ -263,14 +263,14 @@ public class TruReader
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
    /// <returns>The <see cref="DateOnly"/> value of the key in the data source.</returns>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<DateOnly> GetDate(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseDate(value).Match(
-         some: ΤruΤxtResult<DateOnly>.Ok,
-         none: () => ΤruΤxtResult<DateOnly>.Error($"'{value}' cannot be converted to a DateOnly", key, value)
+         some: ΤruΤxtResult<DateOnly>.Success,
+         none: () => ΤruΤxtResult<DateOnly>.Failure($"'{value}' cannot be converted to a DateOnly", key, value)
       );
    }
 
@@ -278,14 +278,14 @@ public class TruReader
    /// Tries to get a value from the validated TruTxt validation results source, and tries to convert it to a <see cref="TimeOnly"/>.
    /// </summary>
    /// <param name="key">The key value to look-up in the data store</param>
-   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Error{TValue}"/> with an error message</returns>
+   /// <returns>A <see cref="ΤruΤxtResult{TValue}"/> containing the value is successful; or a <see cref="Failure{TValue}"/> with an error message</returns>
    public ΤruΤxtResult<TimeOnly> GetTime(string key)
    {
       var value = GetValue(key);
 
       return TruParser.ParseTime(value).Match(
-         some: ΤruΤxtResult<TimeOnly>.Ok,
-         none: () => ΤruΤxtResult<TimeOnly>.Error($"'{value}' cannot be converted to a TimeOnly", key, value)
+         some: ΤruΤxtResult<TimeOnly>.Success,
+         none: () => ΤruΤxtResult<TimeOnly>.Failure($"'{value}' cannot be converted to a TimeOnly", key, value)
       );
    }
 
@@ -299,11 +299,11 @@ public class TruReader
       return string.IsNullOrWhiteSpace(GetValue(key));
    }
 
-   private static ΤruΤxtResult<Option<T>> SomeResult<T>(T value) => new Ok<Option<T>>(Option<T>.Some(value));
-   private static ΤruΤxtResult<Option<T>> NoResult<T>() => new Ok<Option<T>>(Option<T>.None());
+   private static ΤruΤxtResult<Option<T>> SomeResult<T>(T value) => new Success<Option<T>>(Option<T>.Some(value));
+   private static ΤruΤxtResult<Option<T>> NoResult<T>() => new Success<Option<T>>(Option<T>.None());
 
    private static ΤruΤxtResult<Option<T>> FailOption<T>(string error, string key, string text) =>
-      new Error<Option<T>>(error, key, text);
+      new Failure<Option<T>>(error, key, text);
 
    /// <summary>
    /// Tries to get an optional value from the data source and convert it to an <see cref="int"/>.
