@@ -6,8 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// A data structure that represents the presence ort absence of a valuer 
 /// </summary>
-/// <typeparam name="TValue">The type of the value that maybe present</typeparam>
-public abstract record Option<TValue>
+/// <typeparam name="T">The type of the value that maybe present</typeparam>
+public abstract record Option<T>
 {
    /// <summary>
    /// The constructor is private to prevent any other subtypes other than Some and None 
@@ -16,20 +16,20 @@ public abstract record Option<TValue>
    {
    }
 
-   public static implicit operator Option<TValue>(No no) => new None<TValue>();
+   public static implicit operator Option<T>(No no) => new None<T>();
 
    /// <summary>
    /// Creates a <see cref="None"/> instance, typed as an <see cref="Option{TValue}"/>
    /// </summary>
    /// <returns>A <see cref="None"/> <see cref="Option{TValue}"/></returns>
-   public static Option<TValue> None() => new None<TValue>();
+   public static Option<T> None() => new None<T>();
 
    /// <summary>
    /// Creates a <see cref="Some"/> instance with the supplied value, typed as an <see cref="Option{TValue}"/>
    /// </summary>
    /// <param name="value">The value of the <see cref="Some"/></param>
    /// <returns>A <see cref="Some"/> <see cref="Option{TValue}"/></returns>
-   public static Option<TValue> Some([NotNull] TValue value) => new Some<TValue>(value);
+   public static Option<T> Some([NotNull] T value) => new Some<T>(value);
 }
 
 /// <summary>
@@ -66,13 +66,15 @@ public sealed record No
 public static class OptionExtensions
 {
    [Pure]
-   public static TResult Match<TValue, TResult>(this Option<TValue> option, Func<TValue, TResult> some,
-      Func<TResult> none)
+   public static TResult Match<TValue, TResult>(
+      this Option<TValue> option, 
+      Func<TValue, TResult> onSome,
+      Func<TResult> onNone)
    {
       return option switch
       {
-         Some<TValue> s => some(s.Value),
-         None<TValue> _ => none(),
+         Some<TValue> s => onSome(s.Value),
+         None<TValue> _ => onNone(),
          _ => throw new TruTxtException("Unknown Option type")
       };
    }

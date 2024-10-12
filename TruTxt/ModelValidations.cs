@@ -96,15 +96,15 @@ public record ModelValidations<T>(ImmutableDictionary<string, ValidationResult> 
       lhs.AddRange(rhs);
 
    /// <summary>
-   /// Creates a Runner function that processes a <see cref="ValidationResult"/>s for a property name gleaned from
+   /// Creates a Collect function that processes a <see cref="ValidationResult"/>s for a property name gleaned from
    /// the supplied <see cref="Expression{TDelegate}"/>, and returns a new <see cref="ModelValidations{T}"/> collection.
    /// </summary>
-   /// <returns>A <see cref="Runner"/> function</returns>
-   public static Runner<T> Runner() => Create;
+   /// <returns>A <see cref="Collect"/> function</returns>
+   public static Runner<T> Collect() => Create;
 }
 
 /// <summary>
-/// The <see cref="Delegate"/> definition for the <see cref="ModelValidations{T}"/> Runner method.
+/// The <see cref="Delegate"/> definition for the <see cref="ModelValidations{T}"/> Collect method.
 /// </summary>
 /// <typeparam name="T">The type of model object whose property name will be used as the key for the
 /// <see cref="ValidationResult"/></typeparam>

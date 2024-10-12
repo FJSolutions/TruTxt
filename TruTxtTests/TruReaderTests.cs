@@ -775,12 +775,12 @@ public class TruReaderTests
             valid: d =>
             {
                 return d.Match(
-                    some: v =>
+                    onSome: v =>
                     {
                         Assert.Equal(58, v);
                         return string.Empty;
                     },
-                    none: () =>
+                    onNone: () =>
                     {
                         Assert.Fail();
                         return string.Empty;

@@ -21,7 +21,7 @@ public class ModelValidationsTests
    public void ResultCollectorCreationTest()
    {
       var result = V.Min(3).Apply("FBJ");
-      var results = Validations.Runner().Invoke(p => p.FirstName, result);
+      var results = Validations.Collect().Invoke(p => p.FirstName, result);
 
       Assert.NotNull(results);
       Assert.NotEmpty(results);
@@ -33,7 +33,7 @@ public class ModelValidationsTests
    public void ResultCollectorAddWithKeyTest()
    {
       var result = V.Min(3).Apply("FBJ");
-      var runner = Validations.Runner();
+      var runner = Validations.Collect();
       var results = runner(p => p.FirstName, result)
                     + runner(p => p.SecondName, V.Min(2).Apply("NJ"));
 
@@ -48,7 +48,7 @@ public class ModelValidationsTests
    public void ResultCollectorGetByKeyTest()
    {
       var result = V.Min(3).Apply("FBJ");
-      var runner = Validations.Runner();
+      var runner = Validations.Collect();
       var results = runner(p => p.FirstName, result)
                     + runner(p => p.SecondName, V.Min(2).Apply("NJ"));
 
@@ -67,7 +67,7 @@ public class ModelValidationsTests
    public void ComparisonValidTest()
    {
       var newPassword = PasswordPolicy.Medium().NewPassword();
-      var runner = ModelValidations<ChangePassword>.Runner();
+      var runner = ModelValidations<ChangePassword>.Collect();
       var results =
          runner(p => p.NewPassword, V.Password(PasswordPolicy.Medium()).Apply(newPassword))
          + runner(p => p.ConfirmPassword, V.Password(PasswordPolicy.Medium()).Apply(newPassword));
@@ -84,7 +84,7 @@ public class ModelValidationsTests
    {
       var newPassword = PasswordPolicy.Medium().NewPassword();
       var newPassword2 = PasswordPolicy.Medium().NewPassword();
-      var runner = ModelValidations<ChangePassword>.Runner();
+      var runner = ModelValidations<ChangePassword>.Collect();
       var results =
          runner(p => p.NewPassword, V.Password(PasswordPolicy.Medium()).Apply(newPassword))
          + runner(p => p.ConfirmPassword, V.Password(PasswordPolicy.Medium()).Apply(newPassword2));

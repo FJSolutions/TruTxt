@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="TruConfig\TruConfig.csproj" Type="Classic C#" />
+  <Project Path="TruTxtTests\TruTxtTests.csproj" Type="Classic C#" />
+  <Project Path="TruTxtWebTests\TruTxtWebTests.csproj" Type="Classic C#" />
+  <Project Path="TruTxt\TruTxt.csproj" Type="Classic C#" />
+</Solution>

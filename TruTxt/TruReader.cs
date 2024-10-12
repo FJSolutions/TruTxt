@@ -1,4 +1,6 @@
-﻿namespace TruTxt;
+﻿using TruTxt.Common;
+
+namespace TruTxt;
 
 /// <summary>
 /// A class that can read validated text and trues to convert it to strongly typed values
@@ -49,9 +51,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseInt64(value).Match(
-         some: ΤruΤxtResult<long>.Success,
-         none: () => ΤruΤxtResult<long>.Failure($"'{value}' cannot be converted to an Int64", key, value)
+      return TruTxtParser.ParseInt64(value).Match(
+         onSome: ΤruΤxtResult<long>.Success,
+         onNone: () => ΤruΤxtResult<long>.Failure($"'{value}' cannot be converted to an Int64", key, value)
       );
    }
 
@@ -64,9 +66,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseInt32(value).Match(
-         some: ΤruΤxtResult<int>.Success,
-         none: () => ΤruΤxtResult<int>.Failure($"'{value}' cannot be converted to an Int32", key, value)
+      return TruTxtParser.ParseInt32(value).Match(
+         onSome: ΤruΤxtResult<int>.Success,
+         onNone: () => ΤruΤxtResult<int>.Failure($"'{value}' cannot be converted to an Int32", key, value)
       );
    }
 
@@ -79,9 +81,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseInt16(value).Match(
-         some: ΤruΤxtResult<short>.Success,
-         none: () => ΤruΤxtResult<short>.Failure($"'{value}' cannot be converted to an Int16", key, value)
+      return TruTxtParser.ParseInt16(value).Match(
+         onSome: ΤruΤxtResult<short>.Success,
+         onNone: () => ΤruΤxtResult<short>.Failure($"'{value}' cannot be converted to an Int16", key, value)
       );
    }
 
@@ -94,9 +96,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseUInt8(value).Match(
-         some: ΤruΤxtResult<byte>.Success,
-         none: () => ΤruΤxtResult<byte>.Failure($"'{value}' cannot be converted to a Byte", key, value)
+      return TruTxtParser.ParseUInt8(value).Match(
+         onSome: ΤruΤxtResult<byte>.Success,
+         onNone: () => ΤruΤxtResult<byte>.Failure($"'{value}' cannot be converted to a Byte", key, value)
       );
    }
 
@@ -109,9 +111,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseUInt64(value).Match(
-         some: ΤruΤxtResult<ulong>.Success,
-         none: () => ΤruΤxtResult<ulong>.Failure($"'{value}' cannot be converted to a UInt64", key, value)
+      return TruTxtParser.ParseUInt64(value).Match(
+         onSome: ΤruΤxtResult<ulong>.Success,
+         onNone: () => ΤruΤxtResult<ulong>.Failure($"'{value}' cannot be converted to a UInt64", key, value)
       );
    }
 
@@ -124,9 +126,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseUInt32(value).Match(
-         some: ΤruΤxtResult<uint>.Success,
-         none: () => ΤruΤxtResult<uint>.Failure($"'{value}' cannot be converted to a UInt32", key, value)
+      return TruTxtParser.ParseUInt32(value).Match(
+         onSome: ΤruΤxtResult<uint>.Success,
+         onNone: () => ΤruΤxtResult<uint>.Failure($"'{value}' cannot be converted to a UInt32", key, value)
       );
    }
 
@@ -140,9 +142,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseUInt16(value).Match(
-         some: ΤruΤxtResult<ushort>.Success,
-         none: () => ΤruΤxtResult<ushort>.Failure($"'{value}' cannot be converted to a UInt16", key, value)
+      return TruTxtParser.ParseUInt16(value).Match(
+         onSome: ΤruΤxtResult<ushort>.Success,
+         onNone: () => ΤruΤxtResult<ushort>.Failure($"'{value}' cannot be converted to a UInt16", key, value)
       );
    }
 
@@ -156,9 +158,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseInt8(value).Match(
-         some: ΤruΤxtResult<sbyte>.Success,
-         none: () => ΤruΤxtResult<sbyte>.Failure($"'{value}' cannot be converted to a SByte", key, value)
+      return TruTxtParser.ParseInt8(value).Match(
+         onSome: ΤruΤxtResult<sbyte>.Success,
+         onNone: () => ΤruΤxtResult<sbyte>.Failure($"'{value}' cannot be converted to a SByte", key, value)
       );
    }
 
@@ -172,9 +174,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseDecimal(value).Match(
-         some: ΤruΤxtResult<decimal>.Success,
-         none: () => ΤruΤxtResult<decimal>.Failure($"'{value}' cannot be converted to a Decimal", key, value)
+      return TruTxtParser.ParseDecimal(value).Match(
+         onSome: ΤruΤxtResult<decimal>.Success,
+         onNone: () => ΤruΤxtResult<decimal>.Failure($"'{value}' cannot be converted to a Decimal", key, value)
       );
    }
 
@@ -188,9 +190,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseDouble(value).Match(
-         some: ΤruΤxtResult<double>.Success,
-         none: () => ΤruΤxtResult<double>.Failure($"'{value}' cannot be converted to a Double", key, value)
+      return TruTxtParser.ParseDouble(value).Match(
+         onSome: ΤruΤxtResult<double>.Success,
+         onNone: () => ΤruΤxtResult<double>.Failure($"'{value}' cannot be converted to a Double", key, value)
       );
    }
 
@@ -204,9 +206,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseSingle(value).Match(
-         some: ΤruΤxtResult<float>.Success,
-         none: () => ΤruΤxtResult<float>.Failure($"'{value}' cannot be converted to a Single", key, value)
+      return TruTxtParser.ParseSingle(value).Match(
+         onSome: ΤruΤxtResult<float>.Success,
+         onNone: () => ΤruΤxtResult<float>.Failure($"'{value}' cannot be converted to a Single", key, value)
       );
    }
 
@@ -220,9 +222,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseGuid(value).Match(
-         some: ΤruΤxtResult<Guid>.Success,
-         none: () => ΤruΤxtResult<Guid>.Failure($"'{value}' cannot be converted to a GUID", key, value)
+      return TruTxtParser.ParseGuid(value).Match(
+         onSome: ΤruΤxtResult<Guid>.Success,
+         onNone: () => ΤruΤxtResult<Guid>.Failure($"'{value}' cannot be converted to a GUID", key, value)
       );
    }
 
@@ -236,9 +238,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseBool(value).Match(
-         some: ΤruΤxtResult<bool>.Success,
-         none: () => ΤruΤxtResult<bool>.Failure($"'{value}' cannot be converted to a boolean", key, value)
+      return TruTxtParser.ParseBool(value).Match(
+         onSome: ΤruΤxtResult<bool>.Success,
+         onNone: () => ΤruΤxtResult<bool>.Failure($"'{value}' cannot be converted to a boolean", key, value)
       );
    }
 
@@ -252,9 +254,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseDateTime(value).Match(
-         some: ΤruΤxtResult<DateTime>.Success,
-         none: () => ΤruΤxtResult<DateTime>.Failure($"'{value}' cannot be converted to a DateTime", key, value)
+      return TruTxtParser.ParseDateTime(value).Match(
+         onSome: ΤruΤxtResult<DateTime>.Success,
+         onNone: () => ΤruΤxtResult<DateTime>.Failure($"'{value}' cannot be converted to a DateTime", key, value)
       );
    }
 
@@ -268,9 +270,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseDate(value).Match(
-         some: ΤruΤxtResult<DateOnly>.Success,
-         none: () => ΤruΤxtResult<DateOnly>.Failure($"'{value}' cannot be converted to a DateOnly", key, value)
+      return TruTxtParser.ParseDate(value).Match(
+         onSome: ΤruΤxtResult<DateOnly>.Success,
+         onNone: () => ΤruΤxtResult<DateOnly>.Failure($"'{value}' cannot be converted to a DateOnly", key, value)
       );
    }
 
@@ -283,9 +285,9 @@ public class TruReader
    {
       var value = GetValue(key);
 
-      return TruParser.ParseTime(value).Match(
-         some: ΤruΤxtResult<TimeOnly>.Success,
-         none: () => ΤruΤxtResult<TimeOnly>.Failure($"'{value}' cannot be converted to a TimeOnly", key, value)
+      return TruTxtParser.ParseTime(value).Match(
+         onSome: ΤruΤxtResult<TimeOnly>.Success,
+         onNone: () => ΤruΤxtResult<TimeOnly>.Failure($"'{value}' cannot be converted to a TimeOnly", key, value)
       );
    }
 
@@ -318,9 +320,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<string>();
 
-      return TruParser.ParseString(value).Match(
-         some: SomeResult,
-         none: () => FailOption<string>($"'{value}' cannot be converted to a string", key, value)
+      return TruTxtParser.ParseString(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<string>($"'{value}' cannot be converted to a string", key, value)
       );
    }
 
@@ -337,9 +339,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<sbyte>();
 
-      return TruParser.ParseInt8(value).Match(
-         some: SomeResult,
-         none: () => FailOption<sbyte>($"'{value}' cannot be converted to a SByte", key, value)
+      return TruTxtParser.ParseInt8(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<sbyte>($"'{value}' cannot be converted to a SByte", key, value)
       );
    }
 
@@ -356,9 +358,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<short>();
 
-      return TruParser.ParseInt16(value).Match(
-         some: SomeResult,
-         none: () => FailOption<short>($"'{value}' cannot be converted to a Int16", key, value)
+      return TruTxtParser.ParseInt16(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<short>($"'{value}' cannot be converted to a Int16", key, value)
       );
    }
 
@@ -375,9 +377,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<int>();
 
-      return TruParser.ParseInt32(value).Match(
-         some: SomeResult,
-         none: () => FailOption<int>($"'{value}' cannot be converted to a Int32", key, value)
+      return TruTxtParser.ParseInt32(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<int>($"'{value}' cannot be converted to a Int32", key, value)
       );
    }
 
@@ -394,9 +396,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<long>();
 
-      return TruParser.ParseInt64(value).Match(
-         some: SomeResult,
-         none: () => FailOption<long>($"'{value}' cannot be converted to a Int64", key, value)
+      return TruTxtParser.ParseInt64(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<long>($"'{value}' cannot be converted to a Int64", key, value)
       );
    }
 
@@ -413,9 +415,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<byte>();
 
-      return TruParser.ParseUInt8(value).Match(
-         some: SomeResult,
-         none: () => FailOption<byte>($"'{value}' cannot be converted to a UInt8", key, value)
+      return TruTxtParser.ParseUInt8(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<byte>($"'{value}' cannot be converted to a UInt8", key, value)
       );
    }
 
@@ -432,9 +434,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<ushort>();
 
-      return TruParser.ParseUInt16(value).Match(
-         some: SomeResult,
-         none: () => FailOption<ushort>($"'{value}' cannot be converted to a UInt16", key, value)
+      return TruTxtParser.ParseUInt16(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<ushort>($"'{value}' cannot be converted to a UInt16", key, value)
       );
    }
 
@@ -451,9 +453,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<uint>();
 
-      return TruParser.ParseUInt32(value).Match(
-         some: SomeResult,
-         none: () => FailOption<uint>($"'{value}' cannot be converted to a UInt32", key, value)
+      return TruTxtParser.ParseUInt32(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<uint>($"'{value}' cannot be converted to a UInt32", key, value)
       );
    }
 
@@ -470,9 +472,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<ulong>();
 
-      return TruParser.ParseUInt64(value).Match(
-         some: SomeResult,
-         none: () => FailOption<ulong>($"'{value}' cannot be converted to a UInt64", key, value)
+      return TruTxtParser.ParseUInt64(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<ulong>($"'{value}' cannot be converted to a UInt64", key, value)
       );
    }
 
@@ -489,9 +491,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<float>();
 
-      return TruParser.ParseSingle(value).Match(
-         some: SomeResult,
-         none: () => FailOption<float>($"'{value}' cannot be converted to a single", key, value)
+      return TruTxtParser.ParseSingle(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<float>($"'{value}' cannot be converted to a single", key, value)
       );
    }
 
@@ -508,9 +510,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<double>();
 
-      return TruParser.ParseDouble(value).Match(
-         some: SomeResult,
-         none: () => FailOption<double>($"'{value}' cannot be converted to a double", key, value)
+      return TruTxtParser.ParseDouble(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<double>($"'{value}' cannot be converted to a double", key, value)
       );
    }
 
@@ -527,9 +529,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<decimal>();
 
-      return TruParser.ParseDecimal(value).Match(
-         some: SomeResult,
-         none: () => FailOption<decimal>($"'{value}' cannot be converted to a decimal", key, value)
+      return TruTxtParser.ParseDecimal(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<decimal>($"'{value}' cannot be converted to a decimal", key, value)
       );
    }
 
@@ -546,9 +548,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<bool>();
 
-      return TruParser.ParseBool(value).Match(
-         some: SomeResult,
-         none: () => FailOption<bool>($"'{value}' cannot be converted to a boolean", key, value)
+      return TruTxtParser.ParseBool(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<bool>($"'{value}' cannot be converted to a boolean", key, value)
       );
    }
 
@@ -565,9 +567,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<Guid>();
 
-      return TruParser.ParseGuid(value).Match(
-         some: SomeResult,
-         none: () => FailOption<Guid>($"'{value}' cannot be converted to a GUID", key, value)
+      return TruTxtParser.ParseGuid(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<Guid>($"'{value}' cannot be converted to a GUID", key, value)
       );
    }
 
@@ -584,9 +586,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<DateTime>();
 
-      return TruParser.ParseDateTime(value).Match(
-         some: SomeResult,
-         none: () => FailOption<DateTime>($"'{value}' cannot be converted to a DateTime", key, value)
+      return TruTxtParser.ParseDateTime(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<DateTime>($"'{value}' cannot be converted to a DateTime", key, value)
       );
    }
 
@@ -603,9 +605,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<DateOnly>();
 
-      return TruParser.ParseDate(value).Match(
-         some: SomeResult,
-         none: () => FailOption<DateOnly>($"'{value}' cannot be converted to a DateOnly", key, value)
+      return TruTxtParser.ParseDate(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<DateOnly>($"'{value}' cannot be converted to a DateOnly", key, value)
       );
    }
 
@@ -622,9 +624,9 @@ public class TruReader
       if (string.IsNullOrWhiteSpace(value))
          return NoResult<TimeOnly>();
 
-      return TruParser.ParseTime(value).Match(
-         some: SomeResult,
-         none: () => FailOption<TimeOnly>($"'{value}' cannot be converted to a TimeOnly", key, value)
+      return TruTxtParser.ParseTime(value).Match(
+         onSome: SomeResult,
+         onNone: () => FailOption<TimeOnly>($"'{value}' cannot be converted to a TimeOnly", key, value)
       );
    }
 }

@@ -7,4 +7,9 @@
       <NoDefaultLaunchSettingsFile>True</NoDefaultLaunchSettingsFile>
    </PropertyGroup>
 
+   <ItemGroup>
+     <ProjectReference Include="..\TruConfig\TruConfig.csproj" />
+     <ProjectReference Include="..\TruTxt\TruTxt.csproj" />
+   </ItemGroup>
+
 </Project>

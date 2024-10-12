@@ -2,64 +2,56 @@
 
 using System.Diagnostics.Contracts;
 
-public abstract record ConfigResult
+public abstract record ConfigResult<T>
 {
    internal ConfigResult()
    {
    }
 
-   public static ConfigResult Present(string value) => new Present([value]);
+   public static ConfigResult<T> Present(T value, string propertyName) => new Present<T>(value, propertyName);
 
-   public static ConfigResult Missing(string errorMessage) => new Absent([errorMessage]);
+   public static ConfigResult<T>
+      Missing(string errorMessage, string typeName, string propertyName, string configPath) =>
+      new Missing<T>([new ConfigError(errorMessage, typeName, propertyName, configPath)]);
 };
 
-public sealed record Present(string[] Values) : ConfigResult;
+public sealed record Present<T>(T Value, string PropertyName) : ConfigResult<T>;
 
-public sealed record Absent(string[] ErrorMessages) : ConfigResult;
+public sealed record ConfigError(string ErrorMessage, string TypeName, string PropertyName, string ConfigPath);
+
+public sealed record Missing<T>(ConfigError[] Errors) : ConfigResult<T>;
 
 public static class ConfigResultExtensions
 {
-   public static TResult Match<TResult>(
-      this ConfigResult result,
-      Func<string[], TResult> present,
-      Func<string[], TResult> absent
+   public static TResult Match<T, TResult>(
+      this ConfigResult<T> result,
+      Func<Present<T>, TResult> onPresent,
+      Func<ConfigError[], TResult> onMissing
    ) => result switch
    {
-      Present p => present(p.Values),
-      Absent a => absent(a.ErrorMessages),
-      _ => throw new NotImplementedException("The Type of ConfigResult is not known in the Match function!")
+      Present<T> p => onPresent(p),
+      Missing<T> a => onMissing(a.Errors),
+      _ => throw new NotImplementedException("The Type of ConfigResult<T> is not known in the Match function!")
    };
 
-   public static ConfigResult Combine(
-      this ConfigResult result,
-      ConfigResult otherResult
-   ) => (result, otherResult) switch
-   {
-      (Present p1, Present p2) => new Present(p1.Values.Concat(p2.Values).ToArray()),
-      (Present _, Absent a) => a,
-      (Absent a, Present _) => a,
-      (Absent a1, Absent a2) => new Absent(a1.ErrorMessages.Concat(a2.ErrorMessages).ToArray()),
-      _ => throw new NotImplementedException("The Type of ConfigResult is not known in the Match function!")
-   };
-
-   public static ConfigResult Map(
-      this ConfigResult result,
-      Func<string[], string[]> mapper
+   public static ConfigResult<TResult> Map<T, TResult>(
+      this ConfigResult<T> result,
+      Func<T, TResult> mapper
    ) => result switch
    {
-      Present p => new Present(mapper(p.Values)),
-      Absent a => a,
-      _ => throw new NotImplementedException("The Type of ConfigResult is not known in the Map function!")
+      Present<T> p => new Present<TResult>(mapper(p.Value), p.PropertyName),
+      Missing<T> m => new Missing<TResult>(m.Errors),
+      _ => throw new NotImplementedException("The Type of ConfigResult<T> is not known in the Map function!")
    };
 
-   public static ConfigResult Bind(
-      this ConfigResult result,
-      Func<string[], ConfigResult> binder
+   public static ConfigResult<TResult> Bind<T, TResult>(
+      this ConfigResult<T> result,
+      Func<T, ConfigResult<TResult>> binder
    ) => result switch
    {
-      Present p => binder(p.Values),
-      Absent a => a,
-      _ => throw new NotImplementedException("The Type of ConfigResult is not known in the Bind function!")
+      Present<T> p => binder(p.Value),
+      Missing<T> m => new Missing<TResult>(m.Errors),
+      _ => throw new NotImplementedException("The Type of ConfigResult<T> is not known in the Bind function!")
    };
 
    /*******************************
@@ -69,23 +61,27 @@ public static class ConfigResultExtensions
     *******************************/
 
    [Pure]
-   public static ConfigResult Select(this ConfigResult result,
-      Func<string[], string[]> mapper) => Map(result, mapper);
+   public static ConfigResult<TResult> Select<T, TResult>(
+      this ConfigResult<T> result,
+      Func<T, TResult> mapper) => Map(result, mapper);
 
    [Pure]
-   public static ConfigResult SelectMany<TValue, TResult>(this ConfigResult result,
-      Func<string[], ConfigResult> binder) => Bind(result, binder);
+   public static ConfigResult<TResult> SelectMany<T, TResult>(
+      this ConfigResult<T> result,
+      Func<T, ConfigResult<TResult>> binder) => Bind(result, binder);
 
    [Pure]
-   public static ConfigResult SelectMany(
-      this ConfigResult result,
-      Func<string[], ConfigResult> binder) =>
-      result.Bind(a => binder(a).Map(b => a.Concat(b).ToArray()));
-   
-   // [Pure]
-   // public static ConfigResult SelectMany(
-   //    this ConfigResult result,
-   //    Func<string, ConfigResult> binder,
-   //    Func<string, string, string[]> combiner) =>
-   //    result.Bind(a => binder(a).Map(b => combiner(a, b)));
+   public static ConfigResult<TResult> SelectMany<T, TIntermediate, TResult>(
+      this ConfigResult<T> result,
+      Func<T, ConfigResult<TIntermediate>> binder,
+      Func<T, TIntermediate, TResult> combiner
+   ) => result.Bind(a => binder(a).Map(b => combiner(a, b)));
+
+   public static ConfigResult<T> Where<T>(this ConfigResult<T> result, Predicate<T> predicate)
+      => result.Match(
+         onPresent: v => predicate(v.Value) 
+            ? ConfigResult<T>.Present(v.Value, v.PropertyName) 
+            : ConfigResult<T>.Missing($"{v.Value} does not match the Where predicate", string.Empty, v.PropertyName, string.Empty),
+         onMissing: e => new Missing<T>(e)
+      );
 }
