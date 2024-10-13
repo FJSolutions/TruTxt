@@ -22,7 +22,6 @@ public static class TruTxtParser
    /// <typeparam name="T">The type to parse the string value as</typeparam>
    /// <returns>An instance of <typeparam name="T"></typeparam></returns>
    /// <exception cref="NotImplementedException">If the type is not one of the included parsers</exception>
-   // public static Option<T> Parse<T>(string value)
    public static Option<object> Parse<T>(string value)
    {
       var t = typeof(T);

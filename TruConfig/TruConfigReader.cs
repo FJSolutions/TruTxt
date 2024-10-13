@@ -1,25 +1,34 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace TruConfig;
 
-using TruTxt.Common;
-
-namespace TruConfig;
-
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-
-using TruTxt;
-
 using System.Linq.Expressions;
 
 using Microsoft.Extensions.Configuration;
 
-using static TruTxtParser;
+using TruTxt;
+using TruTxt.Common;
 
+using static TruTxt.Common.TruTxtParser;
+
+/// <summary>
+/// Represents a type that can read values safely from an <see cref="IConfiguration"/> instance and provide a means to
+/// map them to objects or records; or, to return all the missing values at one time.
+/// </summary>
+/// <param name="config">The <see cref="IConfiguration"/> instance to read from</param>
+/// <param name="sectionPath">The full section path (if any) to prepend to the property path</param>
+/// <typeparam name="TModel">The type of the model whose properties will be used as key names for the Read methods</typeparam>
 // ReSharper disable once InconsistentNaming
 public class TruConfigReader<TModel>(IConfiguration config, string? sectionPath = null)
-   where TModel : new()
 {
    private readonly string _modelTypeName = typeof(TModel).Name;
 
+   /// <summary>
+   /// Reads 
+   /// </summary>
+   /// <param name="expr"></param>
+   /// <typeparam name="T"></typeparam>
+   /// <returns></returns>
    public ResultCollector<TModel> Read<T>(Expression<Func<TModel, T>> expr)
    {
       var value = ReadValue(expr);
@@ -49,6 +58,18 @@ public class TruConfigReader<TModel>(IConfiguration config, string? sectionPath 
                   value.PropertyName, value.KeyPath)
          )
          : ConfigResult<object>.Present(defaultValue ?? new object(), value.PropertyName);
+
+      return new ResultCollector<TModel>([result]);
+   }
+
+   public ResultCollector<TModel> AddModel<T>(Expression<Func<TModel, T>> expr, ConfigResult<T> modelResult)
+   {
+      var propertyName = expr.GetPropertyName();
+      
+      var result = modelResult.Match(
+         onPresent: m => ConfigResult<object>.Present(m.Value ?? new object(), propertyName),
+         onMissing: e => new Missing<object>(e)
+      );
 
       return new ResultCollector<TModel>([result]);
    }
@@ -88,13 +109,16 @@ public class TruConfigReader<TModel>(IConfiguration config, string? sectionPath 
    }
 
    [Pure]
-   private static String[] SplitPath(string key)
-   {
-      if (string.IsNullOrEmpty(key))
-         return [];
+   private static String[] SplitPath(string key) =>
+      string.IsNullOrEmpty(key) ? [] : key.Split(':');
 
-      return key.Split(':');
-   }
+   /// <summary>
+   /// An internal record that collects all the information gathered in retrieving a string value safely from the
+   /// <see cref="IConfiguration"/> instance. 
+   /// </summary>
+   /// <param name="IsPresent">Whether a value was present in the <see cref="IConfiguration"/> instance</param>
+   /// <param name="Value">The <see cref="string"/> found; or an empty string</param>
+   /// <param name="PropertyName">The name of the property from the supplied expression</param>
+   /// <param name="KeyPath">The full config path</param>
+   private record ConfigMetadata(bool IsPresent, string Value, string PropertyName, string KeyPath);
 }
-
-internal record ConfigMetadata(bool IsPresent, string Value, string PropertyName, string KeyPath);

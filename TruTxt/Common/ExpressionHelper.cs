@@ -8,6 +8,11 @@ public static class ExpressionHelper
    {
       if (expression.Body is MemberExpression b)
          return b.Member.Name;
+      if (expression.Body is UnaryExpression { NodeType: ExpressionType.Convert } m)
+      {
+         if (m.Operand is MemberExpression c)
+            return c.Member.Name;
+      }
 
       throw new TruTxtException("Cannot get a property name from the expression.");
    }
