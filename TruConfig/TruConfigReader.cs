@@ -29,12 +29,12 @@ public class TruConfigReader<TModel>(IConfiguration config, string? sectionPath 
    /// <param name="expr"></param>
    /// <typeparam name="T"></typeparam>
    /// <returns></returns>
-   public ResultCollector<TModel> Read<T>(Expression<Func<TModel, T>> expr)
+   public ResultCollector<TModel> Read<T>(Expression<Func<TModel, T>> expr) where T : IParsable<T>
    {
       var value = ReadValue(expr);
 
       var result = value.IsPresent
-         ? Parse<T>(value.Value).Match(
+         ? ParseObject<T>(value.Value).Match(
             onSome: v => ConfigResult<object>.Present(v, value.PropertyName),
             onNone: () =>
                ConfigResult<object>.Missing($"'{value.Value}' cannot be parsed as a '{typeof(T).Name}'", _modelTypeName,
@@ -46,12 +46,12 @@ public class TruConfigReader<TModel>(IConfiguration config, string? sectionPath 
       return new ResultCollector<TModel>([result]);
    }
 
-   public ResultCollector<TModel> ReadOptional<T>(Expression<Func<TModel, T>> expr, [NotNull] T defaultValue)
+   public ResultCollector<TModel> ReadOptional<T>(Expression<Func<TModel, T>> expr, [NotNull] T defaultValue) where T : IParsable<T>
    {
       var value = ReadValue(expr);
 
       var result = value.IsPresent
-         ? Parse<T>(value.Value).Match(
+         ? ParseObject<T>(value.Value).Match(
             onSome: v => ConfigResult<object>.Present(v, value.PropertyName),
             onNone: () =>
                ConfigResult<object>.Missing($"'{value.Value}' cannot be parsed as a '{typeof(T).Name}'", _modelTypeName,

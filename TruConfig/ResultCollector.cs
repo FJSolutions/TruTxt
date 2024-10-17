@@ -18,7 +18,7 @@ public record ResultCollector<TModel>(ConfigResult<object>[] Results)
       ));
 
       // If the result is null then collate  all the errors and return them 
-      if (result == null)
+      if (result is null)
       {
          var errors = 
             this.Results.Where(r => r is Missing<object>)

@@ -20,46 +20,26 @@ public static class TruTxtParser
    /// </summary>
    /// <param name="value">The <see cref="String"/> to parse</param>
    /// <typeparam name="T">The type to parse the string value as</typeparam>
-   /// <returns>An instance of <typeparam name="T"></typeparam></returns>
-   /// <exception cref="NotImplementedException">If the type is not one of the included parsers</exception>
-   public static Option<object> Parse<T>(string value)
+   /// <returns>An instance of <see cref="Option{T}"/></returns>
+   public static Option<object> ParseObject<T>(string value) where T : IParsable<T>
    {
-      var t = typeof(T);
-
-      if (t == typeof(String))
-         return ParseString(value).Map(x => (object)x);
-      if (t == typeof(sbyte))
-         return ParseInt8(value).Map(x => (object)x);
-      if (t == typeof(Int16))
-         return ParseInt16(value).Map(x => (object)x);
-      if (t == typeof(Int32))
-         return ParseInt32(value).Map(x => (object)x);
-      if (t == typeof(Int64))
-         return ParseInt64(value).Map(x => (object)x);
-      if (t == typeof(byte))
-         return ParseUInt8(value).Map(x => (object)x);
-      if (t == typeof(UInt16))
-         return ParseUInt16(value).Map(x => (object)x);
-      if (t == typeof(UInt32))
-         return ParseUInt32(value).Map(x => (object)x);
-      if (t == typeof(UInt64))
-         return ParseUInt64(value).Map(x => (object)x);
-      if (t == typeof(double))
-         return ParseDouble(value).Map(x => (object)x);
-      if (t == typeof(float))
-         return ParseSingle(value).Map(x => (object)x);
-      if (t == typeof(decimal))
-         return ParseDecimal(value).Map(x => (object)x);
-      if (t == typeof(Guid))
-         return ParseGuid(value).Map(x => (object)x);
-      if (t == typeof(DateTime))
-         return ParseDateTime(value).Map(x => (object)x);
-      if (t == typeof(DateOnly))
-         return ParseDate(value).Map(x => (object)x);
-      if (t == typeof(TimeOnly))
-         return ParseTime(value).Map(x => (object)x);
-
-      throw new NotImplementedException($"No TruTxtParser implemented for type '{t}'");
+      if (T.TryParse(value, null, out T val))
+         return Option<object>.Some(val);
+      return No.Value;
+   }
+   
+   /// <summary>
+   /// Tries to parse the supplied string to any of the included parsers based on the return type of
+   /// <typeparam name="T"></typeparam>  
+   /// </summary>
+   /// <param name="value">The <see cref="String"/> to parse</param>
+   /// <typeparam name="T">The type to parse the string value as</typeparam>
+   /// <returns>An instance of <see cref="Option{T}"/></returns>
+   public static Option<T> Parse<T>(string value) where T : IParsable<T>
+   {
+      if (T.TryParse(value, null, out T val))
+         return Option<T>.Some(val);
+      return No.Value;
    }
 
    /// <summary>
