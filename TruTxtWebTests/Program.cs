@@ -2,7 +2,8 @@ using TruTxtWebTests.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTruConfiguration(builder.Configuration);
+//* Extension method for adding TruConfig reader  
+builder.AddTruConfiguration();
 
 var app = builder.Build();
 

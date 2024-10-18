@@ -19,15 +19,24 @@ public static class TruTxtParser
    /// <typeparam name="T"></typeparam>  
    /// </summary>
    /// <param name="value">The <see cref="String"/> to parse</param>
-   /// <typeparam name="T">The type to parse the string value as</typeparam>
+   /// <param name="type">The type to parse the string value as</param>
    /// <returns>An instance of <see cref="Option{T}"/></returns>
-   public static Option<object> ParseObject<T>(string value) where T : IParsable<T>
+   public static Option<object> ParseObject(string value, Type type) // where T : IParsable<T>
    {
-      if (T.TryParse(value, null, out T val))
-         return Option<object>.Some(val);
+      if (type == typeof(string))
+         return string.IsNullOrWhiteSpace(value) ? No.Value : Option<object>.Some(value);
+
+      var mi = type.GetMethod("Parse", new[] { typeof(string), typeof(IFormatProvider) });
+      if (mi is not null)
+      {
+         var val = mi.Invoke(null, [value, null]);
+         if (val is not null)
+            return Option<object>.Some(val);
+      }
+
       return No.Value;
    }
-   
+
    /// <summary>
    /// Tries to parse the supplied string to any of the included parsers based on the return type of
    /// <typeparam name="T"></typeparam>  

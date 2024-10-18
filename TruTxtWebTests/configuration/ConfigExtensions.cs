@@ -7,39 +7,32 @@ public static class ConfigExtensions
    /// <summary>
    /// An extension class for reading and registering configurations
    /// </summary>
-   /// <param name="services"></param>
-   /// <param name="configuration"></param>
-   public static void AddTruConfiguration(this IServiceCollection services, IConfiguration configuration)
+   /// <param name="builder">The <see cref="IHostApplicationBuilder"/> application instance</param>
+   public static void AddTruConfiguration(this IHostApplicationBuilder builder)
    {
-      //* Start EmailServer
+      var config = new TruConfigReader(builder.Configuration);
+      var emailReader = config.CreateReader<EmailServer>("EmailServer");
+      var hostReader = config.CreateReader<Host>("Host");
       
-      var emailConfig = new TruConfigReader<EmailServer>(configuration, "EmailServer");
-      var emailResults =
-         emailConfig.Read(s => s.Address)
-         + emailConfig.Read(s => s.Port)
-         + emailConfig.Read(s => s.LoginId)
-         + emailConfig.Read(s => s.LoginPassword)
-         + emailConfig.ReadOptional(s => s.Retries, 0);
-      
-      //? Can I combine these two sections into one data structure?
-
       var emailServer =
-         from port in emailResults.GetValue(p => p.Port)
-         from loginId in emailResults.GetValue(p => p.LoginId)
-         from address in emailResults.GetValue(p => p.Address)
-         from loginPassword in emailResults.GetValue(p => p.LoginPassword)
-         from retries in emailResults.GetValue(p => p.Retries)
-         select new EmailServer(address, port, loginId, loginPassword, retries);
-      
-       //* End EmailServer 
-      
-      var hostConfig = new TruConfigReader<Host>(configuration, "Host");
-      var hostResults = hostConfig.Read(h => h.Port)
-         + hostConfig.AddModel(h => h.EmailServer, emailServer);
+         from port in emailReader.GetValue(p => p.Port)
+         from loginId in emailReader.GetValue(p => p.LoginId)
+         from address in emailReader.GetValue(p => p.Address)
+         from loginPassword in emailReader.GetValue(p => p.LoginPassword)
+         select new EmailServer(address, port, loginId, loginPassword);
       
       var host = 
-         from port in hostResults.GetValue(p => p.Port)
-         from email in hostResults.GetValue(p => p.EmailServer)
+         from port in hostReader.GetOptionalValue(p => p.Port, (ushort)8080)
+         from email in hostReader.GetModel(emailServer)
          select new Host(port, email);
+
+      host.Match(
+         onPresent: p => builder.Services.AddSingleton(p.Value),
+         onMissing: m =>
+         {
+            var message = "Configuration Problems:\n" + m.Aggregate((s1, s2) => "  " + s1 + ", \n" + s2);  
+            throw new Exception(message);
+         }
+         );
    }
 }

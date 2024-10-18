@@ -1,4 +1,6 @@
-﻿namespace TruConfig;
+﻿using System.Reflection;
+
+namespace TruConfig;
 
 using System.Diagnostics.Contracts;
 
@@ -8,29 +10,53 @@ public abstract record ConfigResult<T>
    {
    }
 
-   public static ConfigResult<T> Present(T value, string propertyName) => new Present<T>(value, propertyName);
+   public static ConfigResult<T> Present(T value) => new Present<T>(value);
 
-   public static ConfigResult<T>
-      Missing(string errorMessage, string typeName, string propertyName, string configPath) =>
-      new Missing<T>([new ConfigError(errorMessage, typeName, propertyName, configPath)]);
+   public static ConfigResult<T> Missing(string errorMessage) => new Missing<T>([errorMessage]);
 };
 
-public sealed record Present<T>(T Value, string PropertyName) : ConfigResult<T>;
+public sealed record Present<T>(T Value) : ConfigResult<T>;
 
-public sealed record ConfigError(string ErrorMessage, string TypeName, string PropertyName, string ConfigPath);
+public sealed record ConfigError(string ErrorMessage);
 
-public sealed record Missing<T>(ConfigError[] Errors) : ConfigResult<T>;
+public sealed record Missing<T>(string[] Errors) : ConfigResult<T>;
 
 public static class ConfigResultExtensions
 {
+   public static Present<T> AsPresent<T>(this ConfigResult<T> result) where T : notnull
+   {
+      if (result is Present<T> present)
+         return present;
+      
+      throw new InvalidCastException($"{typeof(T).Name} is not a Present result.");
+   }
+   
+   public static Missing<T> AsMissing<T>(this ConfigResult<T> result) where T : notnull
+   {
+      if (result is Missing<T> missing)
+         return missing;
+      
+      throw new InvalidCastException($"{typeof(T).Name} is not a Missing result.");
+   }
+   
+   public static ConfigResult<T> AsResult<T>(this Missing<T> missing) where T : notnull
+   {
+      return missing;
+   }
+   
+   public static ConfigResult<T> AsResult<T>(this Present<T> present) where T : notnull
+   {
+      return present;
+   }
+
    public static TResult Match<T, TResult>(
       this ConfigResult<T> result,
       Func<Present<T>, TResult> onPresent,
-      Func<ConfigError[], TResult> onMissing
+      Func<string[], TResult> onMissing
    ) => result switch
    {
       Present<T> p => onPresent(p),
-      Missing<T> a => onMissing(a.Errors),
+      Missing<T> e => onMissing(e.Errors),
       _ => throw new NotImplementedException("The Type of ConfigResult<T> is not known in the Match function!")
    };
 
@@ -39,7 +65,7 @@ public static class ConfigResultExtensions
       Func<T, TResult> mapper
    ) => result switch
    {
-      Present<T> p => new Present<TResult>(mapper(p.Value), p.PropertyName),
+      Present<T> p => new Present<TResult>(mapper(p.Value)),
       Missing<T> m => new Missing<TResult>(m.Errors),
       _ => throw new NotImplementedException("The Type of ConfigResult<T> is not known in the Map function!")
    };
@@ -79,9 +105,9 @@ public static class ConfigResultExtensions
 
    public static ConfigResult<T> Where<T>(this ConfigResult<T> result, Predicate<T> predicate)
       => result.Match(
-         onPresent: v => predicate(v.Value) 
-            ? ConfigResult<T>.Present(v.Value, v.PropertyName) 
-            : ConfigResult<T>.Missing($"{v.Value} does not match the Where predicate", string.Empty, v.PropertyName, string.Empty),
+         onPresent: v => predicate(v.Value)
+            ? ConfigResult<T>.Present(v.Value)
+            : ConfigResult<T>.Missing($"{v.Value} does not match the Where predicate"),
          onMissing: e => new Missing<T>(e)
       );
 }

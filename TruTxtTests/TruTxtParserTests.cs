@@ -630,7 +630,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseStringTest()
    {
-      var result = ParseObject<string>("Francis");
+      var result = ParseObject("Francis", typeof(string));
 
       Assert.Equal(Option<object>.Some("Francis"), result);
    }
@@ -638,7 +638,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseInt8Test()
    {
-      var result = ParseObject<sbyte>("58");
+      var result = ParseObject("58", typeof(sbyte));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -646,7 +646,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseInt16Test()
    {
-      var result = ParseObject<short>("58");
+      var result = ParseObject("58", typeof(short));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -654,7 +654,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseInt32Test()
    {
-      var result = ParseObject<int>("58");
+      var result = ParseObject("58", typeof(int));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -662,7 +662,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseInt64Test()
    {
-      var result = ParseObject<long>("58");
+      var result = ParseObject("58", typeof(long));
 
       Assert.Equivalent(Option<object>.Some(58L), result);
    }
@@ -670,7 +670,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseUInt8Test()
    {
-      var result = ParseObject<byte>("58");
+      var result = ParseObject("58", typeof(byte));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -678,7 +678,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseUInt16Test()
    {
-      var result = ParseObject<ushort>("58");
+      var result = ParseObject("58", typeof(ushort));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -686,7 +686,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseUInt32Test()
    {
-      var result = ParseObject<uint>("58");
+      var result = ParseObject("58", typeof(uint));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -694,7 +694,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseUInt64Test()
    {
-      var result = ParseObject<ulong>("58");
+      var result = ParseObject("58", typeof(ulong));
 
       Assert.Equivalent(Option<object>.Some(58), result);
    }
@@ -702,7 +702,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseDoubleTest()
    {
-      var result = ParseObject<Double>("58.0");
+      var result = ParseObject("58.0", typeof(double));
 
       Assert.Equivalent(Option<object>.Some(58.0), result);
    }
@@ -710,7 +710,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseSingleTest()
    {
-      var result = ParseObject<float>("58.0");
+      var result = ParseObject("58.0", typeof(float));
 
       Assert.Equivalent(Option<object>.Some(58.0f), result);
    }
@@ -718,7 +718,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseDecimalTest()
    {
-      var result = ParseObject<Decimal>("58.0");
+      var result = ParseObject("58.0", typeof(decimal));
 
       Assert.Equivalent(Option<object>.Some(58.0M), result);
    }
@@ -726,7 +726,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseGuidTest()
    {
-      var result = ParseObject<Guid>("9655DB059EE3443DA24FF3776A70814E");
+      var result = ParseObject("9655DB059EE3443DA24FF3776A70814E", typeof(Guid));
 
       Assert.Equivalent(Option<object>.Some(Guid.Parse("9655DB05-9EE3-443D-A24F-F3776A70814E")), result);
    }
@@ -734,7 +734,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseDateTimeTest()
    {
-      var result = ParseObject<DateTime>("2024-10-08 15:12:47");
+      var result = ParseObject("2024-10-08 15:12:47", typeof(DateTime));
 
       Assert.Equivalent(Option<object>.Some(new DateTime(2024, 10, 8, 15, 12, 47)), result);
    }
@@ -742,7 +742,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseTimeTest()
    {
-      var result = ParseObject<TimeOnly>("15:12:47");
+      var result = ParseObject("15:12:47", typeof(TimeOnly));
 
       Assert.Equivalent(Option<object>.Some(new TimeOnly(15, 12, 47)), result);
    }
@@ -750,7 +750,7 @@ public class TruTxtParserTests(ITestOutputHelper output)
    [Fact]
    public void GenericParseDateTest()
    {
-      var result = ParseObject<DateOnly>("2024-10-08");
+      var result = ParseObject("2024-10-08", typeof(DateOnly));
 
       Assert.Equivalent(Option<object>.Some(new DateOnly(2024, 10, 8)), result);
    }
