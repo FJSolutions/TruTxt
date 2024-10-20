@@ -1,3 +1,8 @@
-﻿namespace TruTxtWebTests.Configuration;
+﻿using System.Collections.Immutable;
 
-public record Host(ushort Port, EmailServer EmailServer);
+using TruAspNetCore;
+using TruAspNetCore.Config;
+
+namespace TruTxtWebTests.Configuration;
+
+public record Host(ushort Port, EmailServer EmailServer, ConnectionStringsCollector ConnectionStrings);

@@ -1,10 +1,9 @@
-﻿using System.Numerics;
+﻿namespace TruAspNetCore.Config;
 
-namespace TruConfig;
-
-using System.Reflection;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using Microsoft.Extensions.Configuration;
 
@@ -28,9 +27,9 @@ public class TruConfigReader(IConfiguration config)
       foreach (var property in t.GetProperties(BindingFlags.Public | BindingFlags.Instance))
       {
          // This is to skip complex classes and records that need to have their own readers.
-         if(!property.PropertyType.IsValueType && property.PropertyType != typeof(string))
+         if (!property.PropertyType.IsValueType && property.PropertyType != typeof(string))
             continue;
-         
+
          var path = sectionName == null ? property.Name : $"{sectionName}:{property.Name}";
          var (isPresent, stringValue) = ReadValue(path, config);
          if (isPresent)
@@ -40,19 +39,36 @@ public class TruConfigReader(IConfiguration config)
                TruTxtParser.ParseObject(stringValue, pt)
                   .Match(
                      onSome: ConfigResult<object>.Present,
-                     onNone: () => ConfigResult<object>.Missing($"{stringValue} could not be parsed as a {pt}")
+                     onNone: () => ConfigResult<object>.Missing($"{stringValue} could not be parsed as a {pt}",
+                        typeName, property.Name, path)
                   );
-            _metadata.Add(new ConfigMetadata(true, objValue, typeName, property.Name));
+            _metadata.Add(new ConfigMetadata(true, objValue, typeName, property.Name, path));
          }
          else
             _metadata.Add(new ConfigMetadata(false,
-               ConfigResult<object>.Missing($"No value could be found for {property.Name} of {typeName}"),
-               typeName, property.Name)
+               ConfigResult<object>.Missing(
+                  $"No value could be found for '{property.Name}' of '{typeName}' at path: {path}", typeName,
+                  property.Name, path),
+               typeName, property.Name, path)
             );
       }
 
       // Return a reader function that gets values for this T and returns them as a ConfigResult
       return new Reader<T>(_metadata, typeName);
+   }
+
+   public ConnectionStringsCollector ReadConnectionStrings()
+   {
+      var list = ImmutableList.Create<ConfigConnectionInfo>().ToBuilder();
+
+      var section = config.GetSection("ConnectionStrings");
+      if (section.Exists())
+      {
+         foreach (var conStr in section.GetChildren())
+            list.Add(new ConfigConnectionInfo(conStr.Key, conStr.Value ?? string.Empty));
+      }
+
+      return new ConnectionStringsCollector(list.ToImmutable());
    }
 
    [Pure]
@@ -100,7 +116,8 @@ public class TruConfigReader(IConfiguration config)
       bool IsPresent,
       ConfigResult<object> ParsedValue,
       string TypeName,
-      string PropertyName);
+      string PropertyName,
+      string ConfigPath);
 
 
    public class Reader<T>
@@ -149,9 +166,25 @@ public class TruConfigReader(IConfiguration config)
       private ConfigResult<A> AllErrors<A>() =>
          this._metadata.Where(m => !m.IsPresent)
             .Select(m => m.ParsedValue.AsMissing())
-            .Aggregate((m1, m2) => new Missing<object>(
-               m1.Errors.Concat(m2.Errors).ToArray()
-            ))
-            .SelectMany(r => (ConfigResult<A>)new Missing<A>((string[])r));
+            .Aggregate((m1, m2) => new Missing<object>(m1.Errors.Concat(m2.Errors).ToArray()))
+            .SelectMany(r =>
+            {
+               var m = r as Missing<object>;
+               return new Missing<A>(m!.Errors);
+            });
    }
+
+   public record ConfigConnectionInfo(string Name, string ConnectionString);
+}
+
+public record ConnectionStringsCollector(
+   ImmutableList<TruConfigReader.ConfigConnectionInfo> ConfigConnectionInformation);
+
+public static class ConnectionConfigExtensions
+{
+   public static bool IsEmpty(this ConnectionStringsCollector info) => info.ConfigConnectionInformation.IsEmpty;
+
+   public static string Get(this ConnectionStringsCollector connectionStrings, string name) =>
+      connectionStrings.ConfigConnectionInformation.FirstOrDefault(cs => cs.Name == name)?.ConnectionString ??
+      string.Empty;
 }
